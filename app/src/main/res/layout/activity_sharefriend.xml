@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:background="@color/back_bei"
+    android:layout_height="match_parent">
+<include
+    layout="@layout/include_count"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+</include>
+
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <ImageView
+
+        android:scaleType="fitXY"
+        android:src="@drawable/bike"
+        android:layout_width="match_parent"
+        android:layout_height="300dp" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/shape_radioline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout2"
+            android:layout_marginTop="200dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true">
+
+            <TextView
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black_san"
+            android:gravity="center"
+            android:text="想增信用值，就得多分享"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView"
+            android:layout_below="@+id/linearLayout2"
+            android:layout_alignStart="@+id/linearLayout2"
+            />
+
+            <TextView
+
+                android:textColor="@color/black_san"
+                android:gravity="center"
+                android:text="分享即可获得平台奖励"
+                android:textSize="20sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linearLayout2"
+                android:layout_alignStart="@+id/linearLayout2"
+                />
+            <LinearLayout
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/share_wei"
+                    android:layout_gravity="center"
+                    android:gravity="right"
+                    android:textSize="16sp"
+                    android:textColor="@color/textcolcr"
+                    android:drawablePadding="10dp"
+                    android:text="微信好友"
+                    android:drawableTop="@drawable/share_weixin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/share_friend"
+                    android:layout_marginLeft="10dp"
+                     android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:textColor="@color/textcolcr"
+                    android:drawablePadding="10dp"
+                    android:text="朋友圈"
+                    android:drawableTop="@drawable/share_pengyouquan"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/share_qq"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:textColor="@color/textcolcr"
+                    android:drawablePadding="10dp"
+                    android:text="QQ好友"
+                    android:drawableTop="@drawable/share_qq"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/share_kongjian"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:textColor="@color/textcolcr"
+                    android:drawablePadding="10dp"
+                    android:text="QQ空间"
+                    android:drawableTop="@drawable/share_kongjian"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="80dp">
+                <TextView
+                    android:id="@+id/look_xiangqing"
+                    android:layout_marginTop="40dp"
+                    android:textColor="@color/textcolcr"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:text="查看详细规则"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <View
+                    android:background="@color/font_black_5"
+                    android:layout_gravity="center"
+                    android:layout_width="100dp"
+                    android:layout_height="1dp"></View>
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</LinearLayout>

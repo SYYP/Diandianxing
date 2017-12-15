@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:background="@color/back_bei">
+<include
+    layout="@layout/include_count"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+</include>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/shape_radioline"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <RelativeLayout
+        android:id="@+id/real_pho"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="头像"
+            android:id="@+id/set_pho"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:padding="15dp"
+            android:textColor="@color/black_san"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/back"
+            android:padding="3dp"
+            android:layout_marginRight="15dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/set_next"
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
+        <www.diandianxing.com.diandianxing.utils.CircleImageView
+            android:layout_marginRight="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/aaa"
+            android:padding="10dp"
+            android:id="@+id/person_pho"
+            android:layout_toLeftOf="@id/back"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+        <View
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/font_black_5"
+            android:layout_below="@id/set_pho"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"></View>
+    </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/real_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:drawablePadding="10dp"
+                android:text="昵称"
+                android:id="@+id/set_name"
+                android:layout_centerVertical="true"
+                android:textSize="16sp"
+                android:padding="15dp"
+                android:textColor="@color/black_san"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/back1"
+                android:padding="3dp"
+                android:layout_marginRight="15dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/set_next"
+                android:layout_width="25dp"
+                android:layout_height="25dp" />
+            <TextView
+                android:textColor="@color/textcolcr"
+                android:text="Sense"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/back1"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <View
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/font_black_5"
+                android:layout_below="@id/set_name"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"></View>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/real_renzheng"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:drawablePadding="10dp"
+                android:text="昵称"
+                android:id="@+id/set_renzheng"
+                android:layout_centerVertical="true"
+                android:textSize="16sp"
+                android:padding="15dp"
+                android:textColor="@color/black_san"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/back2"
+                android:padding="3dp"
+                android:layout_marginRight="15dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/set_next"
+                android:layout_width="25dp"
+                android:layout_height="25dp" />
+            <TextView
+                android:textColor="@color/reds"
+                android:text="未认证"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/back2"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <View
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"></View>
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

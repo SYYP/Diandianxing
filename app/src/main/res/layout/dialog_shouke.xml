@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <RelativeLayout
+
+         android:orientation="vertical"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:padding="10dp"
+            android:text="客户服务"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <View
+        android:background="@color/font_black_5"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"></View>
+    <RelativeLayout
+       android:id="@+id/real_weiting"
+        android:orientation="vertical"
+        android:layout_marginLeft="15dp"
+
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:gravity="center"
+            android:drawablePadding="10dp"
+            android:drawableLeft="@drawable/img_weiting"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:padding="10dp"
+            android:text="违停举报"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <View
+        android:background="@color/font_black_5"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"></View>
+    <RelativeLayout
+         android:id="@+id/real_guzhang"
+        android:orientation="vertical"
+        android:layout_marginLeft="15dp"
+
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:gravity="center"
+            android:drawablePadding="10dp"
+            android:drawableLeft="@drawable/img_guzhang"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:padding="10dp"
+            android:text="故障申报"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <View
+        android:background="@color/font_black_5"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"></View>
+    <RelativeLayout
+      android:id="@+id/real_qita"
+        android:orientation="vertical"
+        android:layout_marginLeft="15dp"
+
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:gravity="center"
+            android:drawablePadding="10dp"
+            android:drawableLeft="@drawable/img_qita"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:padding="10dp"
+            android:text="其他问题"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <View
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"></View>
+</LinearLayout>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:background="@color/back_bei">
+
+    <include
+        layout="@layout/include_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </include>
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/shape_radioline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+      <EditText
+
+          android:cursorVisible="false"
+          android:textColor="@color/black_9"
+          android:textSize="16sp"
+          android:background="@null"
+          android:layout_marginLeft="10dp"
+          android:padding="10dp"
+          android:hint="请输入你的昵称"
+          android:id="@+id/alter_name"
+          android:layout_width="match_parent"
+          android:layout_height="55dp" />
+    </LinearLayout>
+     <TextView
+         android:textSize="14sp"
+         android:layout_marginTop="10dp"
+         android:layout_marginLeft="20dp"
+         android:text="昵称请控制在16个字之内，包含英文，汉字，数字"
+         android:textColor="#999999"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:layout_marginTop="55dp"
+        android:background="@drawable/shape_redradius"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp">
+
+        <TextView
+            android:elevation="100dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:padding="5dp"
+            android:id="@+id/name_ok"
+            android:layout_centerHorizontal="true"
+            android:text="保存"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+</LinearLayout>

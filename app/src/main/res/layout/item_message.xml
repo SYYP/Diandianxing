@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="@drawable/shape_radioline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_marginTop="10dp"
+            android:id="@+id/mesg_pho"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/bike"
+            android:layout_width="match_parent"
+            android:layout_height="150dp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <LinearLayout
+
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+         <TextView
+             android:id="@+id/mesg_title"
+             android:layout_marginTop="15dp"
+             android:layout_marginLeft="15dp"
+             android:textColor="@color/black_san"
+             android:textSize="15sp"
+             android:text="喜迎圣诞，单车活动享不停，免费骑三天"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content" />
+            <TextView
+                android:layout_marginBottom="5dp"
+                android:padding="5dp"
+                android:id="@+id/mesg_date"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="15dp"
+                android:textColor="@color/textcolcr"
+                android:textSize="14sp"
+                android:text="2017-11-28"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+            <ImageView
+                android:padding="1dp"
+                android:layout_marginRight="15dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/set_next"
+                android:layout_width="20dp"
+                android:layout_height="20dp" />
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

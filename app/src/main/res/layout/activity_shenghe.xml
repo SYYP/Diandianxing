@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:background="@color/back_bei">
+
+    <include
+        layout="@layout/include_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></include>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+             android:background="@drawable/shape_shengheradioline"
+            android:layout_width="300dp"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="180dp"
+            android:id="@+id/linearLayout">
+
+            <TextView
+                android:gravity="center"
+                android:layout_marginTop="75dp"
+                android:text="审核失败"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/shen_text"
+                android:layout_marginStart="16dp" />
+            <TextView
+                android:padding="2dp"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:text="您的资料信息和照片信息不符"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/shen_text_bai"
+                android:layout_marginStart="16dp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_marginTop="40dp"
+            android:layout_below="@id/linearLayout"
+            android:background="@drawable/shape_redradius"
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="80dp"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp">
+            <TextView
+                android:elevation="100dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:padding="5dp"
+                android:id="@+id/chongxin_ok"
+                android:layout_centerHorizontal="true"
+                android:text="重新认证"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+
+        <ImageView
+            android:src="@drawable/shengke_false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:layout_alignBottom="@+id/linearLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="90dp" />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@color/back_bei"
+    android:orientation="vertical">
+<include
+    layout="@layout/include_count"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"></include>
+    <ListView
+        android:layout_marginTop="10dp"
+        android:scrollbars="none"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:divider="@color/back_bei"
+        android:dividerHeight="10dp"
+        android:id="@+id/list_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ListView>
+</LinearLayout>

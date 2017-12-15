@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="text_orage">#ff8e4a</color>
+    <color name="white">#fff</color>
+    <color name="black">#000</color>
+    <color name="textcolcr">#666666</color>
+    <color name="font_black_5">#66bdbdbd</color>
+    <color name="font_xian">#33bdbdbd</color>
+    <color name="back_bei">#edecea</color>
+    <color name="black_san">#333333</color>
+    <color name="back_color">#d7d7d7</color>
+    <color name="qing">#68978d</color>
+    <color name="reds">#e11c08</color>
+    <color name="black_9">#999999</color>
+    <color name="orage_back">#f25b10</color>
+    <color name="color_hui">#e7e7e7</color>
+    <color name="banance_black">#772e2e2e</color>
+    <color name="xu_white">#99fefefe</color>
+    <color name="beizhu">#f5f5f5</color>
+</resources>

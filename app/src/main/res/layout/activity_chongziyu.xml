@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:background="@color/back_bei">
+<include
+    layout="@layout/include_count"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"></include>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shape_radioline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:padding="10dp"
+            android:textColor="@color/black_san"
+            android:textSize="16sp"
+            android:text="充值金额"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+              <TextView
+                  android:id="@+id/erbai"
+                  android:gravity="center"
+                  android:layout_marginRight="10dp"
+                  android:layout_marginLeft="15dp"
+                  android:layout_weight="1"
+                  android:padding="10dp"
+                  android:background="@drawable/shape_backorageradioline"
+                  android:textSize="18sp"
+                  android:textColor="@color/white"
+                  android:text="充200元"
+                  android:layout_width="0dp"
+                  android:layout_height="60dp" />
+              <TextView
+                  android:id="@+id/yibai"
+                  android:gravity="center"
+                  android:layout_marginLeft="10dp"
+                  android:layout_weight="1"
+                  android:layout_marginRight="15dp"
+                  android:padding="10dp"
+                  android:background="@drawable/shape_backhuiradioline"
+                  android:textSize="18sp"
+                  android:textColor="@color/white"
+                  android:text="充100元"
+                  android:layout_width="0dp"
+                  android:layout_height="60dp" />
+          </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/wushi"
+                android:gravity="center"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:background="@drawable/shape_backhuiradioline"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:text="充50元"
+                android:layout_width="0dp"
+                android:layout_height="60dp" />
+            <TextView
+                android:id="@+id/ershi"
+                android:gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:layout_marginRight="15dp"
+                android:padding="10dp"
+                android:background="@drawable/shape_backhuiradioline"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:text="充20元"
+                android:layout_width="0dp"
+                android:layout_height="60dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/shi"
+                android:gravity="center"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:background="@drawable/shape_backhuiradioline"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:text="充10元"
+                android:layout_width="0dp"
+                android:layout_height="60dp" />
+            <TextView
+                android:id="@+id/qita"
+                android:gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:layout_marginRight="15dp"
+                android:padding="10dp"
+                android:background="@drawable/shape_backhuiradioline"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:text="其他金额"
+                android:layout_width="0dp"
+                android:layout_height="60dp" />
+        </LinearLayout>
+        <TextView
+
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:text="选择支付方式"
+            android:textColor="@color/black_san"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <RelativeLayout
+            android:id="@+id/wei"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+            <TextView
+                android:textColor="@color/textcolcr"
+                android:layout_marginLeft="15dp"
+                android:layout_centerVertical="true"
+                android:drawablePadding="10dp"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:text="微信"
+                android:drawableLeft="@drawable/img_paywei"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/img_xuanze"
+                android:layout_marginRight="15dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/select_true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <View
+            android:background="@color/font_black_5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"></View>
+        <RelativeLayout
+            android:id="@+id/zhi"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+            <TextView
+                android:textColor="@color/textcolcr"
+                android:layout_marginLeft="15dp"
+                android:layout_centerVertical="true"
+                android:drawablePadding="10dp"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:text="支付宝"
+                android:drawableLeft="@drawable/img_payzhi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/img_xuanze1"
+                android:layout_marginRight="15dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/select_false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_marginTop="40dp"
+        android:background="@drawable/shape_redradius"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp">
+
+        <TextView
+            android:elevation="100dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:padding="5dp"
+            android:id="@+id/chongzhi_ok"
+            android:layout_centerHorizontal="true"
+            android:text="去充值"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+</LinearLayout>

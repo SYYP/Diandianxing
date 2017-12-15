@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:background="@color/back_bei">
+
+    <include
+        layout="@layout/include_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </include>
+    <RelativeLayout
+        android:id="@+id/real_yue"
+        android:background="@drawable/shape_radioline"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="130dp">
+
+        <ImageView
+            android:layout_marginLeft="15dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/img_yue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+
+            android:id="@+id/wallet_next"
+            android:padding="1dp"
+            android:src="@drawable/set_next"
+            android:layout_marginRight="15dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+        <LinearLayout
+            android:layout_marginRight="75dp"
+            android:layout_marginTop="40dp"
+            android:layout_toLeftOf="@id/wallet_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+          <TextView
+            android:textColor="@color/black_san"
+            android:textSize="18sp"
+            android:text="我的余额"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/wallet_yue"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/textcolcr"
+                android:textSize="16sp"
+                android:text="0.00元"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </RelativeLayout>
+    <RelativeLayout
+      android:id="@+id/real_yanjin"
+        android:background="@drawable/shape_radioline"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="130dp">
+
+        <ImageView
+            android:layout_marginLeft="15dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/img_yue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+
+            android:id="@+id/wallet_next1"
+            android:padding="1dp"
+            android:src="@drawable/set_next"
+            android:layout_marginRight="15dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+        <LinearLayout
+            android:layout_marginRight="75dp"
+            android:layout_marginTop="40dp"
+            android:layout_toLeftOf="@id/wallet_next1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:textColor="@color/black_san"
+                android:textSize="18sp"
+                android:text="我的押金"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/wallet_yanjin"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/textcolcr"
+                android:textSize="16sp"
+                android:text="0.00元"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_marginTop="40dp"
+        android:background="@drawable/shape_redradius"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp">
+
+        <TextView
+            android:elevation="100dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:padding="5dp"
+            android:id="@+id/wallet_ok"
+            android:layout_centerHorizontal="true"
+            android:text="充值"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+      <TextView
+          android:id="@+id/look_mingxi"
+          android:layout_marginTop="15dp"
+           android:gravity="center"
+          android:textColor="@color/text_orage"
+          android:textSize="16sp"
+          android:text="查看明细"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content" />
+</LinearLayout>

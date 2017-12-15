@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:layout_height="match_parent"
+    android:background="@color/back_bei">
+<include
+    layout="@layout/include_count"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+</include>
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="@drawable/shape_radioline"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textColor="@color/textcolcr"
+            android:padding="5dp"
+            android:gravity="center"
+            android:text="充值金额"
+            android:layout_marginTop="10dp"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:textStyle="bold"
+            android:textColor="@color/textcolcr"
+            android:padding="5dp"
+            android:gravity="center"
+            android:text="¥ 199"
+            android:textSize="22sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:textColor="@color/black_san"
+            android:padding="5dp"
+            android:gravity="center"
+            android:text="押金随心退，安全快速到账"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <View
+            android:layout_marginTop="22dp"
+            android:background="@color/font_black_5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"></View>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+            <TextView
+                android:textColor="@color/textcolcr"
+                android:layout_marginLeft="15dp"
+                android:layout_centerVertical="true"
+                android:drawablePadding="10dp"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:text="微信"
+                android:drawableLeft="@drawable/img_paywei"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/img_xuanze"
+                android:layout_marginRight="15dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/select_true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <View
+            android:background="@color/font_black_5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"></View>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+            <TextView
+                android:textColor="@color/textcolcr"
+                android:layout_marginLeft="15dp"
+                android:layout_centerVertical="true"
+                android:drawablePadding="10dp"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:text="支付宝"
+                android:drawableLeft="@drawable/img_payzhi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/img_xuanze1"
+                android:layout_marginRight="15dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/select_false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_marginTop="40dp"
+        android:background="@drawable/shape_redradius"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp">
+
+        <TextView
+            android:elevation="100dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:padding="5dp"
+            android:id="@+id/chongzhi_ok"
+            android:layout_centerHorizontal="true"
+            android:text="去充值"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+    <TextView
+        android:textColor="@color/textcolcr"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="本单车不会以任何形式要求您输入银行账号和密码"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

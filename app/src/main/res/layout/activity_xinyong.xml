@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/back_bei">
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/include_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </include>
+    <RelativeLayout
+        android:id="@+id/real"
+          android:layout_below="@id/include"
+        android:background="@drawable/img_xinyong"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:textStyle="bold"
+            android:textColor="@color/text_orage"
+            android:textSize="35dp"
+            android:text="80"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="61dp"
+            android:id="@+id/xinyong_fen" />
+        <TextView
+            android:textStyle="bold"
+            android:textColor="@color/textcolcr"
+            android:textSize="14sp"
+            android:text="评估于2017-11-21"
+            android:layout_marginTop="12dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/xinyong_fen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_below="@id/real"
+        android:orientation="vertical"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/shape_radioline"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:padding="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+          <ImageView
+              android:id="@+id/shui"
+              android:padding="10dp"
+              android:layout_marginLeft="5dp"
+              android:layout_marginTop="10dp"
+              android:src="@drawable/img_shui"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content" />
+            <TextView
+                android:textColor="@color/black_san"
+                android:id="@+id/text_bian"
+                android:layout_marginTop="15dp"
+                android:layout_toRightOf="@id/shui"
+                android:text="上月信用分变化"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/text_date"
+                android:layout_marginTop="5dp"
+                android:layout_below="@id/text_bian"
+                android:layout_toRightOf="@id/shui"
+                android:text="评估时间：2017-11-21"
+                android:textSize="14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_marginRight="70dp"
+               android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/black_san"
+                android:textSize="16sp"
+                android:text="信用分"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/text_fen"
+                android:layout_marginRight="25dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/text_orage"
+                android:textSize="18sp"
+                android:text="+17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <View
+                android:layout_marginTop="10dp"
+                android:background="@color/font_black_5"
+                android:layout_below="@id/text_date"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"></View>
+        </RelativeLayout>
+  <RelativeLayout
+      android:padding="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/look_lishi"
+        android:text="查看信用历史"
+        android:textSize="16sp"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+      <View
+          android:layout_marginBottom="10dp"
+          android:background="@color/textcolcr"
+          android:layout_centerHorizontal="true"
+          android:layout_below="@id/look_lishi"
+          android:layout_width="100dp"
+          android:layout_height="1dp"></View>
+</RelativeLayout>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/text_jiedu"
+        android:drawablePadding="10dp"
+        android:textSize="16sp"
+        android:text="规则解读"
+        android:layout_marginBottom="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:drawableLeft="@drawable/img_jiedu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

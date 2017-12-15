@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   android:background="@color/back_bei"
+    tools:context="www.diandianxing.com.diandianxing.MainActivity">
+    
+   <RelativeLayout
+       android:background="@color/xu_white"
+
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:id="@+id/relativeLayout">
+       <ImageView
+           android:id="@+id/img_my"
+           android:layout_marginLeft="10dp"
+           android:src="@drawable/img_my"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content" />
+       <ImageView
+           android:layout_centerVertical="true"
+           android:layout_centerHorizontal="true"
+           android:src="@drawable/img_diandianxing"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content" />
+       <ImageView
+           android:id="@+id/img_message"
+           android:layout_alignParentRight="true"
+           android:layout_marginRight="10dp"
+           android:src="@drawable/img_message"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content" />
+   </RelativeLayout>
+
+    <LinearLayout
+        android:background="@drawable/shape_radioline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp"
+        android:orientation="vertical"
+        android:layout_marginTop="130dp"
+        android:id="@+id/linearLayout3">
+        <ImageView
+            android:id="@+id/iv_search"
+            android:padding="12dp"
+            android:src="@drawable/img_sou"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/iv_kefu"
+            android:padding="12dp"
+            android:src="@drawable/img_ke"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/iv_refresh"
+            android:padding="12dp"
+            android:src="@drawable/img_shua"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/iv_address"
+            android:padding="12dp"
+            android:src="@drawable/img_ding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/iv_lock"
+        android:layout_marginBottom="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/img_sao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/real_gongxiang"
+        android:orientation="vertical"
+        android:background="@drawable/shape_radioline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="110dp">
+        <ImageView
+            android:id="@+id/img_che"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/img_gongbick"
+            android:layout_width="30dp"
+            android:layout_height="20dp" />
+        <TextView
+            android:padding="2dp"
+            android:layout_marginTop="5dp"
+            android:textSize="12dp"
+            android:drawablePadding="10dp"
+            android:text="共享单车"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+
+</LinearLayout>
+    <LinearLayout
+        android:id="@+id/real_dianzi"
+        android:orientation="vertical"
+        android:background="@drawable/shape_radioline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp">
+        <ImageView
+              android:id="@+id/img_wei"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/img_dianziwei"
+            android:layout_width="25dp"
+            android:layout_height="20dp" />
+        <TextView
+            android:padding="2dp"
+            android:layout_marginTop="5dp"
+            android:textSize="12dp"
+            android:text="电子围栏"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+
+    </LinearLayout>
+</RelativeLayout>

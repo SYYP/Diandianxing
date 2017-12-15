@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/login_back">
+<include
+    layout="@layout/include_title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"></include>
+
+    <RelativeLayout
+        android:layout_marginTop="40dp"
+        android:id="@+id/relative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/logio"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/login_lo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/text_orage"
+            android:text="点点行"
+            android:layout_marginTop="12dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/logio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/register_l"
+            android:padding="10dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/login_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:layout_toRightOf="@id/register_l"
+            android:cursorVisible="false"
+            android:padding="10dp"
+            android:textCursorDrawable="@null"
+            android:inputType="number"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:gravity="left|center_vertical"
+            android:textColor="@color/textcolcr"
+            android:textSize="16sp"
+            android:id="@+id/bound_phone"
+            android:layout_centerHorizontal="true"
+            android:hint=" 请输入手机号码"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+    <View
+        android:layout_marginTop="2dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:background="@color/font_black_5"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"></View>
+    <RelativeLayout
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/login_lpwd"
+            android:padding="10dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/login_yanzhneg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:layout_toRightOf="@id/login_lpwd"
+            android:cursorVisible="false"
+            android:padding="10dp"
+            android:textCursorDrawable="@null"
+            android:inputType="number"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:gravity="left|center_vertical"
+            android:textColor="@color/textcolcr"
+            android:textSize="16sp"
+            android:id="@+id/register_yanzhen"
+            android:layout_centerHorizontal="true"
+            android:hint="请输入验证码"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textColor="@color/text_orage"
+            android:id="@+id/huoqu"
+            android:gravity="right"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            android:padding="10dp"
+            android:layout_toRightOf="@id/register_yanzhen"
+            android:text="获取验证码"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+    <View
+        android:layout_marginTop="2dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:background="@color/font_black_5"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"></View>
+    <RelativeLayout
+        android:layout_marginTop="45dp"
+        android:background="@drawable/shape_redradius"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp">
+
+        <TextView
+            android:elevation="100dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:padding="5dp"
+            android:id="@+id/login_sso"
+            android:layout_centerHorizontal="true"
+            android:text="登录"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="www.diandianxing.com.diandianxing">
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- 访问网络，网络定位需要上网 -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
+    <uses-feature android:name="android.hardware.camera"/>
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".guidance.LancherActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".guidance.GuidePageActivity"></activity>
+        <activity android:name=".Login.LoginActivity"></activity>
+        <activity android:name=".Login.LoginActivitys"></activity>
+        <activity android:name=".Login.RegisterActivity"></activity>
+        <activity android:name=".my.MyActivityActivity"></activity>
+        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".my.PersonActivity"></activity>
+        <activity android:name=".set.SetActivity"></activity>
+        <activity android:name=".my.RenzhenActivity"></activity>
+        <activity android:name=".my.AlternameActivity"></activity>
+        <activity android:name=".my.CredibilityActivity"></activity>
+        <activity android:name=".set.AlterpwdActivity"></activity>
+        <activity android:name=".my.HistorycreditActivity"></activity>
+        <activity android:name=".my.JiedudetailActivity"></activity>
+        <activity android:name=".set.WalletActivity"></activity>
+        <activity android:name=".set.AboutweActivity"></activity>
+        <activity android:name=".my.CashpayActivity"></activity>
+        <activity android:name=".my.ShareActivity"></activity>
+        <activity android:name=".my.MessageActivity"></activity>
+        <activity android:name=".my.MingxiActivity"></activity>
+        <activity android:name=".my.BalanceActivity"></activity>
+        <activity android:name=".set.Feedback"></activity>
+        <activity android:name=".my.ProtocolActivity"></activity>
+        <activity android:name=".Login.ForgetActivity"></activity>
+        <activity android:name=".my.JourActivity"></activity>
+        <!-- 解决7.0照相机崩溃问题 -->
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.xykj.customview.fileproviders"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+    </application>
+
+</manifest>
