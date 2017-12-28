@@ -6,9 +6,10 @@
 <RelativeLayout
 
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="45dp">
 
        <TextView
+
            android:id="@+id/text_kefu"
            android:layout_centerHorizontal="true"
            android:layout_centerVertical="true"

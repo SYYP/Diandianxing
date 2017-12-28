@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginLeft="50dp"
+    android:layout_marginRight="50dp"
+    android:background="@color/white">
+
+
+    <LinearLayout
+
+        android:background="@drawable/shape_inforshang"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/infor_address"
+            android:drawablePadding="10dp"
+            android:textColor="@color/white"
+            android:text="北京市东城区长安街天安门"
+            android:padding="8dp"
+            android:layout_marginLeft="10dp"
+            android:drawableLeft="@drawable/img_baiding"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+
+
+        android:background="@drawable/shape_inforxia"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+       <RelativeLayout
+           android:layout_marginTop="5dp"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+           <TextView
+
+               android:id="@+id/infor_juli"
+               android:layout_marginLeft="10dp"
+               android:padding="8dp"
+               android:text="123米"
+               android:textSize="14sp"
+               android:textColor="@color/text_orage"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content" />
+           <TextView
+
+               android:layout_centerHorizontal="true"
+               android:id="@+id/infor_time"
+               android:layout_marginLeft="10dp"
+               android:padding="8dp"
+               android:text="123分钟"
+               android:textSize="14sp"
+               android:textColor="@color/text_orage"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content" />
+           <TextView
+               android:layout_alignParentRight="true"
+               android:id="@+id/infor_chewei"
+               android:layout_marginRight="10dp"
+               android:padding="8dp"
+               android:text="5辆"
+               android:textSize="14sp"
+               android:textColor="@color/text_orage"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content" />
+       </RelativeLayout>
+        <RelativeLayout
+             android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_marginLeft="10dp"
+               android:padding="1dp"
+                android:text="距离你的位置"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="10dp"
+                android:padding="1dp"
+                android:text="步行时间"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_alignParentRight="true"
+
+                android:layout_marginRight="10dp"
+                android:padding="1dp"
+                android:text="剩余停车位"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        </LinearLayout>
+</LinearLayout>

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:background="@color/back_bei">
 
     <include
@@ -15,14 +16,19 @@
     <RelativeLayout
         android:id="@+id/real"
           android:layout_below="@id/include"
-        android:background="@drawable/img_xinyong"
+         android:background="@drawable/img_ju"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
+<ImageView
+    android:layout_centerHorizontal="true"
+    android:layout_centerVertical="true"
+     android:src="@drawable/img_quan"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
         <TextView
             android:textStyle="bold"
             android:textColor="@color/text_orage"
-            android:textSize="35dp"
+            android:textSize="30dp"
             android:text="80"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,9 +37,10 @@
             android:layout_marginTop="61dp"
             android:id="@+id/xinyong_fen" />
         <TextView
-            android:textStyle="bold"
+            android:id="@+id/xin_time"
+            android:padding="1dp"
             android:textColor="@color/textcolcr"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:text="评估于2017-11-21"
             android:layout_marginTop="12dp"
             android:layout_centerHorizontal="true"
@@ -95,7 +102,7 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:textColor="@color/text_orage"
-                android:textSize="18sp"
+                android:textSize="17sp"
                 android:text="+17"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

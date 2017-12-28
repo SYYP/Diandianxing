@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false">
+
+
+      <LinearLayout
+
+          android:background="@drawable/shape_tishiradioline"
+          android:layout_marginLeft="40dp"
+          android:layout_marginRight="40dp"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical">
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:text="安全小贴士"
+                android:textColor="@color/textcolcr"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:lineSpacingMultiplier="1.2"
+                android:text="又可以开始美妙的骑行之旅了，\n先扫码开锁吧"
+                android:layout_marginLeft="30dp"
+                android:padding="10dp"
+                android:textColor="@color/textcolcr"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+                  <View
+                      android:layout_marginTop="5dp"
+                      android:background="@color/font_xian"
+                      android:layout_width="match_parent"
+                      android:layout_height="0.8dp"></View>
+                  <TextView
+                      android:id="@+id/btn_ok"
+                      android:layout_marginTop="5dp"
+                      android:gravity="center"
+                      android:text="我知道了"
+                      android:textColor="@color/textcolcr"
+                      android:textSize="16sp"
+                      android:padding="10dp"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content" />
+            </LinearLayout>
+      </LinearLayout>
+</LinearLayout>

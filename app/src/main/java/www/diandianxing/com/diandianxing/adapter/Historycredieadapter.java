@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import www.diandianxing.com.diandianxing.R;
+import www.diandianxing.com.diandianxing.bean.Xinyongdetailbean;
 
 /**
  * date : ${Date}
@@ -20,10 +21,11 @@ import www.diandianxing.com.diandianxing.R;
 public class Historycredieadapter extends BaseAdapter {
      private Context context;
     private List<String> list=new ArrayList<>();
-
-    public Historycredieadapter(Context context) {
+    private List<Xinyongdetailbean.DatasBean> datas;
+    public Historycredieadapter(Context context,List<Xinyongdetailbean.DatasBean> datas) {
         this.context = context;
-        data();
+        this.datas=datas;
+       // data();
     }
 
     private void data() {
@@ -35,12 +37,12 @@ public class Historycredieadapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return list.size();
+        return datas!=null?datas.size():0;
     }
 
     @Override
     public Object getItem(int i) {
-        return list.get(i);
+        return datas.get(i);
     }
 
     @Override
@@ -62,7 +64,17 @@ public class Historycredieadapter extends BaseAdapter {
         else {
             myholder= (Myholder) view.getTag();
         }
-         myholder.finish.setText(list.get(i));
+         myholder.finish.setText(datas.get(i).getReason());
+        myholder.text_date.setText("评估时间"+datas.get(i).getAdd_time());
+        String num = datas.get(i).getNum();
+        int i1 = Integer.parseInt(num);
+        if(i1>0){
+            myholder.text_fen.setText("+"+datas.get(i).getNum());
+          }
+        else {
+            myholder.text_fen.setText(datas.get(i).getNum());
+        }
+
         return view;
     }
 

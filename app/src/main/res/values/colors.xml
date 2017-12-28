@@ -20,4 +20,54 @@
     <color name="banance_black">#772e2e2e</color>
     <color name="xu_white">#99fefefe</color>
     <color name="beizhu">#f5f5f5</color>
+    <color name="bg_color">#242424</color>
+    <color name="inforshang">#f25b10</color>
+
+    <color name="xian">#737373</color>
+
+
+    <color name="zc_button">#268AFF</color>
+
+    <color name="czje_button">#D0021B</color>
+    <color name="czje_text_color">#4A4A4A</color>
+    <color name="red">#f55a0b</color>
+
+    <color name="red_xian">#946f5c</color>
+
+    <color name="gr_xian">#9B9B9B</color>
+
+    <color name="gr_text_blue">#27ADFF</color>
+    <color name="rb_blue">#0076FF</color>
+    <color name="inforxia">#4a4945</color>
+
+    <color name="text_hui">#999999</color>
+    <color name="text_red">#ff0000</color>
+    <color name="bg_grzx">#242424</color>
+    <color name="orange">#F5A623</color>
+    <color name="grzx_xian">#F0F0F0</color>
+
+    <color name="height_color">#45AFFF</color>
+    <color name="green">#00BF3B</color>
+    <color name="transparent_background">#50000000</color>
+
+    <color name="red_packge_xian">#979797</color>
+    <color name="xyjf">#44C12F</color>
+    <color name="tv_xyjf">#2AD35E</color>
+
+
+    <color name="zong_rl">#D3E7F4</color>
+
+    <color name="zp_color">#D8D8D8</color>
+    <color name="violet">#9013FE</color>
+    <color name="zhon_hui">#DCDCDC</color>
+
+    <!-- QR_Code -->
+    <color name="viewfinder_mask">#dd434343</color>
+    <color name="result_view">#b0000000</color>
+    <color name="possible_result_points">#c0ffff00</color>
+    <color name="result_image_border">#ffffffff</color>
+    <color name="result_minor_text">#ffc0c0c0</color>
+    <color name="result_points">#c000ff00</color>
+    <color name="system_bar_color">#fed952</color>
+    <color name="navpage">#FFE1E8EB</color>
 </resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:orientation="vertical">
+    <LinearLayout
+        android:background="@color/color_hui"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:padding="10dp"
+            android:gravity="center"
+            android:text="常用地址"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+       <ListView
+         android:background="@color/white"
+           android:scrollbars="none"
+           android:id="@+id/pay_listview"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:divider="@color/font_xian"
+           android:dividerHeight="1dp">
+       </ListView>
+</LinearLayout>

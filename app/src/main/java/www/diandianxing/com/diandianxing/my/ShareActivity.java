@@ -1,5 +1,6 @@
 package www.diandianxing.com.diandianxing.my;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -72,6 +73,8 @@ public class ShareActivity extends BaseActivity implements View.OnClickListener 
             case R.id.share_qq:
                 break;
             case R.id.look_xiangqing:
+                Intent intent=new Intent(this,XiangxiActivity.class);
+                startActivity(intent);
                 break;
         }
     }

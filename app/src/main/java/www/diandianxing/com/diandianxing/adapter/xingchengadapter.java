@@ -1,6 +1,7 @@
 package www.diandianxing.com.diandianxing.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.bean.Jourbean;
+import www.diandianxing.com.diandianxing.my.JourdetailActivity;
 import www.diandianxing.com.diandianxing.utils.DividerItemDecoration;
 
 /**
@@ -52,6 +54,15 @@ public class xingchengadapter extends RecyclerView.Adapter<xingchengadapter.Myvi
         holder.listview.addItemDecoration(new DividerItemDecoration(context,
                 DividerItemDecoration.VERTICAL_LIST));
           holder.listview.setAdapter(xingadapter);
+        xingadapter.setOnItemClickListener(new Xingadapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+                 //跳转到行程详情
+                Intent intent=new Intent(context, JourdetailActivity.class);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

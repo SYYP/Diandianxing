@@ -40,7 +40,7 @@
             android:textColor="@color/black_san"
             android:padding="5dp"
             android:gravity="center"
-            android:text="押金随心退，安全快速到账"
+            android:text="押金随心退，安全速到账"
             android:textSize="16sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

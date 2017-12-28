@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:background="@color/back_bei">
+
+    <include
+        layout="@layout/include_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></include>
+
+ <RelativeLayout
+     android:layout_marginTop="10dp"
+     android:layout_marginLeft="10dp"
+     android:layout_marginRight="10dp"
+     android:background="@drawable/shape_radioline"
+    android:layout_width="match_parent"
+    android:layout_height="200dp">
+     <TextView
+         android:layout_marginTop="10dp"
+         android:padding="10dp"
+         android:layout_centerHorizontal="true"
+         android:text="本次行程消费"
+         android:textColor="@color/black_san"
+         android:textSize="16sp"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content" />
+     <TextView
+         android:layout_marginTop="60dp"
+         android:text="¥ 1.00"
+         android:textColor="@color/red"
+         android:textSize="18sp"
+         android:padding="10dp"
+         android:layout_centerHorizontal="true"
+         android:id="@+id/fei_yuan"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content" />
+     <View
+         android:layout_marginBottom="60dp"
+         android:layout_alignParentBottom="true"
+         android:background="@color/font_black_5"
+         android:layout_width="match_parent"
+         android:layout_height="0.5dp"></View>
+<TextView
+    android:layout_marginBottom="10dp"
+    android:padding="10dp"
+    android:layout_alignParentBottom="true"
+    android:text="总费用：1.00元"
+    android:textColor="@color/black_san"
+    android:textSize="16sp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
+     <TextView
+         android:padding="10dp"
+         android:text="总用时：10分钟"
+         android:textColor="@color/black_san"
+         android:layout_marginBottom="10dp"
+         android:layout_alignParentBottom="true"
+         android:layout_alignParentRight="true"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content" />
+ </RelativeLayout>
+    <RelativeLayout
+        android:layout_marginTop="40dp"
+        android:background="@drawable/shape_redradius"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp">
+
+        <TextView
+            android:elevation="100dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:padding="5dp"
+            android:id="@+id/zhifu_ok"
+            android:layout_centerHorizontal="true"
+            android:text="确认支付"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+</LinearLayout>

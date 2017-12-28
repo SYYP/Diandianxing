@@ -26,15 +26,14 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:layout_marginLeft="5dp"
-                android:textCursorDrawable="@null"
-                android:inputType="textPassword"
-                android:cursorVisible="false"
+                android:textCursorDrawable="@drawable/shap_ed"
                 android:background="@null"
+                android:layout_marginLeft="5dp"
+                android:inputType="textPassword"
                 android:id="@+id/alter_oldpwd"
                 android:layout_centerVertical="true"
                 android:textSize="16sp"
-                android:padding="10dp"
+                android:padding="8dp"
                 android:textColor="@color/black_san"
                 android:hint="请输入旧密码"
                 android:layout_width="match_parent"
@@ -55,15 +54,14 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:layout_marginLeft="5dp"
-                android:textCursorDrawable="@null"
-                android:inputType="textPassword"
-                android:cursorVisible="false"
+                android:textCursorDrawable="@drawable/shap_ed"
                 android:background="@null"
+                android:layout_marginLeft="5dp"
+                android:inputType="textPassword"
                 android:id="@+id/alter_pwd"
                 android:layout_centerVertical="true"
                 android:textSize="16sp"
-                android:padding="10dp"
+                android:padding="8dp"
                 android:textColor="@color/black_san"
                 android:hint="请输入新密码"
                 android:layout_width="match_parent"
@@ -84,15 +82,15 @@
             android:layout_height="wrap_content">
 
             <EditText
+                android:textCursorDrawable="@drawable/shap_ed"
                 android:layout_marginLeft="5dp"
-                android:textCursorDrawable="@null"
+
                 android:inputType="textPassword"
-                android:cursorVisible="false"
                 android:background="@null"
                 android:id="@+id/alter_okpwd"
                 android:layout_centerVertical="true"
                 android:textSize="16sp"
-                android:padding="10dp"
+                android:padding="8dp"
                 android:textColor="@color/black_san"
                 android:hint="请输入确认密码"
                 android:layout_width="match_parent"
@@ -117,12 +115,12 @@
              android:layout_centerVertical="true"
              android:layout_marginLeft="20dp"
              android:gravity="center"
-             android:textSize="18sp"
+             android:textSize="17sp"
              android:text="取消"
              android:textColor="@color/white"
              android:background="@drawable/shape_huiradioline"
              android:layout_width="140dp"
-             android:layout_height="55dp" />
+             android:layout_height="45dp" />
          <TextView
              android:id="@+id/alter_ok"
              android:layout_centerVertical="true"
@@ -130,11 +128,11 @@
              android:layout_alignParentRight="true"
              android:layout_marginLeft="30dp"
              android:gravity="center"
-             android:textSize="18sp"
+             android:textSize="17sp"
              android:text="修改"
              android:textColor="@color/white"
              android:background="@drawable/shape_orageradioline"
              android:layout_width="140dp"
-             android:layout_height="55dp" />
+             android:layout_height="45dp" />
      </RelativeLayout>
 </LinearLayout>

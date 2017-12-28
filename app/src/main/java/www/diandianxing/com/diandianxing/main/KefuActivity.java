@@ -8,12 +8,15 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -23,14 +26,27 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.socks.library.KLog;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
+import www.diandianxing.com.diandianxing.bean.Gubackbean;
 import www.diandianxing.com.diandianxing.utils.BaseDialog;
+import www.diandianxing.com.diandianxing.utils.EventMessage;
 import www.diandianxing.com.diandianxing.utils.MyContants;
 import www.diandianxing.com.diandianxing.utils.PhotoUtils;
+import www.diandianxing.com.diandianxing.utils.SpUtils;
 import www.diandianxing.com.diandianxing.utils.ToastUtils;
+import www.diandianxing.com.diandianxing.utils.UploadUtil;
 
 /**
  * date : ${Date}
@@ -57,12 +73,16 @@ public class KefuActivity extends BaseActivity implements View.OnClickListener {
     private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
     private Uri cropImageUri;
     private File fileUri = new File(Environment.getExternalStorageDirectory().getPath() + "/photo.jpg");
+    private TextView zishu;
+    private TextView tv_bianhao;
+    private Handler handler=new Handler();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         MyContants.windows(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kefu);
+        EventBus.getDefault().register(this);
         initView();
     }
 
@@ -76,11 +96,32 @@ public class KefuActivity extends BaseActivity implements View.OnClickListener {
         fu_edtext = (EditText) findViewById(R.id.fu_edtext);
         liner1 = (LinearLayout) findViewById(R.id.liner1);
         fu_tijiao = (TextView) findViewById(R.id.fu_tijiao);
+        zishu = (TextView) findViewById(R.id.zishu);
+        tv_bianhao = (TextView) findViewById(R.id.tv_bianhao);
         zhong.setText("客户服务");
         img_sao.setOnClickListener(this);
         img_increate.setOnClickListener(this);
         iv_callback.setOnClickListener(this);
         fu_tijiao.setOnClickListener(this);
+        fu_edtext.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String trim = editable.toString().trim();
+                int length = trim.length();
+                int i = 140 - length;
+                zishu.setText(i+"/140");
+            }
+        });
     }
 
     private void submit() {
@@ -108,12 +149,68 @@ public class KefuActivity extends BaseActivity implements View.OnClickListener {
                 break;
             //扫一扫
             case R.id.img_sao:
+                /*
+                  跳扫码
+                 */
+                Intent intent=new Intent(this,ZiXingActivity.class);
+                startActivity(intent);
+
+
+
                 break;
             //提交
             case R.id.fu_tijiao:
+                network();
+                finish();
                 break;
         }
     }
+
+    private void network() {
+
+
+            final Thread thred = new Thread(new Runnable() {
+                private Gubackbean gubackbean;
+                private String s1;
+
+                @Override
+                public void run() {
+                    Map<String,String> map=new HashMap<>();
+                    map.put("uid", SpUtils.getString(KefuActivity.this,"userid",null));
+                    map.put("token",SpUtils.getString(KefuActivity.this,"token",null));
+                    map.put("identnum",tv_bianhao.getText().toString());
+                    Map<String,File> maps=new HashMap<>();
+                    if(fileCropUri!=null) {
+                        maps.put("file", fileCropUri);
+                    }
+                    s1 = UploadUtil.uploadFile(map, maps, MyContants.BASEURL + "s=Bike/feedback");
+                    Gson gson=new Gson();
+                    gubackbean = gson.fromJson(s1, Gubackbean.class);
+
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            KLog.a("Tag", s1);
+                            if(gubackbean.getCode()==200){
+                                ToastUtils.show(KefuActivity.this,"提交成功",1);
+                                finish();
+
+                            }
+                            // ToastUtils.showShort(PersoninforActivity.this, s);
+                            //Glide.with(PersonActivity.this).load(MyContants.FILENAME+datas.getHeadImageUrl()).into(per_pho);
+                        }
+                    });
+
+                }
+            });
+            thred.start();
+        }
+
+
+
+
+
     public static boolean hasSdcard() {
         String state = Environment.getExternalStorageState();
         return state.equals(Environment.MEDIA_MOUNTED);
@@ -242,6 +339,9 @@ public class KefuActivity extends BaseActivity implements View.OnClickListener {
         View view = dialog.getView(R.id.tv_local);
       TextView tv_loal=  view.findViewById(R.id.tv_local);
         tv_loal.setVisibility(View.GONE);
+        View view1=dialog.getView(R.id.pho_view);
+        View vi = view1.findViewById(R.id.pho_view);
+        vi.setVisibility(View.GONE);
         //取消
         dialog.getView(R.id.tv_pause).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -250,5 +350,19 @@ public class KefuActivity extends BaseActivity implements View.OnClickListener {
             }
         });
         dialog.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventMessage eventMessage) {
+        //扫码成功后刷新主页面
+        if (eventMessage.getMsg().equals("zxing")) {
+            String bikenum = SpUtils.getString(this, "bikenum", null);
+            tv_bianhao.setText(bikenum);
+        }
     }
 }

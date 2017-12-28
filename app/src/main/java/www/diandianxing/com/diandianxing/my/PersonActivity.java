@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -20,14 +21,24 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.socks.library.KLog;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
+import www.diandianxing.com.diandianxing.base.Myapplication;
+import www.diandianxing.com.diandianxing.bean.Photobean;
 import www.diandianxing.com.diandianxing.utils.BaseDialog;
 import www.diandianxing.com.diandianxing.utils.CircleImageView;
 import www.diandianxing.com.diandianxing.utils.EventMessage;
@@ -35,6 +46,7 @@ import www.diandianxing.com.diandianxing.utils.MyContants;
 import www.diandianxing.com.diandianxing.utils.PhotoUtils;
 import www.diandianxing.com.diandianxing.utils.SpUtils;
 import www.diandianxing.com.diandianxing.utils.ToastUtils;
+import www.diandianxing.com.diandianxing.utils.UploadUtil;
 
 /**
  * date : ${Date}
@@ -42,7 +54,8 @@ import www.diandianxing.com.diandianxing.utils.ToastUtils;
  */
 
 public class PersonActivity extends BaseActivity implements View.OnClickListener {
-    private Uri imageUri;
+    private Photobean.DatasBean datas;
+     List<String> list=new ArrayList<>();
     private ImageView iv_callback;
     private TextView zhong;
     private TextView you;
@@ -54,16 +67,20 @@ public class PersonActivity extends BaseActivity implements View.OnClickListener
     private RelativeLayout real_name;
     private TextView set_renzheng;
     private ImageView back2;
+    private RelativeLayout real_renzheng;
+    private CircleImageView per_pho;
+    private TextView alter_name;
+    private Uri imageUri;
     private static final int CODE_RESULT_REQUEST = 0xa2;
     private static final int CODE_CAMERA_REQUEST = 0xa1;
     private static final int CODE_GALLERY_REQUEST = 0xa0;
-    private RelativeLayout real_renzheng;
     private File fileCropUri = new File(Environment.getExternalStorageDirectory().getPath() + "/crop_photo.jpg");
     private static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x03;
     private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
     private Uri cropImageUri;
     private File fileUri = new File(Environment.getExternalStorageDirectory().getPath() + "/photo.jpg");
-    private CircleImageView per_pho;
+    private Handler handler=new Handler();
+    private String s;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,11 +100,10 @@ public class PersonActivity extends BaseActivity implements View.OnClickListener
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventMessage eventMessage) {
         if (eventMessage.getMsg().equals("myname")) {
-            String name = SpUtils.getString(this, "name", null);
-            set_name.setText(name);
+            String name = SpUtils.getString(this, "nickname", null);
+            alter_name.setText(name);
         }
     }
-
     private void initView() {
         iv_callback = (ImageView) findViewById(R.id.iv_callback);
         zhong = (TextView) findViewById(R.id.zhong);
@@ -100,6 +116,7 @@ public class PersonActivity extends BaseActivity implements View.OnClickListener
         real_name = (RelativeLayout) findViewById(R.id.real_name);
         set_renzheng = (TextView) findViewById(R.id.set_renzheng);
         back2 = (ImageView) findViewById(R.id.back2);
+        alter_name = (TextView) findViewById(R.id.alter_name);
         per_pho = (CircleImageView) findViewById(R.id.person_pho);
         real_renzheng = (RelativeLayout) findViewById(R.id.real_renzheng);
         iv_callback.setOnClickListener(this);
@@ -107,12 +124,24 @@ public class PersonActivity extends BaseActivity implements View.OnClickListener
         zhong.setText("个人信息");
         real_name.setOnClickListener(this);
         real_renzheng.setOnClickListener(this);
+        String paizhao = SpUtils.getString(this, "paiphoto", null);
+        Glide.with(this).load(paizhao).into(per_pho);
+        String nickname = SpUtils.getString(this, "nickname", null);
+        alter_name.setText(nickname);
+
+
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.iv_callback:
+                //sp存头像
+                if(list!=null&&list.size()>0) {
+                    SpUtils.putString(PersonActivity.this, "paiphoto", list.get(0) + "");
+                }
+                EventMessage eventMessage = new EventMessage("personphoto");
+                EventBus.getDefault().postSticky(eventMessage);
                 finish();
                 break;
             //修改头像
@@ -271,14 +300,11 @@ public class PersonActivity extends BaseActivity implements View.OnClickListener
                     break;
                 case CODE_RESULT_REQUEST:
                     Bitmap bitmap = PhotoUtils.getBitmapFromUri(cropImageUri, this);
-                    String s = cropImageUri.toString();
-                    //sp存头像
-//                    SpUtils.putString(PersoninforActivity.this,"photos",s);
-//                    EventMessage eventMessage = new EventMessage("ppp");
-//                    EventBus.getDefault().postSticky(eventMessage);
+                    s = cropImageUri.toString();
+
 //                    KLog.a(cropImageUri);
 //                    //将URl上传到服务器
-//                    photowork();
+                    photowork();
                     //     ToastUtils.showShort(PersoninforActivity.this,cropImageUri.toString());
                     if (bitmap != null) {
 
@@ -288,10 +314,64 @@ public class PersonActivity extends BaseActivity implements View.OnClickListener
             }
         }
     }
+
+    private void photowork() {
+
+        final Thread thred = new Thread(new Runnable() {
+
+
+
+            private String s;
+
+            @Override
+            public void run() {
+                Map<String,File > files = new HashMap<>();
+                files.put("file", fileCropUri);
+                Map<String,String> map=new HashMap<>();
+                map.put("uid",SpUtils.getString(Myapplication.getApplication(),"userid",null));
+                map.put("token",SpUtils.getString(PersonActivity.this,"token",null));
+                /*
+                  图片上传
+                 */
+                s = UploadUtil.uploadFile(map,files, MyContants.BASEURL + "s=User/updateHeadImg");
+                Gson gson = new Gson();
+
+                Photobean photobean = gson.fromJson(s, Photobean.class);
+                datas = photobean.getDatas();
+                list.clear();
+                list.add(MyContants.PHOTO+datas.getHeadImageUrl());
+                //保存上传头像
+
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        KLog.a("Tag", s);
+                        // ToastUtils.showShort(PersoninforActivity.this, s);
+                       //Glide.with(PersonActivity.this).load(MyContants.FILENAME+datas.getHeadImageUrl()).into(per_pho);
+                    }
+                });
+
+            }
+        });
+        thred.start();
+    }
+
     private void showImages(Bitmap bitmap) {
         //设置图片到页面
         per_pho.setImageBitmap(bitmap);
         //  String s = bitmaptoString(bitmap);
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //sp存头像
+        if(list!=null&&list.size()>0) {
+            SpUtils.putString(PersonActivity.this, "paiphoto", list.get(0) + "");
+        }
+        EventMessage eventMessage = new EventMessage("personphoto");
+        EventBus.getDefault().postSticky(eventMessage);
     }
 }

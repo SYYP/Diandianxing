@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:background="@color/back_bei">
+<include
+    layout="@layout/include_count"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+    <com.liaoinstan.springview.widget.SpringView
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:id="@+id/ming_springview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <ListView
+        android:dividerHeight="1dp"
+        android:divider="@drawable/dividerlin"
+        android:background="@drawable/shape_radioline"
+        android:scrollbars="none"
+        android:id="@+id/list_mingxi"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></ListView>
+    </com.liaoinstan.springview.widget.SpringView>
 </LinearLayout>

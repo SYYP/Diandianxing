@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:background="@drawable/login_back">
 
     <include
@@ -47,10 +48,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <EditText
+            android:textCursorDrawable="@drawable/shap_ed"
             android:layout_toRightOf="@id/set_lpwd"
-            android:cursorVisible="false"
             android:padding="10dp"
-            android:textCursorDrawable="@null"
             android:inputType="number"
             android:background="@null"
             android:layout_centerVertical="true"
@@ -86,11 +86,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <EditText
+            android:textCursorDrawable="@drawable/shap_ed"
             android:layout_toRightOf="@id/register_l"
-            android:cursorVisible="false"
             android:padding="10dp"
-            android:textCursorDrawable="@null"
-            android:inputType="number"
+            android:inputType="textPassword"
             android:background="@null"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
@@ -113,7 +112,7 @@
         android:layout_height="1dp"></View>
     <RelativeLayout
         android:layout_marginTop="5dp"
-        android:layout_marginLeft="35dp"
+        android:layout_marginLeft="33dp"
         android:layout_marginRight="35dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -125,10 +124,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <EditText
+            android:textCursorDrawable="@drawable/shap_ed"
             android:layout_toRightOf="@id/login_lpwd"
-            android:cursorVisible="false"
             android:padding="10dp"
-            android:textCursorDrawable="@null"
             android:inputType="number"
             android:background="@null"
             android:layout_centerVertical="true"
@@ -142,8 +140,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
+            android:textColor="@color/text_orage"
             android:id="@+id/huoqu"
-            android:gravity="right"
+            android:gravity="center"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:textSize="16sp"
@@ -177,9 +176,9 @@
             android:textColor="@color/white"
             android:textSize="18sp"
             android:padding="5dp"
-            android:id="@+id/login_sso"
+            android:id="@+id/register_sso"
             android:layout_centerHorizontal="true"
-            android:text="登录"
+            android:text="注册"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </RelativeLayout>
@@ -197,6 +196,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
+        android:id="@+id/text_diandian"
         android:textColor="@color/text_orage"
         android:layout_toRightOf="@id/zhu"
         android:text="《点点行用户协议》"

@@ -9,9 +9,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
+import www.diandianxing.com.diandianxing.bean.Alternamebean;
+import www.diandianxing.com.diandianxing.network.BaseObserver1;
+import www.diandianxing.com.diandianxing.network.RetrofitManager;
 import www.diandianxing.com.diandianxing.utils.MyContants;
+import www.diandianxing.com.diandianxing.utils.SpUtils;
+import www.diandianxing.com.diandianxing.utils.ToastUtils;
 
 /**
  * date : ${Date}
@@ -34,6 +42,29 @@ public class AlterpwdActivity extends BaseActivity implements View.OnClickListen
         MyContants.windows(this);
         setContentView(R.layout.activity_uppwd);
         initView();
+
+    }
+
+    private void network() {
+        Map<String,String> map=new HashMap<>();
+          map.put("uid", SpUtils.getString(this,"userid",null));
+          map.put("token",SpUtils.getString(this,"token",null));
+          map.put("old_password",alter_oldpwd.getText().toString().trim());
+          map.put("password",alter_pwd.getText().toString().trim());
+        RetrofitManager.post(MyContants.BASEURL + "s=User/updatePwd", map, new BaseObserver1<Alternamebean>("") {
+            @Override
+            public void onSuccess(Alternamebean result, String tag) {
+                if(result.getCode()==200){
+                    ToastUtils.showShort(AlterpwdActivity.this,"修改成功");
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailed(int code) {
+
+            }
+        });
     }
 
     private void initView() {
@@ -70,9 +101,13 @@ public class AlterpwdActivity extends BaseActivity implements View.OnClickListen
             Toast.makeText(this, "请输入确认密码", Toast.LENGTH_SHORT).show();
             return;
         }
+        if(!(okpwd.equals(pwd))){
+            ToastUtils.showShort(this,"两次密码不一致");
+            return;
+        }
 
         // TODO validate success, do something
-
+        network();//加载网络请求
 
     }
 
@@ -84,9 +119,12 @@ public class AlterpwdActivity extends BaseActivity implements View.OnClickListen
                 break;
             //取消
             case R.id.alter_pause:
+                finish();
                 break;
             //确认
             case R.id.alter_ok:
+                submit();
+
                 break;
         }
     }

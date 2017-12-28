@@ -3,11 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/back_bei">
 <include
     layout="@layout/include_count"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"></include>
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -15,7 +23,6 @@
             android:textColor="@color/textcolcr"
             android:textSize="16sp"
             android:text="客户服务"
-            android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:padding="8dp"
             android:layout_width="wrap_content"
@@ -32,15 +39,105 @@
             android:textColor="@color/black_san"
             android:textSize="16sp"
             android:text="发现车辆故障"
-            android:layout_marginTop="10dp"
             android:layout_marginLeft="15dp"
             android:padding="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <android.support.v7.widget.RecyclerView
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
+            android:id="@+id/recycler_guzhang"
+            android:layout_marginLeft="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+        <RelativeLayout
+            android:background="@drawable/shape_radioline"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/liner"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:scaleType="fitXY"
+                    android:layout_gravity="bottom"
+                    android:id="@+id/img_increate"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:src="@drawable/img_paizhao"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp" />
+                <TextView
+                    android:layout_gravity="center"
+                    android:textColor="@color/textcolcr"
+                    android:lineSpacingMultiplier="1.2"
+                    android:layout_marginLeft="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/img_increate"
+                    android:text="请上传故障车辆\n照片含周围环境"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/liner1"
+                android:orientation="vertical"
+                android:background="@drawable/shape_bei"
+                android:layout_below="@id/liner"
+                android:layout_marginTop="18dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="100dp">
+                <EditText
+                    android:textCursorDrawable="@drawable/shap_ed"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="top"
+                    android:padding="10dp"
+                    android:hint="备注"
+                    android:textSize="14sp"
+                    android:background="@null"
+                    android:id="@+id/fu_edtext"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/zishu"
+                android:layout_marginRight="20dp"
+                android:layout_below="@id/liner1"
+                android:layout_alignParentRight="true"
+                android:padding="10dp"
+                android:textSize="16sp"
+                android:text="140/140"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
     </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/real_ok"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/shape_redradius"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp">
+
+        <TextView
+            android:elevation="100dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:padding="5dp"
+            android:id="@+id/fu_tijiao"
+            android:layout_centerHorizontal="true"
+            android:text="提交"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+</LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

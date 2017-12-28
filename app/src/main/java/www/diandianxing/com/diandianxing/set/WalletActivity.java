@@ -17,6 +17,7 @@ import www.diandianxing.com.diandianxing.my.CashpayActivity;
 import www.diandianxing.com.diandianxing.my.MingxiActivity;
 import www.diandianxing.com.diandianxing.utils.BaseDialog;
 import www.diandianxing.com.diandianxing.utils.MyContants;
+import www.diandianxing.com.diandianxing.utils.SpUtils;
 
 /**
  * date : ${Date}
@@ -61,6 +62,10 @@ public class WalletActivity extends BaseActivity implements View.OnClickListener
         wallet_ok.setOnClickListener(this);
         real_yue.setOnClickListener(this);
         zhong.setText("我的钱包");
+        String yajin = SpUtils.getString(this, "yajin", null);
+        wallet_yanjin.setText(yajin+"元");
+        String yue = SpUtils.getString(this, "yue", null);
+        wallet_yue.setText(yue+"元");
     }
 
     @Override
@@ -84,7 +89,7 @@ public class WalletActivity extends BaseActivity implements View.OnClickListener
                 Intent intent=new Intent(this, BalanceActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.look_mingxi:
+            case R.id.look_mingxi://查看明细
                 Intent intent2=new Intent(this, MingxiActivity.class);
                 startActivity(intent2);
                 break;

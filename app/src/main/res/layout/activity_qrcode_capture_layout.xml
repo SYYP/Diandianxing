@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <RelativeLayout
+        android:id="@+id/rl_smq"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+         >
+
+        <SurfaceView
+            android:id="@+id/preview_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center" />
+
+        <www.diandianxing.com.diandianxing.bjxf.ms.qr.ViewfinderView
+            android:id="@+id/viewfinder_view"
+            android:layout_width="fill_parent"
+            
+            android:layout_height="fill_parent" />
+
+        
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:id="@+id/ll_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <!-- <View  
+        android:id="@+id/sweep_code_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/> -->
+        
+            <RelativeLayout 
+                
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:background="#434343"
+               	>
+                
+                <ImageView 
+                    android:id="@+id/sm_fanhui"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/bs_fanhui"
+                    android:layout_centerVertical="true"
+                    />
+                
+                <TextView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="扫码开锁"
+                    android:textSize="18sp"
+					android:layout_centerInParent="true"
+                    android:textColor="#ffffff"/>
+                
+                <TextView
+                    android:id="@+id/user_zhinan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="用户指南"
+                    android:textSize="16sp"
+					android:layout_alignParentRight="true"
+					android:layout_centerVertical="true"
+                    android:textColor="#ffffff"/>
+                
+            </RelativeLayout>
+            
+        </LinearLayout>
+        
+        
+        
+
+        <include
+            android:id="@+id/item_footer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            layout="@layout/item_qrcode_footer" />
+        
+        <include
+            android:layout_below="@id/ll_title"
+            android:id="@+id/item_head"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/item_qrcode_head" />
+        
+    </RelativeLayout>
+    
+    
+    <LinearLayout
+        android:id="@+id/ll_pro"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_grzx"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/jindutiao_2x"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:orientation="horizontal">
+
+            <ProgressBar
+                android:id="@+id/pb_jd"
+		    android:layout_width="0dp"
+		    android:layout_weight="1"
+		    android:layout_height="wrap_content"
+		    style="@style/StyleProgressBarMini"
+		    android:max="100"
+		    />
+
+            <TextView
+                android:id="@+id/tv_jd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0%"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/white"
+                android:textSize="15sp"/>
+
+        </LinearLayout>
+
+		<TextView
+                android:id="@+id/tv_kaisuo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginTop="10dp"
+            	android:layout_marginLeft="30dp"
+            	android:layout_marginRight="30dp"
+                android:textColor="@color/white"
+                android:textSize="15sp"/>
+
+
+    </LinearLayout>
+    
+
+</FrameLayout>

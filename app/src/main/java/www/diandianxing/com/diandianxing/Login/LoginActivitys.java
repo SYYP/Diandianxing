@@ -3,6 +3,7 @@ package www.diandianxing.com.diandianxing.Login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -13,10 +14,17 @@ import android.widget.Toast;
 
 import org.zackratos.ultimatebar.UltimateBar;
 
+import java.util.Map;
+
 import www.diandianxing.com.diandianxing.MainActivity;
 import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
+import www.diandianxing.com.diandianxing.bean.Loginbean;
+import www.diandianxing.com.diandianxing.network.BaseObserver1;
+import www.diandianxing.com.diandianxing.network.RetrofitManager;
 import www.diandianxing.com.diandianxing.utils.MyContants;
+import www.diandianxing.com.diandianxing.utils.MyUtils;
+import www.diandianxing.com.diandianxing.utils.SpUtils;
 
 /**
  * date : ${Date}
@@ -41,18 +49,15 @@ public class LoginActivitys extends BaseActivity implements View.OnClickListener
     private TextView iv_weibo;
     private ImageView ivcallback;
     private TextView forgetpwd;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         UltimateBar ultimateBar = new UltimateBar(this);
         ultimateBar.setImmersionBar();
         MyContants.windows(this);
         setContentView(R.layout.activity_startlogin);
         initView();
     }
-
     private void initView() {
         iv_callback = (ImageView) findViewById(R.id.iv_callback);
         zhong = (TextView) findViewById(R.id.zhong);
@@ -73,24 +78,50 @@ public class LoginActivitys extends BaseActivity implements View.OnClickListener
         login_sso.setOnClickListener(this);
         forgetpwd.setOnClickListener(this);
     }
-
     private void submit() {
-        // validate
-        String phone = login_phone.getText().toString().trim();
-        if (TextUtils.isEmpty(phone)) {
-            Toast.makeText(this, "请输入手机号码", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(login_phone.getText().toString())) {
+            Toast.makeText(this, "手机号码不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        String pwd = login_pwd.getText().toString().trim();
-        if (TextUtils.isEmpty(pwd)) {
-            Toast.makeText(this, "请输入手机号码", Toast.LENGTH_SHORT).show();
+        if (!MyUtils.isMobileNO(login_phone.getText().toString())) {
+            Toast.makeText(this, "手机号格式不正确", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (TextUtils.isEmpty(login_pwd.getText().toString())) {
+            Toast.makeText(this, "密码不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (login_pwd.getText().toString().length() < 5||login_pwd.getText().toString().length() > 20) {
+            Toast.makeText(this, "请输入6-20位密码", Toast.LENGTH_SHORT).show();
+            return;
+        }
+            /*
+               登录
+             */
+             Map<String,String> map=new ArrayMap<>();
+             map.put("mobile",login_phone.getText().toString().trim());
+             map.put("password",login_pwd.getText().toString().trim());
+        RetrofitManager.post(MyContants.BASEURL + "s=Login/login", map, new BaseObserver1<Loginbean>("") {
+            @Override
+            public void onSuccess(Loginbean result, String tag) {
+                if(result.getCode()==200){
+                    Loginbean.DatasBean datas = result.getDatas();
+                    String token= datas.getToken();
+                    String id = datas.getId();
+                    //将 token与userid保存
+                    SpUtils.putString(LoginActivitys.this,"token",token);
+                    SpUtils.putString(LoginActivitys.this,"userid",id);
+                    Intent intent=new Intent(LoginActivitys.this, MainActivity.class);
+                    startActivity(intent);
 
+                }
+            }
+            @Override
+            public void onFailed(int code) {
 
+            }
+        });
     }
-
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -98,12 +129,20 @@ public class LoginActivitys extends BaseActivity implements View.OnClickListener
                 finish();
                 break;
             case R.id.login_sso:
-                Intent intent=new Intent(this, MainActivity.class);
-                startActivity(intent);
+
+                  submit();
+
                 break;
             case R.id.forgetpwd:
+                Intent intent1=new Intent(this,ForgetActivity.class);
+                   startActivity(intent1);
                 break;
-
+            case R.id.iv_qq:
+                break;
+            case R.id.iv_weixin:
+                break;
+            case R.id.iv_weibo:
+                break;
         }
     }
 }

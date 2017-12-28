@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+<include
+    android:id="@+id/inlcue"
+    layout="@layout/include_count"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+</include>
+    <com.amap.api.maps.MapView
+        android:id="@+id/map"
+        android:layout_below="@id/inlcue"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </com.amap.api.maps.MapView>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:background="@color/white"
+    android:layout_alignParentBottom="true"
+    android:layout_width="match_parent"
+    android:layout_height="320dp">
+
+    <LinearLayout
+        android:weightSum="2"
+        android:layout_marginBottom="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+        <TextView
+            android:textColor="@color/textcolcr"
+            android:textSize="16sp"
+            android:text="骑行时间(min)"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textColor="@color/textcolcr"
+                android:textSize="16sp"
+                android:text="骑行距离(m)"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/liner_qi"
+        android:weightSum="2"
+        android:layout_marginBottom="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:textColor="@color/textcolcr"
+                android:textSize="17sp"
+                android:text="3"
+                android:drawableLeft="@drawable/img_qixingtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:textColor="@color/textcolcr"
+                android:textSize="17sp"
+                android:text="64"
+                android:drawableLeft="@drawable/img_qixingjuli"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="125dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/font_xian"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/view"></View>
+    <LinearLayout
+
+
+        android:layout_marginBottom="110dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/shape_backhuidaradioline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout4">
+    <TextView
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:padding="10dp"
+        android:text="自行车编号：123456785246655"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2" />
+    </LinearLayout>
+
+    <ImageView
+        android:src="@drawable/img_zu"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:id="@+id/imageView3"
+        android:layout_marginBottom="21dp"
+        android:layout_above="@+id/linearLayout4"
+        android:layout_centerHorizontal="true" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginBottom="41dp"
+        android:layout_above="@+id/linearLayout4"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:textSize="25sp"
+            android:textColor="@color/text_orage"
+            android:text="64"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:gravity="center"
+           android:padding="10dp"
+            android:textSize="14sp"
+            android:textColor="@color/textcolcr"
+            android:text="骑行距离(m)"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="250dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
+    <www.diandianxing.com.diandianxing.utils.CircleImageView
+        android:src="@drawable/aaa"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/circleImageView"
+        ></www.diandianxing.com.diandianxing.utils.CircleImageView>
+    </RelativeLayout>
+
+    <ImageView
+        android:src="@drawable/diandianxing_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="42dp"
+        android:id="@+id/imageView5"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+</RelativeLayout>
+</RelativeLayout>

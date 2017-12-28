@@ -18,20 +18,23 @@
         android:layout_width="match_parent"
         android:layout_height="200dp">
         <EditText
+            android:gravity="top"
+            android:layout_gravity="top"
+            android:textSize="14sp"
             android:id="@+id/feel_edtext"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp"
             android:padding="10dp"
             android:hint="请输入反馈消息"
-            android:cursorVisible="false"
             android:background="@null"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
     </LinearLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
+            android:id="@+id/tv_shengyu"
             android:textSize="16sp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
@@ -55,7 +58,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:padding="5dp"
             android:id="@+id/login_sso"
             android:layout_centerHorizontal="true"

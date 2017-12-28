@@ -20,6 +20,7 @@ import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.adapter.xingchengadapter;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
 import www.diandianxing.com.diandianxing.bean.Jourbean;
+import www.diandianxing.com.diandianxing.utils.MyContants;
 
 /**
  * date : ${Date}
@@ -39,6 +40,7 @@ public class JourActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MyContants.windows(this);
         setContentView(R.layout.activity_journey);
         initView();
         data();

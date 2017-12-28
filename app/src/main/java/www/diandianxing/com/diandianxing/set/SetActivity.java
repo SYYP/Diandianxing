@@ -136,9 +136,7 @@ public class SetActivity extends BaseActivity implements View.OnClickListener {
                 break;
             //退出登录
             case R.id.exit:
-                finish();
-                Intent intent3=new Intent(this,LoginActivity.class);
-                startActivity(intent3);
+                tuichuDialog(Gravity.CENTER,R.style.Alpah_aniamtion);
                 break;
         }
     }
@@ -156,14 +154,54 @@ public class SetActivity extends BaseActivity implements View.OnClickListener {
                             .isForce(false) //是否强制更新，默认false 强制更新情况下用户不同意更新则不能使用app
                             .update();
                 }
-
+    //退出登录
+    private void tuichuDialog(int grary, int animationStyle) {
+        BaseDialog.Builder builder = new BaseDialog.Builder(this);
+        final BaseDialog dialog = builder.setViewId(R.layout.dialog_phone)
+                //设置dialogpadding
+                .setPaddingdp(0, 0, 0, 0)
+                //设置显示位置
+                .setGravity(grary)
+                //设置动画
+                .setAnimation(animationStyle)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        dialog.show();
+       TextView tv_clean= dialog.getView(R.id.tv_clean);
+        tv_clean.setVisibility(View.GONE);
+        TextView tv_content = dialog.getView(R.id.tv_content);
+        tv_content.setText("            是否退出登录             ");
+        TextView tv_canel = dialog.getView(R.id.tv_canel);
+        tv_canel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //关闭dialog
+                dialog.close();
+            }
+        });
+        TextView tv_yes = dialog.getView(R.id.tv_yes);
+        tv_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //更新页面
+                Intent intent3=new Intent(SetActivity.this,LoginActivity.class);
+                startActivity(intent3);
+                finish();
+                dialog.dismiss();
+            }
+        });
+    }
 
 //清除缓存
     private void cleanDialog(int grary, int animationStyle) {
         BaseDialog.Builder builder = new BaseDialog.Builder(this);
         final BaseDialog dialog = builder.setViewId(R.layout.dialog_phone)
                 //设置dialogpadding
-                .setPaddingdp(10, 0, 10, 0)
+                .setPaddingdp(0, 0, 0, 0)
                 //设置显示位置
                 .setGravity(grary)
                 //设置动画
@@ -176,9 +214,7 @@ public class SetActivity extends BaseActivity implements View.OnClickListener {
                 .builder();
         dialog.show();
         TextView tv_content = dialog.getView(R.id.tv_content);
-        tv_content.setText("     是否清除缓存？   ");
         TextView tv_canel = dialog.getView(R.id.tv_canel);
-        tv_canel.setText("否");
         tv_canel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,7 +223,6 @@ public class SetActivity extends BaseActivity implements View.OnClickListener {
             }
         });
         TextView tv_yes = dialog.getView(R.id.tv_yes);
-        tv_yes.setText("是");
         tv_yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

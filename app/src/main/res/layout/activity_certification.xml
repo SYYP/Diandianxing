@@ -22,6 +22,7 @@
         android:layout_height="wrap_content">
 
         <RelativeLayout
+            android:id="@+id/ren_real"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:background="@color/back_bei"
@@ -29,17 +30,23 @@
             android:layout_marginRight="10dp"
             android:layout_width="match_parent"
             android:layout_height="175dp">
-
+           <ImageView
+               android:visibility="gone"
+               android:scaleType="fitXY"
+               android:id="@+id/pho_idcard"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent" />
             <ImageView
                 android:id="@+id/paizhao"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="35dp"
-                android:src="@drawable/img_paizhao"
+                android:src="@drawable/img_paizhaos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
+                android:id="@+id/text_miaoshu"
                 android:textColor="@color/textcolcr"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="添加身份证正面照片"
                 android:layout_marginTop="15dp"
                 android:layout_centerHorizontal="true"
@@ -59,23 +66,20 @@
                 android:id="@+id/set_lpwd"
                 android:padding="10dp"
                 android:text="姓       名："
-                android:textSize="18sp"
+                android:textSize="17sp"
                 android:layout_centerVertical="true"
                 android:src="@drawable/login_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <EditText
                 android:layout_toRightOf="@id/set_lpwd"
-                android:cursorVisible="false"
                 android:padding="15dp"
-                android:textCursorDrawable="@null"
-                android:inputType="number"
                 android:background="@null"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:gravity="left|center_vertical"
                 android:textColor="@color/textcolcr"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:id="@+id/yanzhneg_name"
                 android:layout_centerHorizontal="true"
                 android:hint="请输入名字"
@@ -101,23 +105,20 @@
                 android:id="@+id/set_lpwds"
                 android:padding="10dp"
                 android:text="身份证号："
-                android:textSize="18sp"
+                android:textSize="17sp"
                 android:layout_centerVertical="true"
                 android:src="@drawable/login_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <EditText
                 android:layout_toRightOf="@id/set_lpwds"
-                android:cursorVisible="false"
                 android:padding="15dp"
-                android:textCursorDrawable="@null"
-                android:inputType="number"
                 android:background="@null"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:gravity="left|center_vertical"
                 android:textColor="@color/textcolcr"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:id="@+id/yanzhneg_hao"
                 android:layout_centerHorizontal="true"
                 android:hint="请输入身份证号"

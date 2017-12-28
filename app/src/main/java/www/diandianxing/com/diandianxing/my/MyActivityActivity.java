@@ -11,6 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.zackratos.ultimatebar.UltimateBar;
 
 import www.diandianxing.com.diandianxing.R;
@@ -19,7 +24,9 @@ import www.diandianxing.com.diandianxing.set.SetActivity;
 import www.diandianxing.com.diandianxing.set.WalletActivity;
 import www.diandianxing.com.diandianxing.utils.BaseDialog;
 import www.diandianxing.com.diandianxing.utils.CircleImageView;
+import www.diandianxing.com.diandianxing.utils.EventMessage;
 import www.diandianxing.com.diandianxing.utils.MyContants;
+import www.diandianxing.com.diandianxing.utils.SpUtils;
 
 /**
  * date : ${Date}
@@ -43,13 +50,16 @@ public class MyActivityActivity extends BaseActivity implements View.OnClickList
     private TextView my_kefu;
     private RelativeLayout real_kefu;
     private TextView my_xingyong;
+    private String nickname;
+    private String photo;
+    private String fenshu;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UltimateBar ultimateBar = new UltimateBar(this);
         ultimateBar.setImmersionBar();
-     //   EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
         MyContants.windows(this);
        // getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         setContentView(R.layout.activity_my);
@@ -80,16 +90,37 @@ public class MyActivityActivity extends BaseActivity implements View.OnClickList
         iv_callback.setOnClickListener(this);
         my_xingyong.setOnClickListener(this);
         you.setOnClickListener(this);
+        Intent intent = getIntent();
+        fenshu = intent.getStringExtra("fenshu");
+        String paiphoto = SpUtils.getString(this, "paiphoto", null);
+        String nickname = SpUtils.getString(this, "nickname", null);
+        Glide.with(this).load(paiphoto).into(my_photo);
+        diandianxing.setText(nickname);
+        my_xingyong.setText("信用分 "+fenshu);
+
+
 
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-   //     EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventMessage eventMessage) {
+        if (eventMessage.getMsg().equals("myname")) {
+            String name = SpUtils.getString(this, "nickname", null);
+            diandianxing.setText(name);
+        }
+        else if(eventMessage.getMsg().equals("personphoto")){
+            String photos = SpUtils.getString(this, "paiphoto", null);
+            Glide.with(this).load(photos).into(my_photo);
 
+
+        }
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -164,5 +195,14 @@ public class MyActivityActivity extends BaseActivity implements View.OnClickList
         });
 
         dialog.show();
+    }
+     /*
+       监听返回键
+      */
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
     }
 }

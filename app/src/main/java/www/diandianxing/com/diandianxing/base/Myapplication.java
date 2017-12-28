@@ -2,7 +2,10 @@ package www.diandianxing.com.diandianxing.base;
 
 import android.app.ActivityManager;
 import android.app.Application;
+import android.content.Context;
 import android.content.pm.PackageManager;
+
+import org.litepal.LitePalApplication;
 
 import java.util.Iterator;
 import java.util.List;
@@ -13,16 +16,10 @@ import java.util.List;
  * author:衣鹏宇(ypu)
  */
 
-public class Myapplication extends Application {
+public class Myapplication extends LitePalApplication {
     public static Myapplication application;
 
-    public static Myapplication getInstance() {
-        return application;
-    }
 
-    public static Myapplication getAppContext() {
-        return application;
-    }
 
     @Override
     public void onCreate() {
@@ -65,4 +62,10 @@ public class Myapplication extends Application {
         return processName;
     }
 
+    public static Application getInstance() {
+        return  application;
+    }
+    public static Context getGloableContext()    {
+        return  application.getApplicationContext();
+    }
 }

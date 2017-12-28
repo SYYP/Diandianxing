@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:background="@drawable/shape_radioline"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="130dp">
+      <TextView
+          android:id="@+id/tishi"
+          android:textColor="@color/text_orage"
+          android:textSize="18sp"
+          android:padding="10dp"
+          android:layout_marginTop="5dp"
+          android:layout_centerHorizontal="true"
+          android:text="温馨提示"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content" />
+        <View
+            android:id="@+id/vi"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/tishi"
+            android:background="@color/font_xian"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"></View>
+        <TextView
+            android:layout_marginTop="5dp"
+            android:lineSpacingMultiplier="1.2"
+            android:padding="10dp"
+            android:layout_below="@id/vi"
+            android:text="您所停位置非电子围栏区域，请立即选取附近电子围栏车位停放，否则将会扣信用分"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+</LinearLayout>

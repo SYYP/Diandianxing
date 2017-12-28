@@ -50,6 +50,7 @@ public class Feedback extends BaseActivity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.login_sso:
+                finish();
                 break;
         }
     }

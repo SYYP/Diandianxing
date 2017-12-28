@@ -29,7 +29,7 @@
             android:id="@+id/set_pho"
             android:layout_centerVertical="true"
             android:textSize="16sp"
-            android:padding="15dp"
+            android:padding="12dp"
             android:textColor="@color/black_san"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -47,11 +47,11 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:src="@drawable/aaa"
-            android:padding="10dp"
+            android:padding="8dp"
             android:id="@+id/person_pho"
             android:layout_toLeftOf="@id/back"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_width="45dp"
+            android:layout_height="45dp" />
         <View
             android:layout_marginLeft="15dp"
             android:layout_marginRight="20dp"
@@ -72,7 +72,7 @@
                 android:id="@+id/set_name"
                 android:layout_centerVertical="true"
                 android:textSize="16sp"
-                android:padding="15dp"
+                android:padding="12dp"
                 android:textColor="@color/black_san"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -86,6 +86,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp" />
             <TextView
+                android:id="@+id/alter_name"
                 android:textColor="@color/textcolcr"
                 android:text="Sense"
                 android:layout_centerVertical="true"
@@ -110,11 +111,11 @@
 
             <TextView
                 android:drawablePadding="10dp"
-                android:text="昵称"
+                android:text="实名认证"
                 android:id="@+id/set_renzheng"
                 android:layout_centerVertical="true"
                 android:textSize="16sp"
-                android:padding="15dp"
+                android:padding="12dp"
                 android:textColor="@color/black_san"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

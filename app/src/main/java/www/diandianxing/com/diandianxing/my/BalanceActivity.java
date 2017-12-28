@@ -33,7 +33,7 @@ public class BalanceActivity extends BaseActivity implements View.OnClickListene
     private RelativeLayout zhi;
     private TextView chongzhi_ok;
     private TextView erbai,yibai,wushi,ershi,qita,shi;
-     int i;
+     int i=1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -128,7 +128,6 @@ public class BalanceActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.chongzhi_ok:
                 String banlacn = SpUtils.getString(this, "banlacn", null);
-                ToastUtils.show(this,banlacn.toString(),1);
                 if(i==1){
                     if (banlacn!=null)
                     ToastUtils.show(this,"微信支付"+banlacn,1);

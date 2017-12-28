@@ -2,18 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/white"
+              android:background="@drawable/shape_radioline"
               android:orientation="vertical"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-              android:padding="10dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginLeft="20dp"
+
     >
     <TextView
+        android:id="@+id/tv_clean"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:padding="10dp"
-        android:text="提示"
+        android:text="清除缓存"
+        android:padding="8dp"
         android:textColor="@color/textcolcr"
         android:textSize="16sp"/>
     <TextView
@@ -21,35 +22,41 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:padding="20dp"
-        android:text="是否拨打电话？"
+       android:padding="12dp"
+        android:lineSpacingMultiplier="1.2"
+        android:text="清除后，图片等多媒体消息\n需要重新下载查看,确定清除？"
         android:textColor="#333"/>
+    <View
+        android:background="@color/back_bei"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"></View>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp">
+        android:layout_height="40dp">
+
         <TextView
             android:id="@+id/tv_canel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="10dp"
+         android:layout_gravity="center"
+            android:padding="10dp"
             android:layout_weight="1"
-            android:background="@drawable/shape_huiradioline"
             android:gravity="center"
-            android:padding="8dp"
+
             android:text="取消"/>
+        <View
+            android:background="@color/back_bei"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"></View>
         <TextView
             android:id="@+id/tv_yes"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_margin="10dp"
             android:layout_weight="1"
-            android:background="@drawable/shape_backorageradioline"
             android:gravity="center"
-            android:padding="8dp"
+            android:padding="10dp"
             android:text="确定"
-            android:textColor="@color/white"/>
+            android:textColor="@color/textcolcr"/>
     </LinearLayout>
 </LinearLayout>
