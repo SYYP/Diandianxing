@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         RetrofitManager.get(MyContants.BASEURL + "s=Bike/myInfo", map, new BaseObserver1<Shouyebean>("") {
 
 
-
+            private int istemp;
 
             @Override
             public void onSuccess(Shouyebean result, String tag) {
@@ -203,13 +203,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if(code==200){
                     datas = result.getDatas();
                     Log.d("ssss",datas.getRidingState());
-                    int ride = Integer.parseInt(datas.getRidingState());
-                    int istemp = Integer.parseInt(datas.getIsTemporary());
+
+                    int ride = Integer.parseInt(datas.getRidingState().trim());
+                    if(datas.getIsTemporary()!=null&&datas.getIsTemporary().length()>0){
+                        istemp = Integer.parseInt(datas.getIsTemporary());
+                    }
+
                     SpUtils.putString(MainActivity.this,"token", datas.getToken());
                      SpUtils.putString(MainActivity.this,"paiphoto",MyContants.PHOTO+datas.getHeadImageUrl()+"");
                      SpUtils.putString(MainActivity.this,"nickname",datas.getNickName()+"");
                      SpUtils.putString(MainActivity.this,"yajin",datas.getSecurityDeposit());//押金
                      SpUtils.putString(MainActivity.this,"yue",datas.getBalance());//余额
+                     SpUtils.putString(MainActivity.this,"IDcard",datas.getRealType()+"");
+                    Log.d("idcrd",datas.getRealType()+"");
+
                     // intent.putExtra("photo",datas.getHeadImageUrl());
                     if(datas.getSecurityDeposit()!=null&&!("0".equals(datas.getSecurityDeposit()))){
                         main_liner.setVisibility(View.GONE);
@@ -278,14 +285,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             datamap();
             adddianzimark();
             network();
-//            real_gongxiang.setVisibility(View.GONE);
-//            real_dianzi.setVisibility(View.GONE);
-//            iv_lock.setVisibility(View.GONE);
-//            liner_linshi.setVisibility(View.VISIBLE);
-//            iv_refresh.setVisibility(View.GONE);
-//            iv_search.setVisibility(View.GONE);
-//            liner_jishi.setVisibility(View.VISIBLE);
-//            main_liner.setVisibility(View.GONE);
+            real_gongxiang.setVisibility(View.GONE);
+            real_dianzi.setVisibility(View.GONE);
+            iv_lock.setVisibility(View.GONE);
+            liner_linshi.setVisibility(View.VISIBLE);
+            iv_refresh.setVisibility(View.GONE);
+            iv_search.setVisibility(View.GONE);
+            liner_jishi.setVisibility(View.VISIBLE);
+            main_liner.setVisibility(View.GONE);
 
 
         }

@@ -95,7 +95,9 @@ public class MyActivityActivity extends BaseActivity implements View.OnClickList
         String paiphoto = SpUtils.getString(this, "paiphoto", null);
         String nickname = SpUtils.getString(this, "nickname", null);
         Glide.with(this).load(paiphoto).into(my_photo);
-        diandianxing.setText(nickname);
+        if(nickname.length()>0&&nickname!=null) {
+            diandianxing.setText(nickname);
+        }
         my_xingyong.setText("信用分 "+fenshu);
 
 

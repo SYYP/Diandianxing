@@ -8,10 +8,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import www.diandianxing.com.diandianxing.R;
+import www.diandianxing.com.diandianxing.bean.Messagebean;
+import www.diandianxing.com.diandianxing.utils.MyContants;
 
 /**
  * date : ${Date}
@@ -21,10 +25,11 @@ import www.diandianxing.com.diandianxing.R;
 public class Messageadapter extends BaseAdapter {
        private Context context;
       private List<String> list=new ArrayList<>();
-
-    public Messageadapter(Context context) {
+    List<Messagebean.DatasBean> datas;
+    public Messageadapter(Context context,List<Messagebean.DatasBean> datas) {
         this.context = context;
-        date();
+        this.datas=datas;
+      //  date();
     }
 
     private void date() {
@@ -36,12 +41,12 @@ public class Messageadapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return list.size();
+        return datas!=null?datas.size():0;
     }
 
     @Override
     public Object getItem(int i) {
-        return list.get(i);
+        return datas.get(i);
     }
 
     @Override
@@ -63,7 +68,9 @@ public class Messageadapter extends BaseAdapter {
         else {
             holder= (ViewHolder) view.getTag();
          }
-         holder.text_title.setText(list.get(i));
+        holder.text_date.setText(datas.get(i).getAdd_time());
+        holder.text_title.setText(datas.get(i).getTitle());
+        Glide.with(context).load(MyContants.PHOTO+datas.get(i).getPic()).error(R.drawable.aaa).into(holder.img_pho);
         return view;
     }
 

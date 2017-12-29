@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -81,6 +82,7 @@ public class PersonActivity extends BaseActivity implements View.OnClickListener
     private File fileUri = new File(Environment.getExternalStorageDirectory().getPath() + "/photo.jpg");
     private Handler handler=new Handler();
     private String s;
+    private TextView id_card;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,6 +105,24 @@ public class PersonActivity extends BaseActivity implements View.OnClickListener
             String name = SpUtils.getString(this, "nickname", null);
             alter_name.setText(name);
         }
+         else if(eventMessage.getMsg().equals("idcard")){
+            String iDcrad = SpUtils.getString(this, "IDcard", null);
+            int idc = Integer.parseInt(iDcrad.trim());
+            if(idc==0){
+                id_card.setText("未认证");
+            }
+            else if(idc==1){
+                id_card.setText("审核中");
+            }
+            else if(idc==2){
+                id_card.setText("审核不通过");
+            }
+            else if(idc==3){
+                id_card.setText("已认证");
+            }
+
+
+        }
     }
     private void initView() {
         iv_callback = (ImageView) findViewById(R.id.iv_callback);
@@ -119,15 +139,55 @@ public class PersonActivity extends BaseActivity implements View.OnClickListener
         alter_name = (TextView) findViewById(R.id.alter_name);
         per_pho = (CircleImageView) findViewById(R.id.person_pho);
         real_renzheng = (RelativeLayout) findViewById(R.id.real_renzheng);
+        id_card = (TextView) findViewById(R.id.idcard_zhuangtai);
         iv_callback.setOnClickListener(this);
         real_pho.setOnClickListener(this);
         zhong.setText("个人信息");
         real_name.setOnClickListener(this);
         real_renzheng.setOnClickListener(this);
         String paizhao = SpUtils.getString(this, "paiphoto", null);
-        Glide.with(this).load(paizhao).into(per_pho);
+        if(paizhao!=null&&paizhao.length()>0) {
+            Glide.with(this).load(paizhao).into(per_pho);
+        }
         String nickname = SpUtils.getString(this, "nickname", null);
         alter_name.setText(nickname);
+        String iDcrad = SpUtils.getString(this, "IDcard",null);
+        int idc = Integer.parseInt(iDcrad.trim());
+        if(idc==0){
+            id_card.setText("未认证");
+            real_renzheng.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent its=new Intent(PersonActivity.this,RenzhenActivity.class);
+                    startActivity(its);
+                }
+            });
+        }
+        else if(idc==1){
+            id_card.setText("审核中");
+            real_renzheng.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent its=new Intent(PersonActivity.this,RenzhenActivity.class);
+                    startActivity(its);
+                }
+            });
+
+        }
+        else if(idc==2){
+            id_card.setText("审核不通过");
+            real_renzheng.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent its=new Intent(PersonActivity.this,RenzhenActivity.class);
+                    startActivity(its);
+                }
+            });
+        }
+        else if(idc==3){
+            id_card.setText("已认证");
+        }
+
 
 
     }
@@ -154,10 +214,9 @@ public class PersonActivity extends BaseActivity implements View.OnClickListener
                 startActivity(it);
                 break;
             //实名认证
-            case R.id.real_renzheng:
-                Intent its=new Intent(this,RenzhenActivity.class);
-                startActivity(its);
-                break;
+//            case R.id.real_renzheng:
+//
+//                break;
 
         }
     }
@@ -327,6 +386,7 @@ public class PersonActivity extends BaseActivity implements View.OnClickListener
             public void run() {
                 Map<String,File > files = new HashMap<>();
                 files.put("file", fileCropUri);
+                Log.d("ffff",fileCropUri+"");
                 Map<String,String> map=new HashMap<>();
                 map.put("uid",SpUtils.getString(Myapplication.getApplication(),"userid",null));
                 map.put("token",SpUtils.getString(PersonActivity.this,"token",null));

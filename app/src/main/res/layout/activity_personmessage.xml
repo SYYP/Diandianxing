@@ -129,6 +129,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp" />
             <TextView
+                android:id="@+id/idcard_zhuangtai"
                 android:textColor="@color/reds"
                 android:text="未认证"
                 android:layout_centerVertical="true"

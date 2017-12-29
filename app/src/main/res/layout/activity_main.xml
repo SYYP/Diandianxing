@@ -356,12 +356,14 @@
         android:layout_marginBottom="110dp">
         <ImageView
             android:id="@+id/img_che"
-            android:layout_marginTop="8dp"
-            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
             android:src="@drawable/img_gongbick"
             android:layout_width="30dp"
             android:layout_height="20dp" />
         <TextView
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
             android:padding="2dp"
             android:layout_marginTop="5dp"
             android:textSize="12dp"
@@ -383,13 +385,14 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="30dp">
         <ImageView
-              android:id="@+id/img_wei"
-            android:layout_marginTop="5dp"
-            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:id="@+id/img_wei"
+            android:layout_gravity="center"
             android:src="@drawable/img_dianziwei"
             android:layout_width="25dp"
             android:layout_height="20dp" />
         <TextView
+            android:layout_gravity="center"
             android:padding="2dp"
             android:layout_marginTop="5dp"
             android:textSize="12dp"
