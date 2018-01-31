@@ -1,23 +1,15 @@
 package www.diandianxing.com.diandianxing.main;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,7 +18,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.socks.library.KLog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -34,7 +31,9 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import www.diandianxing.com.diandianxing.R;
@@ -43,7 +42,7 @@ import www.diandianxing.com.diandianxing.bean.Gubackbean;
 import www.diandianxing.com.diandianxing.utils.BaseDialog;
 import www.diandianxing.com.diandianxing.utils.EventMessage;
 import www.diandianxing.com.diandianxing.utils.MyContants;
-import www.diandianxing.com.diandianxing.utils.PhotoUtils;
+import www.diandianxing.com.diandianxing.utils.SoftKeyboardTool;
 import www.diandianxing.com.diandianxing.utils.SpUtils;
 import www.diandianxing.com.diandianxing.utils.ToastUtils;
 import www.diandianxing.com.diandianxing.utils.UploadUtil;
@@ -76,6 +75,11 @@ public class KefuActivity extends BaseActivity implements View.OnClickListener {
     private TextView zishu;
     private TextView tv_bianhao;
     private Handler handler=new Handler();
+    private EditText ed;
+    private List<String> cameraList;
+    private List<LocalMedia> selectList = new ArrayList<>();
+    private String cutPath;
+    private File file;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -141,11 +145,14 @@ public class KefuActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.iv_callback:
+                EventMessage eventMessage=new EventMessage("yincang");
+                EventBus.getDefault().postSticky(eventMessage);
                 finish();
                 break;
             //添加照片
             case R.id.img_increate:
-                showphotoDialog(Gravity.BOTTOM,R.style.Bottom_Top_aniamtion);
+                requestCamera();
+            //    showphotoDialog(Gravity.BOTTOM,R.style.Bottom_Top_aniamtion);
                 break;
             //扫一扫
             case R.id.img_sao:
@@ -153,6 +160,7 @@ public class KefuActivity extends BaseActivity implements View.OnClickListener {
                   跳扫码
                  */
                 Intent intent=new Intent(this,ZiXingActivity.class);
+                 intent.putExtra("abool",true);
                 startActivity(intent);
 
 
@@ -180,8 +188,8 @@ public class KefuActivity extends BaseActivity implements View.OnClickListener {
                     map.put("token",SpUtils.getString(KefuActivity.this,"token",null));
                     map.put("identnum",tv_bianhao.getText().toString());
                     Map<String,File> maps=new HashMap<>();
-                    if(fileCropUri!=null) {
-                        maps.put("file", fileCropUri);
+                    if(file!=null) {
+                        maps.put("file", file);
                     }
                     s1 = UploadUtil.uploadFile(map, maps, MyContants.BASEURL + "s=Bike/feedback");
                     Gson gson=new Gson();
@@ -209,147 +217,42 @@ public class KefuActivity extends BaseActivity implements View.OnClickListener {
 
 
 
-
-
-    public static boolean hasSdcard() {
-        String state = Environment.getExternalStorageState();
-        return state.equals(Environment.MEDIA_MOUNTED);
+    private void requestCamera() {
+        PictureSelector.create(this)
+                .openCamera(PictureMimeType.ofImage())// 单独拍照，也可录像或也可音频 看你传入的类型是图片or视频
+                .theme(R.style.picture_default_style)// 主题样式设置 具体参考 values/styles
+                .enableCrop(false)// 是否裁剪
+                .compress(false)// 是否压缩
+                .compressMode(PictureConfig.SYSTEM_COMPRESS_MODE)//系统自带 or 鲁班压缩 PictureConfig.SYSTEM_COMPRESS_MODE or LUBAN_COMPRESS_MODE
+                .freeStyleCropEnabled(false)// 裁剪框是否可拖拽
+                .circleDimmedLayer(false)// 是否圆形裁剪
+                .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
+                .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
+                .scaleEnabled(false)// 裁剪是否可放大缩小图片
+//                .glideOverride(160, 160)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
+//                .selectionMedia(list)// 是否传入已选图片
+//                .previewEggs(true)//预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
+                .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
     }
-    //调用相机
-    private void autoObtainCameraPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-                ToastUtils.showShort(this, "您已经拒绝过一次");
-            }
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, CAMERA_PERMISSIONS_REQUEST_CODE);
-        } else {//有权限直接调用系统相机拍照
-            if (hasSdcard()) {
-                imageUri = Uri.fromFile(fileUri);
-                if (Build.VERSION.SDK_INT >= 24)
-                    imageUri = FileProvider.getUriForFile(this, "com.xykj.customview.fileproviders", fileUri);//通过FileProvider创建一个content类型的Uri
-                PhotoUtils.takePicture(this, imageUri, CODE_CAMERA_REQUEST);
-            } else {
-                ToastUtils.showShort(this, "设备没有SD卡！");
-            }
 
 
-        }
-    }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode) {
-            case CAMERA_PERMISSIONS_REQUEST_CODE: {//调用系统相机申请拍照权限回调
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (hasSdcard()) {
-                        imageUri = Uri.fromFile(fileUri);
-                        if (Build.VERSION.SDK_INT >= 24)
-                            imageUri = FileProvider.getUriForFile(this, "com.xykj.customview.fileproviders", fileUri);//通过FileProvider创建一个content类型的Uri
-                        PhotoUtils.takePicture(this, imageUri, CODE_CAMERA_REQUEST);
-                    } else {
-                        ToastUtils.showShort(this, "设备没有SD卡！");
-                    }
-                } else {
-
-                    ToastUtils.showShort(this, "请允许打开相机！！");
-                }
-                break;
-
-
-            }
-            case STORAGE_PERMISSIONS_REQUEST_CODE://调用系统相册申请Sdcard权限回调
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    PhotoUtils.openPic(this, CODE_GALLERY_REQUEST);
-                } else {
-
-                    ToastUtils.showShort(this, "请允许打操作SDCard！！");
-                }
-                break;
-        }
-    }
-    private static final int output_X = 480;
-    private static final int output_Y = 480;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case CODE_CAMERA_REQUEST://拍照完成回调
-                    cropImageUri = Uri.fromFile(fileCropUri);
-
-
-                    PhotoUtils.cropImageUri(this, imageUri, cropImageUri, 1, 1, output_X, output_Y, CODE_RESULT_REQUEST);
-
-                    break;
-                case CODE_RESULT_REQUEST:
-                    Bitmap bitmap = PhotoUtils.getBitmapFromUri(cropImageUri, this);
-                    String s = cropImageUri.toString();
-                    //sp存头像
-//                    SpUtils.putString(PersoninforActivity.this,"photos",s);
-//                    EventMessage eventMessage = new EventMessage("ppp");
-//                    EventBus.getDefault().postSticky(eventMessage);
-//                    KLog.a(cropImageUri);
-//                    //将URl上传到服务器
-//                    photowork();
-                    //     ToastUtils.showShort(PersoninforActivity.this,cropImageUri.toString());
-                    if (bitmap != null) {
-
-                        showImages(bitmap);
-                    }
+                case PictureConfig.CHOOSE_REQUEST:
+                    // 图片选择结果回调
+                    selectList = PictureSelector.obtainMultipleResult(data);
+                    cutPath = selectList.get(0).getPath();
+                    file = new File(cutPath);
+                    Glide.with(this).load(cutPath).into(img_increate);
+                    Log.d("files",file+"");
                     break;
             }
         }
-    }
-    private void showImages(Bitmap bitmap) {
-        //设置图片到页面
-        img_increate.setImageBitmap(bitmap);
-        //  String s = bitmaptoString(bitmap);
 
-    }
-    private void showphotoDialog(int grary, int animationStyle) {
-        BaseDialog.Builder builder = new BaseDialog.Builder(this);
-        final BaseDialog dialog = builder.setViewId(R.layout.dialog_photo)
-                //设置dialogpadding
-                .setPaddingdp(0, 0, 0, 0)
-                //设置显示位置
-                .setGravity(grary)
-                //设置动画
-                .setAnimation(animationStyle)
-                //设置dialog的宽高
-                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                //设置触摸dialog外围是否关闭
-                .isOnTouchCanceled(true)
-                //设置监听事件
-                .builder();
-        //拍照
-        dialog.getView(R.id.tv_paizhao).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //相机选取
-                autoObtainCameraPermission();
-                dialog.dismiss();
-            }
-        });
-        //相册
-        View view = dialog.getView(R.id.tv_local);
-      TextView tv_loal=  view.findViewById(R.id.tv_local);
-        tv_loal.setVisibility(View.GONE);
-        View view1=dialog.getView(R.id.pho_view);
-        View vi = view1.findViewById(R.id.pho_view);
-        vi.setVisibility(View.GONE);
-        //取消
-        dialog.getView(R.id.tv_pause).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
     }
 
     @Override
@@ -363,6 +266,52 @@ public class KefuActivity extends BaseActivity implements View.OnClickListener {
         if (eventMessage.getMsg().equals("zxing")) {
             String bikenum = SpUtils.getString(this, "bikenum", null);
             tv_bianhao.setText(bikenum);
+
         }
+        else if(eventMessage.getMsg().equals("shoushi")){
+            showCarDialog(R.style.Alpah_aniamtion);
+
+        }
+    }
+
+    private void showCarDialog( int animationStyle) {
+        BaseDialog.Builder builder = new BaseDialog.Builder(this);
+        final BaseDialog dialog = builder.setViewId(R.layout.dialog_shuru)
+                //设置dialogpadding
+                .setPaddingdp(0, 0, 0, 0)
+                //设置显示位置
+                .setGravity(580)
+                //设置动画
+                .setAnimation(animationStyle)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(false)
+
+                //设置监听事件
+                .builder();
+
+        ed = (EditText) dialog.getView(R.id.ed_shuru).findViewById(R.id.ed_shuru);
+        SoftKeyboardTool.showSoftKeyboard(ed);
+        dialog.getView(R.id.bike_sso).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SoftKeyboardTool.closeKeyboard(ed);
+                dialog.dismiss();
+                tv_bianhao.setText(ed.getText().toString().trim());
+            }
+        });
+        dialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        /*
+          返回键调用eventbus刷新主页面使其输车牌好影藏
+
+         */
+          EventMessage eventMessage=new EventMessage("yincang");
+          EventBus.getDefault().postSticky(eventMessage);
     }
 }

@@ -70,7 +70,7 @@ public class Messageadapter extends BaseAdapter {
          }
         holder.text_date.setText(datas.get(i).getAdd_time());
         holder.text_title.setText(datas.get(i).getTitle());
-        Glide.with(context).load(MyContants.PHOTO+datas.get(i).getPic()).error(R.drawable.aaa).into(holder.img_pho);
+        Glide.with(context).load(MyContants.PHOTO+datas.get(i).getPic()).into(holder.img_pho);
         return view;
     }
 

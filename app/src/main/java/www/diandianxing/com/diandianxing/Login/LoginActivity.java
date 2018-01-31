@@ -9,10 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.umeng.socialize.UMShareAPI;
+
 import org.zackratos.ultimatebar.UltimateBar;
 
 import www.diandianxing.com.diandianxing.R;
-import www.diandianxing.com.diandianxing.base.BaseActivity;
 import www.diandianxing.com.diandianxing.utils.MyContants;
 
 /**
@@ -20,7 +21,7 @@ import www.diandianxing.com.diandianxing.utils.MyContants;
  * author:衣鹏宇(ypu)
  */
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener{
+public class LoginActivity extends UMLoginActivity implements View.OnClickListener{
 
     private ImageView logio;
     private RelativeLayout relative;
@@ -70,11 +71,19 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                 startActivity(intent1);
                 break;
             case R.id.iv_qq:
+                loginByQQ(this);
                 break;
             case R.id.iv_weixin:
+                loginByWeiXin(this);
                 break;
             case R.id.iv_weibo:
                 break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 }

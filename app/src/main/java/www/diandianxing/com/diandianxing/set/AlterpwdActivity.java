@@ -1,5 +1,6 @@
 package www.diandianxing.com.diandianxing.set;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import java.util.HashMap;
 import java.util.Map;
 
+import www.diandianxing.com.diandianxing.Login.LoginActivity;
 import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
 import www.diandianxing.com.diandianxing.bean.Alternamebean;
@@ -55,13 +57,15 @@ public class AlterpwdActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onSuccess(Alternamebean result, String tag) {
                 if(result.getCode()==200){
-                    ToastUtils.showShort(AlterpwdActivity.this,"修改成功");
+                    ToastUtils.showShort(AlterpwdActivity.this,"修改成功,请重新登录");
+                    Intent intent=new Intent(AlterpwdActivity.this, LoginActivity.class);
+                    startActivity(intent);
                     finish();
                 }
             }
 
             @Override
-            public void onFailed(int code) {
+            public void onFailed(int code,String data) {
 
             }
         });

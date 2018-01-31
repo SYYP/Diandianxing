@@ -8,7 +8,7 @@
 
 
     <LinearLayout
-            android:id="@+id/flash_btn"
+            android:id="@+id/flash_shou"
         android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -20,7 +20,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/sdt_2x" />
+            android:src="@drawable/shoushi" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/flash_shou"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:text="手动开锁"
+            android:textColor="#ffffff"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/flash_btn"
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/shoudian" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -30,8 +56,6 @@
             android:layout_marginTop="10dp"
             android:text="打开手电筒"
             android:textColor="#ffffff"
-            android:textSize="18sp" />
+            android:textSize="17sp" />
     </LinearLayout>
-    
-    
 </LinearLayout>

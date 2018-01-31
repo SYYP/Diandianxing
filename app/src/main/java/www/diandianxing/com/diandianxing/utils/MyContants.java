@@ -5,9 +5,10 @@ import android.view.View;
 
 public class MyContants {
     public static String FILENAME = "config.xml";
-    public static String BASEURL="http://172.16.9.148/danche/api.php?";
-    public static String PHOTO="http://172.16.9.148";
-    public static String HTML="http://114.215.83.139/bike/danche/";
+    public static String BASEURL="http://47.93.45.38/server/api.php?";
+    public static String BASEURLS="http://114.215.83.139/danche/api.php?";
+    public static String PHOTO="http://47.93.45.38";
+    public static String HTML="http://47.93.45.38/server/html5/";
 
     public static  void windows(Activity activity){
 

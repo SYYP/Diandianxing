@@ -10,14 +10,26 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
+import www.diandianxing.com.diandianxing.bean.Tuikuanbean;
 import www.diandianxing.com.diandianxing.my.BalanceActivity;
 import www.diandianxing.com.diandianxing.my.CashpayActivity;
 import www.diandianxing.com.diandianxing.my.MingxiActivity;
+import www.diandianxing.com.diandianxing.network.BaseObserver1;
+import www.diandianxing.com.diandianxing.network.RetrofitManager;
 import www.diandianxing.com.diandianxing.utils.BaseDialog;
+import www.diandianxing.com.diandianxing.utils.EventMessage;
 import www.diandianxing.com.diandianxing.utils.MyContants;
 import www.diandianxing.com.diandianxing.utils.SpUtils;
+import www.diandianxing.com.diandianxing.utils.ToastUtils;
 
 /**
  * date : ${Date}
@@ -41,6 +53,7 @@ public class WalletActivity extends BaseActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         MyContants.windows(this);
         setContentView(R.layout.activity_mywallet);
+        EventBus.getDefault().register(this);//注册eventbus
         initView();
     }
 
@@ -118,9 +131,14 @@ public class WalletActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void onClick(View v) {
                 //押金退换
-
+                 /*
+                    网络请求退换押金
+                  */
+                     networkmoney();
                 dialog.dismiss();
             }
+
+
         });
         //取消
         dialog.getView(R.id.pause).setOnClickListener(new View.OnClickListener() {
@@ -130,5 +148,41 @@ public class WalletActivity extends BaseActivity implements View.OnClickListener
             }
         });
         dialog.show();
+    }
+    private void networkmoney() {
+
+        Map<String,String> map=new HashMap<>();
+         map.put("uid",SpUtils.getString(this,"userid",null));
+         map.put("token",SpUtils.getString(this,"token",null));
+        RetrofitManager.post(MyContants.BASEURL+"s=Payment/refundDeposit", map, new BaseObserver1<Tuikuanbean>("") {
+            @Override
+            public void onSuccess(Tuikuanbean result, String tag) {
+                if(result.getCode()==200){
+
+                    ToastUtils.show(WalletActivity.this,result.getDatas().toString(),1);
+                    wallet_yanjin.setText(0.00+"元");
+                }
+            }
+
+            @Override
+            public void onFailed(int code, String data) {
+
+            }
+        });
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventMessage eventMessage) {
+        //支付完好跳到详情，看完后返回主界面
+        if (eventMessage.getMsg().equals("dingdan")) {
+            String yajin = SpUtils.getString(this, "yajin", null);
+            wallet_yanjin.setText(yajin+"元");
+            String yue = SpUtils.getString(this, "yue", null);
+            wallet_yue.setText(yue+"元");
+        }
     }
 }

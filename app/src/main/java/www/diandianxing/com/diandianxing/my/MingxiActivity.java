@@ -113,7 +113,7 @@ public class MingxiActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailed(int code) {
+            public void onFailed(int code,String data) {
                 ToastUtils.showShort(MingxiActivity.this,code+"");
 
             }

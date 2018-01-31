@@ -3,6 +3,7 @@ package www.diandianxing.com.diandianxing.my;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -58,7 +59,7 @@ public class MessageActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailed(int code) {
+            public void onFailed(int code,String data) {
 
             }
         });
@@ -82,6 +83,7 @@ public class MessageActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent=new Intent(MessageActivity.this,MessagedetailActivity.class);
                  intent.putExtra("mes_id",datas.get(i).getId());
+                Log.d("Tag",datas.get(i).getId());
                  startActivity(intent);
             }
         });

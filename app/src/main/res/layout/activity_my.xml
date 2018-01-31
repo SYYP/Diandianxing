@@ -7,9 +7,9 @@
     <RelativeLayout
         android:clipToPadding="true"
         android:fitsSystemWindows="true"
-        android:background="@drawable/my_back"
+        android:background="@drawable/img_person"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="220dp">
     <RelativeLayout
         android:id="@+id/rela"
         android:layout_width="match_parent"
@@ -19,13 +19,13 @@
             android:id="@+id/iv_callback"
             android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/call_back"
+            android:src="@drawable/img_ge_call"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
             android:text="个人中心"
             android:id="@+id/zhong"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:layout_centerHorizontal="true"
             android:textSize="18dp"
             android:padding="10dp"
@@ -49,12 +49,12 @@
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:layout_width="60dp"
-            android:src="@drawable/aaa"
+            android:src="@drawable/img_motou"
             android:layout_height="60dp" />
         <TextView
            android:layout_marginTop="10dp"
             android:id="@+id/diandianxing"
-            android:textColor="@color/black_san"
+            android:textColor="@color/white"
             android:layout_centerHorizontal="true"
             android:textStyle="bold"
             android:layout_below="@id/my_photo"
@@ -70,7 +70,7 @@
             android:textSize="15sp"
             android:text="信用分 30分"
             android:padding="8dp"
-            android:textColor="@color/qing"
+            android:textColor="@color/white"
             android:background="@drawable/shape_qingradioline"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/diandianxing"

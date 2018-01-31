@@ -69,7 +69,7 @@ public class CredibilityActivity extends BaseActivity implements View.OnClickLis
             }
 
             @Override
-            public void onFailed(int code) {
+            public void onFailed(int code,String data) {
 
             }
         });

@@ -8,8 +8,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import www.diandianxing.com.diandianxing.Login.UmshareActivity;
 import www.diandianxing.com.diandianxing.R;
-import www.diandianxing.com.diandianxing.base.BaseActivity;
 import www.diandianxing.com.diandianxing.utils.MyContants;
 
 /**
@@ -17,7 +17,7 @@ import www.diandianxing.com.diandianxing.utils.MyContants;
  * author:衣鹏宇(ypu)
  */
 
-public class ShareActivity extends BaseActivity implements View.OnClickListener {
+public class ShareActivity extends UmshareActivity implements View.OnClickListener {
 
     private ImageView iv_callback;
     private TextView zhong;
@@ -65,12 +65,16 @@ public class ShareActivity extends BaseActivity implements View.OnClickListener 
                 finish();
                 break;
             case R.id.share_friend:
+                SharebyWeixincenter(this);
                 break;
             case R.id.share_kongjian:
+                SharebyQzon(this);
                 break;
             case R.id.share_wei:
+                SharebyWeixin(this);
                 break;
             case R.id.share_qq:
+                SharebyQQ(this);
                 break;
             case R.id.look_xiangqing:
                 Intent intent=new Intent(this,XiangxiActivity.class);

@@ -47,7 +47,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <EditText
-            android:text="15846511246"
             android:textCursorDrawable="@drawable/shap_ed"
             android:layout_toRightOf="@id/set_lpwd"
             android:padding="10dp"
@@ -86,7 +85,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <EditText
-            android:text="111111"
             android:textCursorDrawable="@drawable/shap_ed"
             android:layout_toRightOf="@id/login_lpwd"
             android:padding="10dp"
@@ -177,7 +175,8 @@
         android:layout_marginRight="30dp"
         android:layout_marginTop="20dp">
         <TextView
-            android:layout_marginLeft="15dp"
+
+            android:layout_marginLeft="50dp"
             android:gravity="center"
             android:id="@+id/iv_qq"
             android:drawablePadding="5dp"
@@ -188,6 +187,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
+            android:layout_marginRight="50dp"
+            android:layout_alignParentRight="true"
             android:textColor="@color/textcolcr"
             android:gravity="center"
             android:layout_centerHorizontal="true"
@@ -199,6 +200,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
+            android:visibility="gone"
             android:layout_marginRight="15dp"
             android:layout_alignParentRight="true"
             android:gravity="center"

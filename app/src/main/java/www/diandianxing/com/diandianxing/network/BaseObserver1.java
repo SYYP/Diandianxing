@@ -1,6 +1,9 @@
 package www.diandianxing.com.diandianxing.network;
 
+import android.os.RemoteException;
+
 import com.alibaba.fastjson.JSON;
+import com.google.gson.Gson;
 import com.socks.library.KLog;
 
 import java.lang.reflect.ParameterizedType;
@@ -11,6 +14,7 @@ import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import retrofit2.HttpException;
+import www.diandianxing.com.diandianxing.bean.Failbean;
 
 /**
  *
@@ -52,10 +56,14 @@ public abstract class BaseObserver1<T> implements Observer<String> {
             Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
             Class entityClass = (Class) params[0];
             T t = (T) JSON.parseObject(s, entityClass);
+
             KLog.e(s);
             onSuccess(t, tag);
         } catch (Exception e) {
-            onFailed(JSON_FORMAT_ERROR);
+            Gson gson=new Gson();
+            Failbean failbean = gson.fromJson(s, Failbean.class);
+            String datas = failbean.getDatas();
+            onFailed(JSON_FORMAT_ERROR,datas);
             e.printStackTrace();
         }
 
@@ -66,20 +74,20 @@ public abstract class BaseObserver1<T> implements Observer<String> {
         try {
             if (e != null) {
                 if (e instanceof HttpException) {
-                    onFailed(HTTP_ERROR);
+                    onFailed(HTTP_ERROR,"");
                 } else if (e instanceof SocketException) {
-                    onFailed(NET_WORK_ERROR);
+                    onFailed(NET_WORK_ERROR,"");
                 } else {
-                    onFailed(UNKNOW_ERROR);
+                    onFailed(UNKNOW_ERROR,"");
                 }
             } else {
-                onFailed(UNKNOW_ERROR);
+                onFailed(UNKNOW_ERROR,"");
             }
             e.printStackTrace();
             System.out.println();
             KLog.i(e);
         } catch (Exception e1) {
-            onFailed(UNKNOW_ERROR);
+            onFailed(UNKNOW_ERROR,"");
             e1.printStackTrace();
         }
     }
@@ -90,7 +98,7 @@ public abstract class BaseObserver1<T> implements Observer<String> {
     }
 
 
-    public abstract void onSuccess(T result, String tag);
+    public abstract void onSuccess(T result, String tag) throws RemoteException;
 
     /**
      * code
@@ -101,7 +109,7 @@ public abstract class BaseObserver1<T> implements Observer<String> {
      *
      * @param code
      */
-    public abstract void onFailed(int code);
+    public abstract void onFailed(int code,String data);
 
 
     public static final int UNKNOW_ERROR = 1000;

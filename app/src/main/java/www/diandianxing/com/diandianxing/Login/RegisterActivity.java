@@ -17,10 +17,10 @@ import org.zackratos.ultimatebar.UltimateBar;
 import java.util.Map;
 
 import www.diandianxing.com.diandianxing.R;
-import www.diandianxing.com.diandianxing.base.BaseActivity;
 import www.diandianxing.com.diandianxing.bean.Successbean;
 import www.diandianxing.com.diandianxing.network.BaseObserver1;
 import www.diandianxing.com.diandianxing.network.RetrofitManager;
+import www.diandianxing.com.diandianxing.utils.ClickFilter;
 import www.diandianxing.com.diandianxing.utils.MyContants;
 import www.diandianxing.com.diandianxing.utils.MyUtils;
 import www.diandianxing.com.diandianxing.utils.SendSmsTimerUtils;
@@ -31,7 +31,7 @@ import www.diandianxing.com.diandianxing.utils.ToastUtils;
  * author:衣鹏宇(ypu)
  */
 
-public class RegisterActivity extends BaseActivity implements View.OnClickListener {
+public class RegisterActivity extends UMLoginActivity implements View.OnClickListener {
 
     private ImageView iv_callback;
     private TextView zhong;
@@ -134,7 +134,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 }
             }
             @Override
-            public void onFailed(int code) {
+            public void onFailed(int code,String data) {
                   ToastUtils.show(RegisterActivity.this,"验证码错误",1);
             }
         });
@@ -152,10 +152,13 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                       finish();
 
                  }
+                 else if(result.getCode()==404){
+                     ToastUtils.show(RegisterActivity.this,"手机号已注册",1);
+                 }
              }
 
              @Override
-             public void onFailed(int code) {
+             public void onFailed(int code,String data) {
 
                  ToastUtils.show(RegisterActivity.this,"手机号或密码错误",1);
              }
@@ -171,16 +174,24 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
             case R.id.register_sso:
+                if (ClickFilter.isFastClick()) {
+                    //写你相关操作即可
+                    submit();
+                }
 
-                submit();
-                finish();
                 break;
             case R.id.huoqu:
-                getcode();
+                if (ClickFilter.isFastClick()) {
+                    //写你相关操作即可
+                    getcode();
+                }
+
                 break;
             case R.id.iv_qq:
+                loginByQQ(this);
                 break;
             case R.id.iv_weixin:
+                loginByWeiXin(this);
                 break;
             case R.id.iv_weibo:
                 break;
@@ -217,9 +228,14 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             }
 
             @Override
-            public void onFailed(int code) {
+            public void onFailed(int code,String data) {
 
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

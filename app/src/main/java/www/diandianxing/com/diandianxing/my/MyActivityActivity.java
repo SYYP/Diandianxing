@@ -12,6 +12,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -94,8 +97,14 @@ public class MyActivityActivity extends BaseActivity implements View.OnClickList
         fenshu = intent.getStringExtra("fenshu");
         String paiphoto = SpUtils.getString(this, "paiphoto", null);
         String nickname = SpUtils.getString(this, "nickname", null);
-        Glide.with(this).load(paiphoto).into(my_photo);
-        if(nickname.length()>0&&nickname!=null) {
+        //加载图片
+        RequestOptions options = new RequestOptions()
+                .error(R.drawable.img_motou)
+                .priority(Priority.NORMAL)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+            Glide.with(this).load(paiphoto).apply(options).into(my_photo);
+
+        if(nickname!=null) {
             diandianxing.setText(nickname);
         }
         my_xingyong.setText("信用分 "+fenshu);
@@ -118,7 +127,14 @@ public class MyActivityActivity extends BaseActivity implements View.OnClickList
         }
         else if(eventMessage.getMsg().equals("personphoto")){
             String photos = SpUtils.getString(this, "paiphoto", null);
-            Glide.with(this).load(photos).into(my_photo);
+            if(photos.length()>0&&photos!=null) {
+                //加载图片
+                RequestOptions options = new RequestOptions()
+                        .error(R.drawable.img_motou)
+                        .priority(Priority.NORMAL)
+                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+                Glide.with(this).load(photos).apply(options).into(my_photo);
+            }
 
 
         }
@@ -128,6 +144,9 @@ public class MyActivityActivity extends BaseActivity implements View.OnClickList
         switch (view.getId()){
             //返回
             case R.id.iv_callback:
+                //通知首页刷新数据
+                EventMessage eventMessage=new EventMessage("mainetwork");
+                 EventBus.getDefault().postSticky(eventMessage);
                 finish();
                 break;
             //设置
@@ -204,6 +223,8 @@ public class MyActivityActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void onBackPressed() {
+        EventMessage eventMessage=new EventMessage("mainetwork");
+        EventBus.getDefault().postSticky(eventMessage);
         super.onBackPressed();
 
     }

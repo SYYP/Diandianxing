@@ -46,7 +46,7 @@
             android:layout_marginRight="10dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/aaa"
+            android:src="@drawable/img_motou"
             android:padding="8dp"
             android:id="@+id/person_pho"
             android:layout_toLeftOf="@id/back"

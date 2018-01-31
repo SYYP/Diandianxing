@@ -47,9 +47,7 @@
             android:layout_height="wrap_content" />
         <EditText
             android:layout_toRightOf="@id/register_l"
-            android:cursorVisible="false"
             android:padding="10dp"
-            android:textCursorDrawable="@null"
             android:inputType="number"
             android:background="@null"
             android:layout_centerVertical="true"

@@ -1,21 +1,12 @@
 package www.diandianxing.com.diandianxing.main;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
@@ -29,9 +20,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.google.gson.Gson;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.socks.library.KLog;
 
 import java.io.File;
@@ -49,7 +45,6 @@ import www.diandianxing.com.diandianxing.network.BaseObserver1;
 import www.diandianxing.com.diandianxing.network.RetrofitManager;
 import www.diandianxing.com.diandianxing.utils.BaseDialog;
 import www.diandianxing.com.diandianxing.utils.MyContants;
-import www.diandianxing.com.diandianxing.utils.PhotoUtils;
 import www.diandianxing.com.diandianxing.utils.SpUtils;
 import www.diandianxing.com.diandianxing.utils.ToastUtils;
 import www.diandianxing.com.diandianxing.utils.UploadUtil;
@@ -73,19 +68,13 @@ public class GuZhangActivity extends BaseActivity {
     private ImageView img_create;
     private RelativeLayout real_ok;
     private Uri imageUri;
-    private static final int CODE_RESULT_REQUEST = 0xa2;
-    private static final int CODE_CAMERA_REQUEST = 0xa1;
-    private static final int CODE_GALLERY_REQUEST = 0xa0;
     private RelativeLayout real_renzheng;
-    private File fileCropUri = new File(Environment.getExternalStorageDirectory().getPath() + "/crop_photo.jpg");
-    private static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x03;
-    private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
-    private Uri cropImageUri;
-    private File fileUri = new File(Environment.getExternalStorageDirectory().getPath() + "/photo.jpg");
     private List<Guzhanxuanbean.DatasBean> datas;
     private Handler handler=new Handler();
     private EditText fu_edtext1;
-
+    private List<LocalMedia> selectList = new ArrayList<>();
+    private String cutPath;
+    private File file;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,7 +111,7 @@ public class GuZhangActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailed(int code) {
+            public void onFailed(int code,String data) {
 
             }
         });
@@ -207,8 +196,8 @@ public class GuZhangActivity extends BaseActivity {
                         map.put("label",datas.get(i).getName()+" ");
                     }
                     Map<String,File> maps=new HashMap<>();
-                    if(fileCropUri!=null){
-                        maps.put("file",fileCropUri) ;
+                    if(file!=null){
+                        maps.put("file",file) ;
                     }
                     s1 = UploadUtil.uploadFile(map, maps, MyContants.BASEURL + "s=Bike/feedback");
                     Gson gson=new Gson();
@@ -266,9 +255,22 @@ public class GuZhangActivity extends BaseActivity {
                     .setChecked(R.id.guzhang_miaoshu, item.isaBoolean());
         }
     }
-    public static boolean hasSdcard() {
-        String state = Environment.getExternalStorageState();
-        return state.equals(Environment.MEDIA_MOUNTED);
+    private void requestCamera() {
+        PictureSelector.create(this)
+                .openCamera(PictureMimeType.ofImage())// 单独拍照，也可录像或也可音频 看你传入的类型是图片or视频
+                .theme(R.style.picture_default_style)// 主题样式设置 具体参考 values/styles
+                .enableCrop(false)// 是否裁剪
+                .compress(false)// 是否压缩
+                .compressMode(PictureConfig.SYSTEM_COMPRESS_MODE)//系统自带 or 鲁班压缩 PictureConfig.SYSTEM_COMPRESS_MODE or LUBAN_COMPRESS_MODE
+                .freeStyleCropEnabled(false)// 裁剪框是否可拖拽
+                .circleDimmedLayer(false)// 是否圆形裁剪
+                .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
+                .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
+                .scaleEnabled(false)// 裁剪是否可放大缩小图片
+//                .glideOverride(160, 160)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
+//                .selectionMedia(list)// 是否传入已选图片
+//                .previewEggs(true)//预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
+                .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
     }
     private void showphotoDialog(int grary, int animationStyle) {
         BaseDialog.Builder builder = new BaseDialog.Builder(this);
@@ -290,7 +292,7 @@ public class GuZhangActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //相机选取
-                autoObtainCameraPermission();
+                requestCamera();
                 dialog.dismiss();
             }
         });
@@ -310,100 +312,25 @@ public class GuZhangActivity extends BaseActivity {
         });
         dialog.show();
     }
-    //调用相机
-    private void autoObtainCameraPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-                ToastUtils.showShort(this, "您已经拒绝过一次");
-            }
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, CAMERA_PERMISSIONS_REQUEST_CODE);
-        } else {//有权限直接调用系统相机拍照
-            if (hasSdcard()) {
-                imageUri = Uri.fromFile(fileUri);
-                if (Build.VERSION.SDK_INT >= 24)
-                    imageUri = FileProvider.getUriForFile(this, "com.xykj.customview.fileproviders", fileUri);//通过FileProvider创建一个content类型的Uri
-                PhotoUtils.takePicture(this, imageUri, CODE_CAMERA_REQUEST);
-            } else {
-                ToastUtils.showShort(this, "设备没有SD卡！");
-            }
 
 
-        }
-    }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode) {
-            case CAMERA_PERMISSIONS_REQUEST_CODE: {//调用系统相机申请拍照权限回调
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (hasSdcard()) {
-                        imageUri = Uri.fromFile(fileUri);
-                        if (Build.VERSION.SDK_INT >= 24)
-                            imageUri = FileProvider.getUriForFile(this, "com.xykj.customview.fileproviders", fileUri);//通过FileProvider创建一个content类型的Uri
-                        PhotoUtils.takePicture(this, imageUri, CODE_CAMERA_REQUEST);
-                    } else {
-                        ToastUtils.showShort(this, "设备没有SD卡！");
-                    }
-                } else {
-
-                    ToastUtils.showShort(this, "请允许打开相机！！");
-                }
-                break;
-
-
-            }
-            case STORAGE_PERMISSIONS_REQUEST_CODE://调用系统相册申请Sdcard权限回调
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    PhotoUtils.openPic(this, CODE_GALLERY_REQUEST);
-                } else {
-
-                    ToastUtils.showShort(this, "请允许打操作SDCard！！");
-                }
-                break;
-        }
-    }
-    private static final int output_X = 480;
-    private static final int output_Y = 480;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case CODE_CAMERA_REQUEST://拍照完成回调
-                    cropImageUri = Uri.fromFile(fileCropUri);
-
-
-                    PhotoUtils.cropImageUri(this, imageUri, cropImageUri, 1, 1, output_X, output_Y, CODE_RESULT_REQUEST);
-
-                    break;
-                case CODE_RESULT_REQUEST:
-                    Bitmap bitmap = PhotoUtils.getBitmapFromUri(cropImageUri, this);
-                    String s = cropImageUri.toString();
-                    //sp存头像
-//                    SpUtils.putString(PersoninforActivity.this,"photos",s);
-//                    EventMessage eventMessage = new EventMessage("ppp");
-//                    EventBus.getDefault().postSticky(eventMessage);
-//                    KLog.a(cropImageUri);
-//                    //将URl上传到服务器
-//                    photowork();
-                    //     ToastUtils.showShort(PersoninforActivity.this,cropImageUri.toString());
-                    if (bitmap != null) {
-
-                        showImages(bitmap);
-                    }
+                case PictureConfig.CHOOSE_REQUEST:
+                    // 图片选择结果回调
+                    selectList = PictureSelector.obtainMultipleResult(data);
+                    cutPath = selectList.get(0).getPath();
+                    file = new File(cutPath);
+                    Glide.with(this).load(cutPath).into(img_create);
+                    Log.d("files",file+"");
                     break;
             }
         }
-    }
-    private void showImages(Bitmap bitmap) {
-        //设置图片到页面
-        img_create.setImageBitmap(bitmap);
-        //  String s = bitmaptoString(bitmap);
+
 
     }
 }

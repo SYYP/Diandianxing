@@ -114,7 +114,7 @@ public class HistorycreditActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailed(int code) {
+            public void onFailed(int code,String data) {
                 ToastUtils.showShort(HistorycreditActivity.this,code+"");
 
             }

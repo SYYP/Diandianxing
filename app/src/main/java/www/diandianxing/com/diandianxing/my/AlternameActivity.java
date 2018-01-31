@@ -83,7 +83,7 @@ public class AlternameActivity extends BaseActivity implements View.OnClickListe
             }
 
             @Override
-            public void onFailed(int code) {
+            public void onFailed(int code,String data) {
 
             }
         });

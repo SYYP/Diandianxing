@@ -17,9 +17,8 @@
         android:layout_height="wrap_content">
 
     <ImageView
-
-        android:scaleType="fitXY"
-        android:src="@drawable/bike"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_fen"
         android:layout_width="match_parent"
         android:layout_height="300dp" />
 

@@ -11,7 +11,7 @@ public class Shouyebean {
     /**
      * code : 200
      * msg : success
-     * datas : {"uid":"3","token":"a0819c2c073c7bba9e0f1f393d11970e","nickName":"昵称改变","credit":"80","id_ident":"3","balance":"100.00","securityDeposit":"199.00","ridingState":"0","realType":"3","headImageUrl":"/danche/uploads/head/20171225/5a40b92aa7b98.png","bikeNumber":"","bikeDistance":"","bikeTime":"","isTemporary":""}
+     * datas : {"uid":"31","token":"08a8ff0924d942566e559df98bb0c919","nickName":"","credit":"146","id_ident":"1","balance":"0.00","securityDeposit":"0.01","ridingState":"1","cartStatus":"1","realType":"0","headImageUrl":"","bikeNumber":"171200770","bikeDistance":"42.49","bikeTime":"0","tripId":"2893","isTemporary":"0"}
      */
 
     private int code;
@@ -44,20 +44,22 @@ public class Shouyebean {
 
     public static class DatasBean {
         /**
-         * uid : 3
-         * token : a0819c2c073c7bba9e0f1f393d11970e
-         * nickName : 昵称改变
-         * credit : 80
-         * id_ident : 3
-         * balance : 100.00
-         * securityDeposit : 199.00
-         * ridingState : 0
-         * realType : 3
-         * headImageUrl : /danche/uploads/head/20171225/5a40b92aa7b98.png
-         * bikeNumber :
-         * bikeDistance :
-         * bikeTime :
-         * isTemporary :
+         * uid : 31
+         * token : 08a8ff0924d942566e559df98bb0c919
+         * nickName :
+         * credit : 146
+         * id_ident : 1
+         * balance : 0.00
+         * securityDeposit : 0.01
+         * ridingState : 1
+         * cartStatus : 1
+         * realType : 0
+         * headImageUrl :
+         * bikeNumber : 171200770
+         * bikeDistance : 42.49
+         * bikeTime : 0
+         * tripId : 2893
+         * isTemporary : 0
          */
 
         private String uid;
@@ -68,11 +70,13 @@ public class Shouyebean {
         private String balance;
         private String securityDeposit;
         private String ridingState;
+        private String cartStatus;
         private String realType;
         private String headImageUrl;
         private String bikeNumber;
         private String bikeDistance;
         private String bikeTime;
+        private String tripId;
         private String isTemporary;
 
         public String getUid() {
@@ -139,6 +143,14 @@ public class Shouyebean {
             this.ridingState = ridingState;
         }
 
+        public String getCartStatus() {
+            return cartStatus;
+        }
+
+        public void setCartStatus(String cartStatus) {
+            this.cartStatus = cartStatus;
+        }
+
         public String getRealType() {
             return realType;
         }
@@ -177,6 +189,14 @@ public class Shouyebean {
 
         public void setBikeTime(String bikeTime) {
             this.bikeTime = bikeTime;
+        }
+
+        public String getTripId() {
+            return tripId;
+        }
+
+        public void setTripId(String tripId) {
+            this.tripId = tripId;
         }
 
         public String getIsTemporary() {

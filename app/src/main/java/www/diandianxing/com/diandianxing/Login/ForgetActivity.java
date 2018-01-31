@@ -19,6 +19,7 @@ import www.diandianxing.com.diandianxing.bean.Forgetbean;
 import www.diandianxing.com.diandianxing.bean.Successbean;
 import www.diandianxing.com.diandianxing.network.BaseObserver1;
 import www.diandianxing.com.diandianxing.network.RetrofitManager;
+import www.diandianxing.com.diandianxing.utils.ClickFilter;
 import www.diandianxing.com.diandianxing.utils.MyContants;
 import www.diandianxing.com.diandianxing.utils.MyUtils;
 import www.diandianxing.com.diandianxing.utils.SendSmsTimerUtils;
@@ -75,7 +76,10 @@ public class ForgetActivity extends BaseActivity implements View.OnClickListener
                 submit();
                 break;
             case R.id.forget_huoqu:
-                getcode();
+                if(ClickFilter.isFastClick()){
+                    getcode();
+                }
+
                 break;
         }
     }
@@ -104,7 +108,7 @@ public class ForgetActivity extends BaseActivity implements View.OnClickListener
             }
 
             @Override
-            public void onFailed(int code) {
+            public void onFailed(int code,String data) {
 
             }
         });
@@ -159,7 +163,7 @@ public class ForgetActivity extends BaseActivity implements View.OnClickListener
 
 
             @Override
-            public void onFailed(int code) {
+            public void onFailed(int code,String data) {
                 ToastUtils.show(ForgetActivity.this,"验证码错误",1);
             }
         });
@@ -183,8 +187,8 @@ public class ForgetActivity extends BaseActivity implements View.OnClickListener
             }
 
             @Override
-            public void onFailed(int code) {
-
+            public void onFailed(int code,String data) {
+                ToastUtils.show(ForgetActivity.this,data,1);
             }
         });
     }

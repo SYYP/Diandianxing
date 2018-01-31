@@ -1,5 +1,6 @@
 package www.diandianxing.com.diandianxing.Login;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,20 +19,21 @@ import java.util.Map;
 
 import www.diandianxing.com.diandianxing.MainActivity;
 import www.diandianxing.com.diandianxing.R;
-import www.diandianxing.com.diandianxing.base.BaseActivity;
 import www.diandianxing.com.diandianxing.bean.Loginbean;
 import www.diandianxing.com.diandianxing.network.BaseObserver1;
 import www.diandianxing.com.diandianxing.network.RetrofitManager;
+import www.diandianxing.com.diandianxing.utils.CustomProgressDialog;
 import www.diandianxing.com.diandianxing.utils.MyContants;
 import www.diandianxing.com.diandianxing.utils.MyUtils;
 import www.diandianxing.com.diandianxing.utils.SpUtils;
+import www.diandianxing.com.diandianxing.utils.ToastUtils;
 
 /**
  * date : ${Date}
  * author:衣鹏宇(ypu)
  */
 
-public class LoginActivitys extends BaseActivity implements View.OnClickListener {
+public class LoginActivitys extends UMLoginActivity implements View.OnClickListener {
 
     private ImageView iv_callback;
     private TextView zhong;
@@ -49,6 +51,7 @@ public class LoginActivitys extends BaseActivity implements View.OnClickListener
     private TextView iv_weibo;
     private ImageView ivcallback;
     private TextView forgetpwd;
+    private static ProgressDialog mDialog;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,9 +77,11 @@ public class LoginActivitys extends BaseActivity implements View.OnClickListener
         iv_weixin = (TextView) findViewById(R.id.iv_weixin);
         iv_weibo = (TextView) findViewById(R.id.iv_weibo);
         forgetpwd = (TextView) findViewById(R.id.forgetpwd);
+        mDialog = new CustomProgressDialog(this, R.style.myprogressdialog);
         iv_callback.setOnClickListener(this);
         login_sso.setOnClickListener(this);
         forgetpwd.setOnClickListener(this);
+        iv_weixin.setOnClickListener(this);
     }
     private void submit() {
         if (TextUtils.isEmpty(login_phone.getText().toString())) {
@@ -111,14 +116,19 @@ public class LoginActivitys extends BaseActivity implements View.OnClickListener
                     //将 token与userid保存
                     SpUtils.putString(LoginActivitys.this,"token",token);
                     SpUtils.putString(LoginActivitys.this,"userid",id);
+                    SpUtils.putBoolean(LoginActivitys.this, "guide", true);
                     Intent intent=new Intent(LoginActivitys.this, MainActivity.class);
                     startActivity(intent);
+                    finish();
 
+                }
+                else if(result.getCode()==404){
+                    ToastUtils.show(LoginActivitys.this,"账号或密码错误",1);
                 }
             }
             @Override
-            public void onFailed(int code) {
-
+            public void onFailed(int code,String data) {
+               ToastUtils.show(LoginActivitys.this,data,1);
             }
         });
     }
@@ -138,11 +148,25 @@ public class LoginActivitys extends BaseActivity implements View.OnClickListener
                    startActivity(intent1);
                 break;
             case R.id.iv_qq:
+                mDialog.show();
+                loginByQQ(this);
                 break;
             case R.id.iv_weixin:
+              //  mDialog.show();
+                loginByWeiXin(this);
                 break;
             case R.id.iv_weibo:
                 break;
         }
+    }
+
+    public static void closeDialog(){
+        mDialog.dismiss();
+        mDialog=null;
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
     }
 }

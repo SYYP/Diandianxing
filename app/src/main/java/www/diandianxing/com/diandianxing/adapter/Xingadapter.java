@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import www.diandianxing.com.diandianxing.R;
-import www.diandianxing.com.diandianxing.bean.Jourbean;
+import www.diandianxing.com.diandianxing.bean.Xingchengbean;
 
 /**
  * date : ${Date}
@@ -19,9 +19,9 @@ import www.diandianxing.com.diandianxing.bean.Jourbean;
 
 public class Xingadapter extends RecyclerView.Adapter<Xingadapter.MyviewHolder> {
       private Context context;
-    private List<Jourbean> list;
+    List<Xingchengbean.DatasBean.ListBean> list;
     private OnItemClickListener mOnItemClickListener = null;
-    public Xingadapter(Context context, List<Jourbean> list) {
+    public Xingadapter(Context context,  List<Xingchengbean.DatasBean.ListBean> list) {
         this.context = context;
         this.list = list;
     }
@@ -46,10 +46,18 @@ public class Xingadapter extends RecyclerView.Adapter<Xingadapter.MyviewHolder> 
                 }
             });
         }
+      //分钟
+        String lengthOfTime = list.get(position).getLengthOfTime();
+        int i = Integer.parseInt(lengthOfTime);
+        int min = i / 60;
 
-       holder.text_heji.setText(list.get(position).getHeji()+"分钟");
-        holder.text_money.setText(list.get(position).getMoney()+"元");
-        holder.text_time.setText(list.get(position).getTime());
+        //钱
+        String money = list.get(position).getMoney();
+        double v = Double.valueOf(money).doubleValue();
+        String moneys= String.valueOf(v);
+        holder.text_heji.setText(min+"分钟");
+        holder.text_money.setText(moneys+"元");
+        holder.text_time.setText(list.get(position).getHours());
 
     }
 

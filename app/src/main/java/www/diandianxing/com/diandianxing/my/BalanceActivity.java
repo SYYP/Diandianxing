@@ -14,6 +14,7 @@ import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
 import www.diandianxing.com.diandianxing.utils.BaseDialog;
 import www.diandianxing.com.diandianxing.utils.MyContants;
+import www.diandianxing.com.diandianxing.utils.PayUtils;
 import www.diandianxing.com.diandianxing.utils.SpUtils;
 import www.diandianxing.com.diandianxing.utils.ToastUtils;
 
@@ -41,7 +42,11 @@ public class BalanceActivity extends BaseActivity implements View.OnClickListene
         MyContants.windows(this);
         setContentView(R.layout.activity_chongziyu);
         initView();
+
+
     }
+
+
 
     private void initView() {
         erbai = (TextView) findViewById(R.id.erbai);
@@ -69,6 +74,9 @@ public class BalanceActivity extends BaseActivity implements View.OnClickListene
         wei.setOnClickListener(this);
         shi.setOnClickListener(this);
         zhi.setOnClickListener(this);
+        SpUtils.putString(this,"banlacn",200+"");
+
+
     }
 
     @Override
@@ -133,8 +141,12 @@ public class BalanceActivity extends BaseActivity implements View.OnClickListene
                     ToastUtils.show(this,"微信支付"+banlacn,1);
                  }
                 else if(i==2){
-                    if (banlacn!=null)
-                    ToastUtils.show(this,"支付宝支付"+banlacn,1);
+                    if (banlacn!=null) {
+                       // ToastUtils.show(this, "支付宝支付" + banlacn, 1);
+                        PayUtils payutil = new PayUtils(this, 1, 2, "0.01");
+                        payutil.goAlipay();
+                    }
+
                 }
                 break;
             case R.id.wei:

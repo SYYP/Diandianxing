@@ -145,13 +145,14 @@ public class SearchActivity extends Activity implements PoiSearch.OnPoiSearchLis
                 lv_ss_content.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+						String latitude = adress.get(i).getLatitude();
+						SpUtils.putString(context,"lat",latitude);
+						SpUtils.putString(context,"lon",adress.get(i).getLongitude());
                         //调用eventbus刷新主页面，根据经纬度跳到该区域
                         EventMessage eventMessage = new EventMessage("lishi");
                         EventBus.getDefault().postSticky(eventMessage);
-                        String latitude = adress.get(i).getLatitude();
-                        SpUtils.putString(context,"lat",latitude);
-                        SpUtils.putString(context,"lon",adress.get(i).getLongitude());
+
+						Log.d("fff",latitude+"`````"+adress.get(i).getLongitude()+"ssss");
                         //ToastUtils.show(SearchActivity.this,adress.get(i).getName()+""+adress.get(i).getLatitude(),1);
                         finish();
                     }
@@ -197,15 +198,7 @@ public class SearchActivity extends Activity implements PoiSearch.OnPoiSearchLis
         else {
             list.add(address);
         }
-
-
 		datasave.setDataList("adress",list);
-        //调用eventbus刷新主页面，根据经纬度跳到该区域
-		String latitude = data.get(position).getLatitude();
-		SpUtils.putString(context,"lat",latitude);
-		SpUtils.putString(context,"lon",data.get(position).getLongitude());
-        EventMessage eventMessage = new EventMessage("sousuo");
-        EventBus.getDefault().postSticky(eventMessage);
         finish();
 
 	}
@@ -296,12 +289,13 @@ public class SearchActivity extends Activity implements PoiSearch.OnPoiSearchLis
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+				String latitude = changlist.get(i).getLatitude();
+				SpUtils.putString(context,"lat",latitude);
+				SpUtils.putString(context,"lon", changlist.get(i).getLongitude());
                 //调用eventbus刷新主页面，根据经纬度跳到该区域
                 EventMessage eventMessage = new EventMessage("changyong");
                 EventBus.getDefault().postSticky(eventMessage);
-                String latitude = changlist.get(i).getLatitude();
-                SpUtils.putString(context,"lat",latitude);
-                SpUtils.putString(context,"lon", changlist.get(i).getLongitude());
+
               //  ToastUtils.show(SearchActivity.this,changlist.get(i).getName()+""+changlist.get(i).getLatitude(),1);
                 finish();
             }
@@ -354,7 +348,12 @@ public class SearchActivity extends Activity implements PoiSearch.OnPoiSearchLis
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                            // ToastUtils.show(context,data.get(i).detailAddress,1);
                             data(i);
-
+							//调用eventbus刷新主页面，根据经纬度跳到该区域
+							String latitude = data.get(i).getLatitude();
+							SpUtils.putString(context,"lat",latitude);
+							SpUtils.putString(context,"lon",data.get(i).getLongitude());
+							EventMessage eventMessage = new EventMessage("sousuo");
+							EventBus.getDefault().postSticky(eventMessage);
 
 
                         }

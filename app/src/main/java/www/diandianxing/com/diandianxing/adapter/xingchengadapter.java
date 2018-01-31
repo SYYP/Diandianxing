@@ -9,13 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import www.diandianxing.com.diandianxing.R;
-import www.diandianxing.com.diandianxing.bean.Jourbean;
+import www.diandianxing.com.diandianxing.bean.Xingchengbean;
 import www.diandianxing.com.diandianxing.my.JourdetailActivity;
 import www.diandianxing.com.diandianxing.utils.DividerItemDecoration;
+import www.diandianxing.com.diandianxing.utils.SpUtils;
 
 /**
  * date : ${Date}
@@ -24,20 +24,12 @@ import www.diandianxing.com.diandianxing.utils.DividerItemDecoration;
 
 public class xingchengadapter extends RecyclerView.Adapter<xingchengadapter.MyviewHolder>{
       private Context context;
-    private List<Jourbean> list;
-    private List<String>titlelist=new ArrayList<>();
-
-    public xingchengadapter(Context context, List<Jourbean> list) {
+    List<Xingchengbean.DatasBean.ListBean> list;
+    public xingchengadapter(Context context,  List<Xingchengbean.DatasBean.ListBean> list) {
         this.context = context;
         this.list = list;
-        data();
     }
 
-    private void data() {
-        for (int i = 0; i < 3; i++) {
-            titlelist.add("11-20");
-        }
-    }
 
     @Override
     public MyviewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -48,7 +40,7 @@ public class xingchengadapter extends RecyclerView.Adapter<xingchengadapter.Myvi
 
     @Override
     public void onBindViewHolder(MyviewHolder holder, int position) {
-           holder.text_date.setText(titlelist.get(position));
+           holder.text_date.setText(list.get(position).getMonth()+"-"+list.get(position).getDay()+"");
           holder.listview.setLayoutManager(new LinearLayoutManager(context));
           Xingadapter xingadapter=new Xingadapter(context,list);
         holder.listview.addItemDecoration(new DividerItemDecoration(context,
@@ -57,9 +49,12 @@ public class xingchengadapter extends RecyclerView.Adapter<xingchengadapter.Myvi
         xingadapter.setOnItemClickListener(new Xingadapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                //保存行程id
+                String log_id = list.get(position).getLog_id();
+                SpUtils.putString(context,"triped",log_id);
                  //跳转到行程详情
                 Intent intent=new Intent(context, JourdetailActivity.class);
+
                 context.startActivity(intent);
             }
         });
@@ -67,7 +62,7 @@ public class xingchengadapter extends RecyclerView.Adapter<xingchengadapter.Myvi
 
     @Override
     public int getItemCount() {
-        return titlelist.size();
+        return list!=null?list.size():0;
     }
 
 

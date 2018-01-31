@@ -8,7 +8,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import www.diandianxing.com.diandianxing.Login.LoginActivity;
+import www.diandianxing.com.diandianxing.MainActivity;
 import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
 import www.diandianxing.com.diandianxing.utils.SpUtils;
@@ -30,7 +30,7 @@ public class LancherActivity extends BaseActivity {
                 if (time == 0) {
                     boolean isguide = SpUtils.getBoolean(LancherActivity.this, "guide", false);
                     if (isguide) {
-                        startActivity(new Intent(LancherActivity.this, LoginActivity.class));
+                        startActivity(new Intent(LancherActivity.this, MainActivity.class));
                     } else {
                         startActivity(new Intent(LancherActivity.this, GuidePageActivity.class));
                     }
@@ -46,38 +46,14 @@ public class LancherActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        UltimateBar ultimateBar = new UltimateBar(this);
-//        ultimateBar.setImmersionBar();
         setContentView(R.layout.activity_launcher);
-//        String umpushid = SpUtils.getString(this, "UMPUSHID", "");
-//        if (!TextUtils.isEmpty(umpushid)) {
-//            ArrayMap arrayMap = new ArrayMap<String, String>();
-//            arrayMap.put("user_id", SpUtils.getString(this, "user_id", ""));
-//            arrayMap.put("token", MyUtils.getToken());
-//            arrayMap.put("device_token", umpushid);
-//            RetrofitManager.get(MyContants.BASEURL + "s=User/upush", arrayMap, new BaseObserver1<EasyBean>("") {
-//                @Override
-//                public void onSuccess(EasyBean result, String tag) {
-//
-//                    //                Toast.makeText(RegisterActivity.this, result.getSuccess(), Toast.LENGTH_SHORT).show();
-//                    if (result.getCode() == 200) {
-//
-//                    } else {
-//
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailed(int code) {
-//                }
-//            });
-    //    }
-        mHandler.postDelayed(new Runnable() {
+        mHandler.postDelayed(
+                new Runnable() {
             @Override
             public void run() {
                 boolean isguide = SpUtils.getBoolean(LancherActivity.this, "guide", false);
                 if (isguide) {
-                    startActivity(new Intent(LancherActivity.this, LoginActivity.class));
+                    startActivity(new Intent(LancherActivity.this,MainActivity.class));
                 } else {
                     startActivity(new Intent(LancherActivity.this, GuidePageActivity.class));
                 }

@@ -1,28 +1,42 @@
 package www.diandianxing.com.diandianxing;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.RemoteException;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptor;
@@ -44,6 +58,7 @@ import com.amap.api.services.route.RideRouteResult;
 import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkPath;
 import com.amap.api.services.route.WalkRouteResult;
+import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -51,33 +66,49 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import www.diandianxing.com.diandianxing.Login.LoginActivity;
+import www.diandianxing.com.diandianxing.base.BaseActivity;
 import www.diandianxing.com.diandianxing.bean.BikeBean;
+import www.diandianxing.com.diandianxing.bean.Changbackbean;
+import www.diandianxing.com.diandianxing.bean.Kailockbean;
+import www.diandianxing.com.diandianxing.bean.MainBikebean;
+import www.diandianxing.com.diandianxing.bean.Shangchuanbean;
 import www.diandianxing.com.diandianxing.bean.Shouyebean;
+import www.diandianxing.com.diandianxing.bean.Zhanshi;
+import www.diandianxing.com.diandianxing.bean.backbean;
 import www.diandianxing.com.diandianxing.main.GuZhangActivity;
 import www.diandianxing.com.diandianxing.main.KefuActivity;
 import www.diandianxing.com.diandianxing.main.OtherActivity;
 import www.diandianxing.com.diandianxing.main.ZiXingActivity;
+import www.diandianxing.com.diandianxing.my.BalanceActivity;
 import www.diandianxing.com.diandianxing.my.CashpayActivity;
+import www.diandianxing.com.diandianxing.my.JieshuActivity;
 import www.diandianxing.com.diandianxing.my.MessageActivity;
 import www.diandianxing.com.diandianxing.my.MyActivityActivity;
 import www.diandianxing.com.diandianxing.network.BaseObserver1;
 import www.diandianxing.com.diandianxing.network.RetrofitManager;
 import www.diandianxing.com.diandianxing.overlay.WalkRouteOverlay;
+import www.diandianxing.com.diandianxing.server.BackService;
 import www.diandianxing.com.diandianxing.sousuo.SearchActivity;
 import www.diandianxing.com.diandianxing.utils.AMapUtil;
 import www.diandianxing.com.diandianxing.utils.BaseDialog;
+import www.diandianxing.com.diandianxing.utils.CustomProgressDialog;
 import www.diandianxing.com.diandianxing.utils.EventMessage;
 import www.diandianxing.com.diandianxing.utils.MyContants;
+import www.diandianxing.com.diandianxing.utils.SoftKeyboardTool;
 import www.diandianxing.com.diandianxing.utils.SpUtils;
 import www.diandianxing.com.diandianxing.utils.ToastUtils;
 
 import static www.diandianxing.com.diandianxing.R.id.map;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,AMap.OnMyLocationChangeListener
-        ,AMap.OnMapTouchListener,RouteSearch.OnRouteSearchListener,AMap.OnMapClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener,AMap.OnMyLocationChangeListener
+        ,AMap.OnMapTouchListener,RouteSearch.OnRouteSearchListener,AMap.OnMapClickListener,LocationSource,
+        AMapLocationListener {
 
     private ImageView img_my;
     private ImageView img_message;
@@ -97,15 +128,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView text_jiaona;
     MapView mMapView = null;
     AMap aMap;
+    private long preTime;
     private Location locations;
     private double lat;
     private double lon;
     private boolean followMove = true;
     private UiSettings mUiSettings;
-    //声明AMapLocationClientOption对象
-    public AMapLocationClientOption mLocationOption = null;
-    //声明AMapLocationClient类对象
-    public AMapLocationClient mLocationClient = null;
     private ArrayList<LatLng> list;
     MyLocationStyle myLocationStyle;
     private ArrayList<LatLng> list1;
@@ -123,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private LatLng latLng;
     private boolean isClickIdentification = false;
     private WalkRouteOverlay walkRouteOverlay;
-    private BaseDialog dialog;
     private String [] time;
     private String distance;
     private TextView tv_address;
@@ -134,7 +161,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView miao_shengyu;
     private TextView miao_time;
     private String des;
-    Handler handler=new Handler();
     private TextView tv_juli;
     private LinearLayout liner_linshi;
     private TextView text_tingche;
@@ -146,8 +172,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView bike_number;
     private TextView qi_time;
     private TextView qi_juli;
+    // 处理定位更新
+    private OnLocationChangedListener mListener;
+    // 定位
+    private AMapLocationClient mlocationClient;
 
+    private AMapLocationClientOption mLocationOption;
+    private List<MainBikebean.DatasBean.EnclosureBean> enclosure;
+    private List<MainBikebean.DatasBean.BikeBean> bike;
+    private RelativeLayout real_shou;
+    private ImageView img_delete;
+    private EditText ed_shuru;
+    private Intent mServiceIntent;
+    private IBackserver iBackService;
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            if(msg.what==1){
+                ToastUtils.show(MainActivity.this,"开锁失败",1);
+            }
+            super.handleMessage(msg);
+        }
+    };
+
+    private static ProgressDialog mDialog;
+    boolean abool;
+    TimerTask timerTask;
+     int i=0,j=0;
+    Timer mtimer;
+    private TextView bike_sso;
+    private String tripld;
+     Timer mtimers;
+    TimerTask timerTasks;
+    boolean aBoolean=true;
+    boolean suo=false;
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MyContants.windows(this);
@@ -157,56 +217,129 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mMapView = (MapView) findViewById(map);
         //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
         mMapView.onCreate(savedInstanceState);
+        mServiceIntent = new Intent(this, BackService.class);
+        startService(mServiceIntent);
+        Log.d("TAG","Create===============================");
+
         /*
            网络请求
          */
 //加载uI
         initView();
-        dataview();
 
         datamap();
-
-        //加载点点行自行车
+        //data加载数据
+        network();
+//加载点点行自行车
         addmark();
         //首先页面初始化时加载的是点点行车页面，保存当前状态
         SpUtils.putString(this, "address", "gongxiang");
-        //data加载数据
-        network();
-        //改变数据
-         intdata();
+        //网络请求车
+        networkbike();
+      //  mtimers.schedule(timerTasks,1000,1000);
+    }
+    /*
+       根据经纬度搜索附近的车辆
+     */
+    private void networkbike() {
+           Map<String,String> map=new HashMap<>();
+        Log.d("lo",SpUtils.getString(this,"lo",null)+"cccccc");
+        Location myLocation = aMap.getMyLocation();
+        if(myLocation!=null) {
+            Log.d("los", myLocation.getLatitude() + "cccccc");
+        }
+        Log.d("la",SpUtils.getString(this,"la",null)+"ccc");
+             map.put("longitude",SpUtils.getString(this,"lo",null));
+             map.put("latitude",SpUtils.getString(this,"la",null));
+             map.put("uid",SpUtils.getString(this,"userid",null));
+             map.put("token",SpUtils.getString(this,"token",null));
+       RetrofitManager.get(MyContants.BASEURL +"s=Bike/indexInfo", map, new BaseObserver1<MainBikebean>("") {
+
+
+
+           @Override
+           public void onSuccess(MainBikebean result, String tag) {
+
+                if(result.getCode()==200){
+                    //电子围栏
+                    enclosure = result.getDatas().getEnclosure();
+                    //共享单车
+                    bike = result.getDatas().getBike();
+                    list1 = new ArrayList<>();
+                    if(bike!=null&&bike.size()>0) {
+                        for (int i = 0; i < bike.size(); i++) {
+                            Log.d("list", list1.size() + "");
+                            LatLng lat = new LatLng(Double.valueOf(bike.get(i).getLatitude().toString().trim()), Double.valueOf(bike.get(i).getLongitude().toString().trim()));
+                            list1.add(lat);
+                            markerOption = new MarkerOptions();
+                            markerOption.position(list1.get(i));
+                            markerOption.draggable(true);//设置Marker可拖动
+                            markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                                    .decodeResource(getResources(), R.drawable.chebiao)));
+                            // 将Marker设置为贴地显示，可以双指下拉地图查看效果
+                            markerOption.setFlat(false);//设置marker平贴地图效果
+                            marker = aMap.addMarker(markerOption);
+                            marker.setObject(new BikeBean("--i--" + i, list1.get(i).latitude, list1.get(i).longitude));
+                            // marker.showInfoWindow();
+                        }
+                    }
+                    //mark点击事件
+                    aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            if (null != walkRouteOverlay) {
+                                walkRouteOverlay.removeFromMap();
+                            }
+                            isClickIdentification = true;
+                            final BikeBean bikebean = (BikeBean) marker.getObject();
+                            mStartPoint = new LatLonPoint(latitude, longitude);
+                            mEndPoint = new LatLonPoint(bikebean.getLat(), bikebean.getLon());
+                            searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WalkDefault);
+                            SpUtils.putString(MainActivity.this,"xuanze","diandianxing");
+                            return true;
+                        }
+                    });
+
+                }
+           }
+
+           @Override
+           public void onFailed(int code,String data) {
+               if(code==1001){
+                   if(data.equals("token不正确")) {
+                       ToastUtils.show(MainActivity.this, "账号已过期，请重新登录", 1);
+                       Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                       startActivity(intent);
+                       finish();
+                   }
+               }
+           }
+       });
+
+
     }
 
-    private void dataview() {
-
-    }
-
-    private void intdata() {
-         /*
-           是否显示押金
-          */
-
-    }
 
     private void network() {
 
-        Map<String,String> map=new HashMap<>();
+        final Map<String,String> map=new HashMap<>();
          map.put("uid",SpUtils.getString(this,"userid",null));
          map.put("token",SpUtils.getString(this,"token",null));
         RetrofitManager.get(MyContants.BASEURL + "s=Bike/myInfo", map, new BaseObserver1<Shouyebean>("") {
 
 
+
             private int istemp;
 
             @Override
-            public void onSuccess(Shouyebean result, String tag) {
+            public void onSuccess(Shouyebean result, String tag)  {
                 int code = result.getCode();
                 if(code==200){
                     datas = result.getDatas();
                     Log.d("ssss",datas.getRidingState());
-
-                    int ride = Integer.parseInt(datas.getRidingState().trim());
+                    int ride = Integer.parseInt(datas.getRidingState().trim());//骑行状态，0未骑行，1骑行中，2骑行结束
                     if(datas.getIsTemporary()!=null&&datas.getIsTemporary().length()>0){
-                        istemp = Integer.parseInt(datas.getIsTemporary());
+                        istemp = Integer.parseInt(datas.getIsTemporary());//是否是临时停车 0不是，1是；
                     }
 
                     SpUtils.putString(MainActivity.this,"token", datas.getToken());
@@ -214,23 +347,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                      SpUtils.putString(MainActivity.this,"nickname",datas.getNickName()+"");
                      SpUtils.putString(MainActivity.this,"yajin",datas.getSecurityDeposit());//押金
                      SpUtils.putString(MainActivity.this,"yue",datas.getBalance());//余额
-                     SpUtils.putString(MainActivity.this,"IDcard",datas.getRealType()+"");
+                     SpUtils.putString(MainActivity.this,"IDcard",datas.getRealType()+"");//认证状态，0未认证，1审核中，2审核不通过，3审核通过
                     Log.d("idcrd",datas.getRealType()+"");
-
+                    tripld = datas.getTripId();
+                    SpUtils.putString(MainActivity.this,"ripedt",datas.getTripId());
+                   String securityDeposit = datas.getSecurityDeposit();
+                    double mooey= Double.valueOf(securityDeposit).doubleValue();
+                    Log.d("mooey",securityDeposit+"");
+//                    int moo= Integer.valueOf(securityDeposit).intValue();
                     // intent.putExtra("photo",datas.getHeadImageUrl());
-                    if(datas.getSecurityDeposit()!=null&&!("0".equals(datas.getSecurityDeposit()))){
+                    if(mooey!=0.00){
+                       Log.d("tttt","ttttttttsstt");
                         main_liner.setVisibility(View.GONE);
+                    } else if(mooey==0.00){
+                        main_liner.setVisibility(View.VISIBLE);
                     }
-                    else if(datas.getBikeNumber()!=null){
-                         bike_number.setText(datas.getBikeNumber());
+                     if(datas.getBikeNumber()!=null){
+                         bike_number.setText("正在用车"+datas.getBikeNumber());
                     }
-                    else if(datas.getBikeDistance()!=null){
-
-                          qi_juli.setText(datas.getBikeDistance());
-                    }
-                    else if(datas.getBikeTime()!=null){
-                         qi_time.setText(datas.getBikeTime());
-                    }
+                    String cartStatus = datas.getCartStatus();
+                    Log.d("cart",cartStatus+"--------违规-------");
+                    int iss = Integer.parseInt(cartStatus);
+                    Log.d("carts",cartStatus+"--------违规停放-------");
+                    if(iss==1){
+                        weiguidailog(Gravity.CENTER,R.style.Alpah_aniamtion);
+                      }
                     Log.d("ff",ride+"");
                      if(ride==1){
                         Log.d("ss","sssssssssssssssssssss");
@@ -241,15 +382,76 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         iv_refresh.setVisibility(View.GONE);
                         iv_search.setVisibility(View.GONE);
                         liner_jishi.setVisibility(View.VISIBLE);
-                        main_liner.setVisibility(View.GONE);
+                         main_liner.setVisibility(View.GONE);
+                         SpUtils.putString(MainActivity.this, "bian", datas.getBikeNumber());
+                         tripld = datas.getTripId();
+                         SpUtils.putString(MainActivity.this,"ripedt",datas.getTripId());
+                           /*
+                          建立长连接
+                          */
+                         if(aBoolean) {
+                             Log.d("start","---------------");
+                             netchang();
+                         }
+                          if(mtimers!=null){
+                              mtimers.schedule(timerTasks,1000,1000);
+                          }
 
                     }
+                     else {
+                         if (ride == 0) {
+                             real_gongxiang.setVisibility(View.VISIBLE);
+                             real_dianzi.setVisibility(View.VISIBLE);
+                             iv_lock.setVisibility(View.VISIBLE);
+                             liner_linshi.setVisibility(View.GONE);
+                             iv_refresh.setVisibility(View.VISIBLE);
+                             iv_search.setVisibility(View.VISIBLE);
+                             liner_jishi.setVisibility(View.GONE);
+                         } else {
+                             if (ride == 2) {//骑行结束跳支付
+
+                                 if (mtimers != null) {
+                                     mtimers.cancel();
+                                     mtimers = null;
+                                 }
+                                 if (timerTasks != null) {
+                                     timerTasks.cancel();
+                                     timerTasks = null;
+                                 }
+                                 tripld = datas.getTripId();
+                                 //  netchangs();
+                                 Log.d("tagss", tripld);
+//                                 Intent intent_unbind = new Intent(MainActivity.this, BackService.class);
+//                                 stopService(intent_unbind);
+
+                                 //   SpUtils.putString(MainActivity.this,"triped",datas.getTripld());
+                                 Intent intent = new Intent(MainActivity.this, JieshuActivity.class);
+                                 startActivity(intent);
+                                finish();
+
+                                 //    netchangs();
+                                 //保存骑行的id
+
+                                 // finish();
+
+                             }
+                         }
+                     }
                      if(istemp==0){
 
-                         text_tingche.setText("继续骑行");
+                         text_tingche.setText("临时停车");
                      }
                     else if(istemp==1){
-                         text_tingche.setText("临时停车");
+                         text_tingche.setText("继续骑行");
+                     }
+
+                         Log.d("tripld",tripld+"-----------");
+                         /*
+                           开启定时器
+                          */
+                         if(tripld!=null&&tripld.length()>0) {
+                           //  mtimers.schedule(timerTasks,1000,1000);
+
                      }
 
                 }
@@ -257,17 +459,56 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             @Override
-            public void onFailed(int code) {
+            public void onFailed(int code,String data) {
 
-                 if(code==404){
-                     ToastUtils.showShort(MainActivity.this,"账号已过期，请重新登录");
-                      Intent intent=new Intent(MainActivity.this, LoginActivity.class);
-                     startActivity(intent);
-
-                 }
+                if(code==1001){
+                    if(data.equals("token不正确")||data.equals("token已过期")) {
+                        ToastUtils.show(MainActivity.this, "账号已过期，请重新登录", 1);
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
             }
         });
 
+    }
+
+
+
+    private void lanetwork() {
+        Map<String,String> map=new HashMap<String, String>();
+        map.put("uid",SpUtils.getString(MainActivity.this,"userid",null));
+        map.put("token",SpUtils.getString(MainActivity.this,"token",null));
+        map.put("log_id",SpUtils.getString(MainActivity.this,"ripedt",null));
+        String la = SpUtils.getString(MainActivity.this, "la", null);
+        Log.d("la",la+"---------------");
+        map.put("lat",SpUtils.getString(MainActivity.this,"la",null));
+        map.put("lon",SpUtils.getString(MainActivity.this,"lo",null));
+        RetrofitManager.post(MyContants.BASEURL + "s=LockBalance/distCalculation", map, new BaseObserver1<Shangchuanbean>("") {
+            @Override
+            public void onSuccess(Shangchuanbean result, String tag) {
+                if(result.getCode()==200){
+                    String addTime = result.getDatas().getAddTime();
+                    int i = Integer.parseInt(addTime);
+                    int i1 = i / 60;
+                    Log.d("msd","成功");
+                    qi_time.setText(i1+"分钟");
+
+                    String route = result.getDatas().getRoute();
+                    if(route!=null) {
+                        double v = Double.valueOf(route).doubleValue();
+                        String s = String.valueOf(v);
+                        qi_juli.setText(s + "米");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int code, String data) {
+
+            }
+        });
     }
 
     /*
@@ -275,33 +516,142 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventMessage eventMessage) {
+        //支付完好跳到详情，看完后返回主界面
+        if(eventMessage.getMsg().equals("xiangqing")){
+
+              network();
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            iBackService.qidong();
+//                            network();
+//
+//                            Log.d("tagss",mReceiver+"----"+conn+"");
+//
+//                        } catch (Exception e){
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }).start();
+
+
+
+//            bindService(mServiceIntent, conn, BIND_AUTO_CREATE);
+//            // 开始服务
+//            registerReceiver();
+
+            // 注销广播 最好在onPause上注销
+
+
+        }
          //扫码成功后刷新主页面
         if (eventMessage.getMsg().equals("zxing")) {
+            suo=true;
+
+            if(suo) {
+
+                bindService(mServiceIntent, conn, BIND_AUTO_CREATE);
+                // 开始服务
+                registerReceiver();
+                Log.d("tagsssssss","start-------------");
+
+            }
           //  liner_mark.setVisibility(View.GONE);
+           //扫码开锁
+            Log.d("start1111111","---------------");
+            mDialog.show();
             SpUtils.putString(this, "address", "dianzi");
             img_che.setImageResource(R.drawable.img_gongxiangfalse);
             img_wei.setImageResource(R.drawable.img_dian_true);
             aMap.clear();
             datamap();
-            adddianzimark();
-            network();
-            real_gongxiang.setVisibility(View.GONE);
-            real_dianzi.setVisibility(View.GONE);
-            iv_lock.setVisibility(View.GONE);
-            liner_linshi.setVisibility(View.VISIBLE);
-            iv_refresh.setVisibility(View.GONE);
-            iv_search.setVisibility(View.GONE);
-            liner_jishi.setVisibility(View.VISIBLE);
-            main_liner.setVisibility(View.GONE);
+            mtimer=new Timer();
 
+            timerTask=new TimerTask() {
+                @Override
+                public void run() {
+                    j++;
+                   if(abool){
+                       j=0;
+                      mDialog.dismiss();
+                       if(mtimer!=null) {
+                           mtimer.cancel();
+                           mtimer = null;
+                       }
+                       if(timerTask!=null) {
+                           timerTask.cancel();
+                           timerTask = null;
+                       }
+
+
+                   }
+                     if(j==39){
+                         j=0;
+                          mDialog.dismiss();
+
+                         handler.sendEmptyMessage(1);
+
+                         if(mtimer!=null) {
+                             mtimer.cancel();
+                             mtimer = null;
+                         }
+                         if(timerTask!=null) {
+                             timerTask.cancel();
+                             timerTask = null;
+                         }
+                     }
+
+                    Log.d("ssssddds",i+"");
+                }
+
+            };
+            kaisuo();//短连接开锁
+
+            adddianzimark();//电子围栏
+            if(timerTask!=null) {
+                mtimer.schedule(timerTask, 1000, 1000);
+            }
+
+
+
+
+
+        }
+        else if(eventMessage.getMsg().equals("mainetwork")){
+            if (mtimers != null) {
+                mtimers.cancel();
+                mtimers = null;
+            }
+            if (timerTasks != null) {
+                timerTasks.cancel();
+                timerTasks = null;
+            }
+
+            network();
+
+        }
+        else  if(eventMessage.getMsg().equals("dingdan")){
+            network();
+
+        }
+        else if(eventMessage.getMsg().equals("shoushi")){
+            real_shou.setVisibility(View.VISIBLE);
+            SoftKeyboardTool.showSoftKeyboard(ed_shuru);
 
         }
         else if(eventMessage.getMsg().equals("myposition")){
              datamap();
+            mlocationClient.startLocation();
 
 
         }
+        else if(eventMessage.getMsg().equals("yincang")){
+            real_shou.setVisibility(View.GONE);
+            SoftKeyboardTool.closeKeyboard(ed_shuru);
+        }
         else if(eventMessage.getMsg().equals("lishi")){
+         //   mlocationClient.stopLocation();
             //常用地址
             //修改地图的中心点位置
             String lat = SpUtils.getString(this, "lat", null);
@@ -309,16 +659,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             double v = Double.valueOf(lat).doubleValue();
             double v1 = Double.valueOf(lon).doubleValue();
             Log.d("vvv",v+"dddd"+v1+"");
-//            mUiSettings = aMap.getUiSettings();
-//            mUiSettings.setZoomControlsEnabled(false);
-//            mUiSettings.setCompassEnabled(true);
             mUpdata = CameraUpdateFactory.newCameraPosition(
 //15是缩放比例，0是倾斜度，30显示比例
                     new CameraPosition(new LatLng(v,v1), 15, 0, 30));//这是地理位置，就是经纬度。
             aMap.moveCamera(mUpdata);//定位的方法
 
         }
-        else if(eventMessage.getMsg().equals("sousou")){
+        else if(eventMessage.getMsg().equals("sousuo")){
+          //  mlocationClient.stopLocation();
             //常用地址
             //修改地图的中心点位置
             String lat = SpUtils.getString(this, "lat", null);
@@ -326,9 +674,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             double v = Double.valueOf(lat).doubleValue();
             double v1 = Double.valueOf(lon).doubleValue();
             Log.d("vvv",v+"dddd"+v1+"");
-//            mUiSettings = aMap.getUiSettings();
-//            mUiSettings.setZoomControlsEnabled(false);
-//            mUiSettings.setCompassEnabled(true);
             mUpdata = CameraUpdateFactory.newCameraPosition(
 //15是缩放比例，0是倾斜度，30显示比例
                     new CameraPosition(new LatLng(v,v1), 15, 0, 30));//这是地理位置，就是经纬度。
@@ -336,6 +681,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
         else if(eventMessage.getMsg().equals("changyong")){
+          //  mlocationClient.stopLocation();
             //常用地址
             //修改地图的中心点位置
             String lat = SpUtils.getString(this, "lat", null);
@@ -349,33 +695,114 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mUpdata = CameraUpdateFactory.newCameraPosition(
 //15是缩放比例，0是倾斜度，30显示比例
              new CameraPosition(new LatLng(v,v1), 15, 0, 30));//这是地理位置，就是经纬度。
-             aMap.moveCamera(mUpdata);//定位的方法
-         //   myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW_NO_CENTER);
-          //  aMap.setMyLocationStyle(myLocationStyle);
-
-           // aMap.moveCamera(CameraUpdateFactory.changeLatLng(latLng));
-
-//                  myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
-//          //  myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
-//            aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
-////aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
-//            myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE) ;//定位一次，且将视角移动到地图中心点。
-//            myLocationStyle.showMyLocation(false);
-//            aMap.setMyLocationEnabled(true);//
-
-//
-//            //初始化定位服务
-//            initLocationService();
+             aMap.moveCamera(mUpdata);//定位的方法;
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // 注销广播 最好在onPause上注销
+    }
+
+    private void netchang() {
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                try {
+                    Log.i("tag", "是否为空：" + iBackService);
+                    if (iBackService == null) {
+                        Toast.makeText(getApplicationContext(),
+                                "没有连接，可能是服务器已断开", Toast.LENGTH_SHORT).show();
+                    } else {
+
+
+                        String bikenum = SpUtils.getString(MainActivity.this, "bianhao", null);
+                             Log.d("bian",bikenum+"");
+                        if(bikenum!=null) {
+                            final boolean isSend = iBackService.sendMessage(bikenum);
+                            SpUtils.putString(MainActivity.this,"bianhao",null);
+                            Log.d("isend",isSend+"--------");
+                        }
+
+                        handler.post(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                // TODO Auto-generated method stub
+//                                Toast.makeText(MainActivity.this,
+//                                        isSend ? "success" : "fail", Toast.LENGTH_SHORT)
+//                                        .show();
+
+
+                            }
+                        });
+
+
+                    }
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+
+    }
+
+    private void netchangs() {
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                try {
+                    Log.i("tag", "是否为空：" + iBackService);
+                    if (iBackService == null) {
+                        Toast.makeText(getApplicationContext(),
+                                "没有连接，可能是服务器已断开", Toast.LENGTH_SHORT).show();
+                    } else {
+
+
+
+
+                        final boolean isSend = iBackService.sendMessage("啥玩意");
+                        Log.d("isend",isSend+"--------");
+                        handler.post(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                // TODO Auto-generated method stub
+                                Toast.makeText(MainActivity.this,
+                                        isSend ? "success" : "fail", Toast.LENGTH_SHORT)
+                                        .show();
+
+                                if(!isSend){
+
+
+
+                                }
+
+                            }
+                        });
+
+
+                    }
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+
     }
 
     private void data() {
         niaddress();
            //通过状态值判断是自行车，还是电子围栏
 
-
     }
-
     /*
       初始化地图
      */
@@ -386,32 +813,63 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //地图初始化时设置的可见比例
             aMap.moveCamera(CameraUpdateFactory.zoomTo(14));
         }
-        //设置logo位置
-        mUiSettings.setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_CENTER);
-        mUiSettings.setZoomControlsEnabled(false);
-
+        aMap.getUiSettings().setZoomControlsEnabled(false);
         myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
-     //   myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE) ;//定位一次，且将视角移动到地图中心点。
-        myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.loation_locin);
         BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
         myLocationStyle.myLocationIcon(bitmapDescriptor);
+        myLocationStyle.radiusFillColor(Color.argb(100, 0, 0, 180));// 设置圆形的填充颜色
+        myLocationStyle.strokeWidth(1.0f);// 设置圆形的边框粗细
         aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
         aMap.setMyLocationEnabled(true);// 设置为
         aMap.setOnMyLocationChangeListener(this);
         aMap.setOnMapTouchListener(this);
         aMap.setOnMapClickListener(this);
-
+        /*
+         dingwei蓝点
+         */
+// 设置定位监听
+        aMap.setLocationSource(this);
+// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+        aMap.setMyLocationEnabled(true);
+// 设置定位的类型为定位模式，有定位、跟随或地图根据面向方向旋转几种
+        aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_FOLLOW);
 
     }
 
+
+
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        if (conn != null && iBackService != null) {
+            suo=false;
+            // 注销广播 最好在onPause上注销
+            LocalBroadcastManager.getInstance(MainActivity.this).unregisterReceiver(mReceiver);
+            // 注销服务
+            unbindService(conn);
+            Log.d("jj-----","注销");
+              conn = null;
+            iBackService = null;
+
+
+        }
+
+//        if(mtimers!=null){
+//            mtimers.cancel();
+//            mtimers=null;
+//
+//        }
+//        if(timerTasks!=null){
+//            timerTasks.cancel();
+//            timerTasks=null;
+//        }
         //在activity执行onDestroy时执行mMapView.onDestroy()，销毁地图
         mMapView.onDestroy();
         EventBus.getDefault().unregister(this);
+        super.onDestroy();
+
+
+
     }
 
     @Override
@@ -426,8 +884,191 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onPause();
         //在activity执行onPause时执行mMapView.onPause ()，暂停地图的绘制
         mMapView.onPause();
+
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        if(suo) {
+//
+//            bindService(mServiceIntent, conn, BIND_AUTO_CREATE);
+//            // 开始服务
+//            registerReceiver();
+//            Log.d("tagsssssss","start-------------");
+//
+//        }
+        Log.d("ffffff","startssss-------------");
+
+
+
+    }
+    // 注册广播
+    private void registerReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BackService.HEART_BEAT_ACTION);
+        intentFilter.addAction(BackService.MESSAGE_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, intentFilter);
+
+    }
+
+      public void kaisuo(){
+           /*
+               建立长连接
+              */
+          final String bikenum = SpUtils.getString(MainActivity.this, "bianhao", null);
+          Map<String, String> map = new HashMap<>();
+          map.put("uid", SpUtils.getString(MainActivity.this, "userid", null));
+          map.put("token", SpUtils.getString(MainActivity.this, "token", null));
+          map.put("ident", bikenum);
+          RetrofitManager.post(MyContants.BASEURL+"s=LockBalance/unlock", map, new BaseObserver1<Kailockbean>("") {
+
+              @Override
+              public void onSuccess(Kailockbean result, String tag) {
+                  if(result.getCode()==200){
+                      Log.d("bikenums",bikenum+"开锁成功");
+                      netchang();//长连接
+                  }
+
+                  else{
+                  if(result.getDatas().equals("token不正确")||result.getDatas().equals("token已过期")) {
+                      ToastUtils.show(MainActivity.this, "账号已过期，请重新登录", 1);
+                      Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                      startActivity(intent);
+                      finish();
+                  }
+                      if(result.getDatas().equals("车辆使用中")){
+                          mDialog.dismiss();
+                          ToastUtils.show(MainActivity.this, "车辆使用中", 1);
+                      }
+                      if(result.getDatas().equals("车俩失踪")){
+                          mDialog.dismiss();
+                          ToastUtils.show(MainActivity.this, "车俩失踪", 1);
+                      }
+
+
+                  }
+              }
+
+              @Override
+              public void onFailed(int code,String data) {
+                  if(code==1001){
+                      if(data.equals("token不正确")||data.equals("token已过期")) {
+                          ToastUtils.show(MainActivity.this, "账号已过期，请重新登录", 1);
+                          Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                          startActivity(intent);
+                          finish();
+                          if(data.equals("车辆使用中")){
+                              mDialog.dismiss();
+                              ToastUtils.show(MainActivity.this, "车辆使用中", 1);
+
+                          }
+                      }
+                  }
+              }
+          });
+
+      }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            // 消息广播
+            if (action.equals(BackService.MESSAGE_ACTION)) {
+                String stringExtra = intent.getStringExtra("message");
+                if (stringExtra.equals("你是不是傻")) {
+                    return;
+                } else {
+                    Gson gson = new Gson();
+                    Log.d("asd", stringExtra + "");
+                    backbean backbean = gson.fromJson(stringExtra, backbean.class);
+                    int code = backbean.getCode();
+                    Log.d("ddddss", code + "");
+
+                    if (code == 93000) {
+                        if (mtimers != null) {
+                            mtimers.cancel();
+                            mtimers = null;
+                        }
+                        if (timerTasks != null) {
+                            timerTasks.cancel();
+                            timerTasks = null;
+                        }
+                        network();
+
+                    } else if (code == 96300) {
+
+                        network();
+
+//                     try {
+//                         network();
+//                         iBackService.shibie();
+//
+//
+//                         //结算
+//
+//                     } catch (RemoteException e) {
+//                         e.printStackTrace();
+//                     }
+
+                    } else if (code == 0) {
+
+                        networkser(stringExtra);
+                    }
+                }
+                 /*
+                    解析chang连接返回的数据
+
+                  */
+                }else if (action.equals(BackService.HEART_BEAT_ACTION)) {// 心跳广播
+                }
+
+        }
+    };
+
+    private ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            // 未连接为空
+            iBackService = null;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            // 已连接
+            iBackService = IBackserver.Stub.asInterface(service);
+            Log.d("iback",iBackService+"-------------");
+        }
+    };
+
+    public  void networkser(final String stringextra){
+        Map<String,String> map=new HashMap<>();
+        map.put("uid",SpUtils.getString(this,"userid",null));
+        map.put("token",SpUtils.getString(this,"token",null));
+        map.put("json",stringextra);
+        RetrofitManager.post(MyContants.BASEURL + "s=LockBalance/equipOperation", map, new BaseObserver1<Changbackbean>("") {
+            @Override
+            public void onSuccess(Changbackbean result, String tag) {
+                if(result.getCode()==200) {
+                    abool=true;
+                    mDialog.dismiss();
+                    aBoolean=false;
+                    network();
+                }
+
+
+            }
+
+            @Override
+            public void onFailed(int code,String data) {
+                if(code==1001){
+                    mDialog.dismiss();
+                    ToastUtils.show(MainActivity.this,data,1);
+                }
+            }
+        });
+    }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -490,42 +1131,97 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         qi_time = (TextView) findViewById(R.id.qi_time);
         qi_juli = (TextView) findViewById(R.id.qi_juli);
         liner_jishi = (LinearLayout) findViewById(R.id.liner_jishi);
+        real_shou = (RelativeLayout) findViewById(R.id.real_shoudong);
+        img_delete = (ImageView) findViewById(R.id.img_delete);
+        img_delete.setOnClickListener(this);
+        ed_shuru = (EditText) findViewById(R.id.ed_shuru);
+        mDialog = new CustomProgressDialog(this, R.style.myprogressdialog);
+        //立即用车
+        bike_sso = (TextView) findViewById(R.id.bike_sso);
+        bike_sso.setOnClickListener(this);
+        //开启定时器每三分钟穿数据
+        mtimers=new Timer();
+        timerTasks=new TimerTask() {
+            @Override
+            public void run() {
+                i++;
+                if(i==10){
+                    i=0;
+                    //上传数据库自己的定位
+                    if(tripld!=null&&tripld.length()>0) {
+                        lanetwork();
+                    }
+                    else {
+                        mtimers.cancel();
+                        mtimers=null;
+                        timerTasks.cancel();
+                        timerTasks=null;
+                    }
 
+                }
+
+                Log.d("ssssddd",i+"");
+            }
+
+
+
+        };
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
 
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.bike_sso://立即用车
+                //获取edittext上的内容
+                String trim = ed_shuru.getText().toString().trim();
+                 SpUtils.putString(MainActivity.this,"bianhao",trim);
+                EventMessage eventMessage = new EventMessage("zxing");
+                EventBus.getDefault().postSticky(eventMessage);
+                real_shou.setVisibility(View.GONE);
+                SoftKeyboardTool.closeKeyboard(ed_shuru);
+                break;
+            case R.id.img_delete:
+                real_shou.setVisibility(View.GONE);
+                SoftKeyboardTool.closeKeyboard(ed_shuru);
+                break;
             case R.id.btn_linshi:
 
                 if(bool){
                     //临时停车,再次点击变为继续骑行
-                    text_tingche.setText("临时停车");
                     showxingDialog(Gravity.CENTER,R.style.Alpah_aniamtion);
+                    text_tingche.setText("临时停车");
                 }
                 else {
-                    //临时停车,再次点击变为继续骑行
-                    text_tingche.setText("继续骑行");
                     showqixingDialog(Gravity.CENTER,R.style.Alpah_aniamtion);
+                    //临时停车,再次点击变为继续骑行
+                    netlinshi();
+
                 }
                 bool=!bool;
-
                 break;
             //我的
-            case R.id.img_my:
-                Intent intent = new Intent(this, MyActivityActivity.class);
-
-                 intent.putExtra("fenshu",datas.getCredit()+"");
+            case R.id.img_my:Intent intent = new Intent(this, MyActivityActivity.class);
+             if(datas!=null) {
+                 intent.putExtra("fenshu", datas.getCredit() + "");
+             }
                 startActivity(intent);
                 break;
             //消息
             case R.id.img_message:
-                Intent intent1 = new Intent(this, MessageActivity.class);
-                startActivity(intent1);
+
+               Intent intent1 = new Intent(this, MessageActivity.class);
+               startActivity(intent1);
                 break;
             //搜索
             case R.id.iv_search:
+                mlocationClient.stopLocation();
                 //跳到搜索页面
                 Intent search=new Intent(this, SearchActivity.class);
                 startActivity(search);
@@ -535,12 +1231,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 showphotoDialog(Gravity.BOTTOM, R.style.Bottom_Top_aniamtion);
                 break;
             case R.id.iv_lock:
-                Intent intent2 = new Intent(this, ZiXingActivity.class);
-                startActivity(intent2);
+                 /*
+                   判断 当押金为零时，跳押金页面
+                    当余额不足时跳充值余额
+                  */
+
+                String yajin = SpUtils.getString(this, "yajin", null);
+                String yue = SpUtils.getString(this, "yue", null);
+                double yues= Double.valueOf(yue).doubleValue();
+                int yu=(int)yues;
+                if(yajin==null||yajin.equals("0.00")||yajin.length()<0){
+                    //跳充值押金
+                    Intent cashpay=new Intent(this,CashpayActivity.class);
+                    startActivity(cashpay);
+                  }
+                else if(yu<2){
+                    Intent cashpays=new Intent(this,BalanceActivity.class);
+                    startActivity(cashpays);
+                }
+                else {
+                    Intent intent2 = new Intent(this, ZiXingActivity.class);
+                    startActivity(intent2);
+                }
                 //扫码
                 break;
             case R.id.iv_address:
-                datamap();
+                mlocationClient.startLocation();
                 String address = SpUtils.getString(this, "address", null);
                 if (address.equals("gongxiang")) {
                     addmark();
@@ -552,10 +1268,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //定位
                 break;
             case R.id.iv_refresh:
+                mlocationClient.startLocation();
                 //刷新
-                datamap();
+                addmark();
                 break;
             case R.id.real_gongxiang:
+                mlocationClient.startLocation();
                 liner_mark.setVisibility(View.GONE);
                 SpUtils.putString(this, "address", "gongxiang");
                 aMap.clear();
@@ -564,6 +1282,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 img_wei.setImageResource(R.drawable.img_dianziwei);
                 break;
             case R.id.real_dianzi:
+                mlocationClient.startLocation();
                 liner_mark.setVisibility(View.GONE);
                 SpUtils.putString(this, "address", "dianzi");
                 img_che.setImageResource(R.drawable.img_gongxiangfalse);
@@ -577,6 +1296,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
 
+    }
+
+    private void netlinshi() {
+
+               Map<String,String> map=new HashMap<>();
+               map.put("uid",SpUtils.getString(this,"userid",null));
+               map.put("token",SpUtils.getString(this,"token",null));
+               map.put("BikeNum",SpUtils.getString(this,"bian",null));
+        RetrofitManager.post(MyContants.BASEURL + "s=LockBalance/suspend", map, new BaseObserver1<Zhanshi>("") {
+            @Override
+            public void onSuccess(Zhanshi result, String tag) {
+                if(result.getCode()==200){
+                     ToastUtils.show(MainActivity.this,result.getDatas().toString(),1);
+                    text_tingche.setText("继续骑行");
+                }
+            }
+
+            @Override
+            public void onFailed(int code,String data) {
+
+            }
+        });
     }
 
     private void showphotoDialog(int grary, int animationStyle) {
@@ -651,6 +1392,70 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
         dialog.show();
     }
+    private void weiguidailog(int grary, int animationStyle) {
+        BaseDialog.Builder builder = new BaseDialog.Builder(this);
+              
+        final BaseDialog dialog = builder.setViewId(R.layout.activity_weigui)
+                //设置dialogpadding
+                .setPaddingdp(0, 0, 0, 0)
+                //设置显示位置
+                .setGravity(grary)
+                //设置动画
+                .setAnimation(animationStyle)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(false)
+                //设置监听事件
+                .builder();
+        //wozhidao
+        TextView text_context= dialog.getView(R.id.text_context);
+        text_context.setText("尊敬的用户，您当前车辆"+(datas.getBikeNumber()+"编号")+"属于违规停放，违规停放将会影响" +
+                "您的骑行信用，请及时处理");
+        dialog.getView(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mtimers != null) {
+                    mtimers.cancel();
+                    mtimers = null;
+                }
+                if (timerTasks != null) {
+                    timerTasks.cancel();
+                    timerTasks = null;
+                }
+                if (conn != null && iBackService != null) {
+                    suo = false;
+                    // 注销广播 最好在onPause上注销
+                    LocalBroadcastManager.getInstance(MainActivity.this).unregisterReceiver(mReceiver);
+                    // 注销服务
+                    unbindService(conn);
+                }
+                   Intent it=new Intent(MainActivity.this,ZiXingActivity.class);
+                   startActivity(it);
+                  dialog.dismiss();
+
+            }
+        });
+        dialog.getView(R.id.lin_no).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mtimers != null) {
+                    mtimers.cancel();
+                    mtimers = null;
+                }
+                if (timerTasks != null) {
+                    timerTasks.cancel();
+                    timerTasks = null;
+                }
+                //联系客服
+                dialog.dismiss();
+                Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "010-1234563245"));
+                //跳转到拨号界面，同时传递电话号码
+                startActivity(dialIntent);
+            }
+        });
+        dialog.show();
+    }
     private void showxingDialog(int grary, int animationStyle) {
         BaseDialog.Builder builder = new BaseDialog.Builder(this);
         final BaseDialog dialog = builder.setViewId(R.layout.dialog_anquantishis)
@@ -680,18 +1485,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     @Override
     public void onMyLocationChange(Location location) {
-        //locations = location;
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         latLng = new LatLng(latitude, longitude);
         Log.d("local", latitude + "" + longitude + "");
+        SpUtils.putString(this,"la",latitude+"");
+        SpUtils.putString(this,"lo",longitude+"");
 
     }
 
     @Override
     public void onTouch(MotionEvent motionEvent) {
-        myLocationStyle.myLocationType((MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER));
-        aMap.setMyLocationStyle(myLocationStyle);
+        mlocationClient.stopLocation();
 
     }
     /*
@@ -699,63 +1504,61 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     public void adddianzimark() {
         list1 = new ArrayList<>();
-        LatLng lat = new LatLng(39.5427, 116.2317);
-        list1.add(lat);
-        LatLng lat1 = new LatLng(39.4698041, 116.27);
-        list1.add(lat1);
-        LatLng lat2 = new LatLng(39.96, 116.3445);
-        list1.add(lat2);
-        for (int i = 0; i < list1.size(); i++) {
-            Log.d("list", list1.size() + "");
 
-            markerOption = new MarkerOptions();
-            markerOption.position(list1.get(i));
-            markerOption.draggable(true);//设置Marker可拖动
-            markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                    .decodeResource(getResources(), R.drawable.dianziwei)));
-            // 将Marker设置为贴地显示，可以双指下拉地图查看效果
-            markerOption.setFlat(false);//设置marker平贴地图效果
-            marker = aMap.addMarker(markerOption);
-            marker.setObject(new BikeBean("--i--" + i, list1.get(i).latitude, list1.get(i).longitude));
-            marker.showInfoWindow();
-        }
-        //mark点击事件
-        aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                if (null != walkRouteOverlay) {
-                    walkRouteOverlay.removeFromMap();
-                }
-                final BikeBean bikebean = (BikeBean) marker.getObject();
-                mStartPoint = new LatLonPoint(latitude, longitude);
-                mEndPoint = new LatLonPoint(bikebean.getLat(), bikebean.getLon());
-                searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WalkDefault);
-                SpUtils.putString(MainActivity.this,"xuanze","dianziwei");
-                return true;
+        if(enclosure!=null&&enclosure.size()>0) {
+            for (int i = 0; i < enclosure.size(); i++) {
+                Log.d("list", "shulia" + enclosure.size() + "");
+                LatLng lat = new LatLng(Double.valueOf(enclosure.get(i).getLatitude().toString().trim()), Double.valueOf(enclosure.get(i).getLongitude().toString().trim()));
+                list1.add(lat);
+                markerOption = new MarkerOptions();
+                markerOption.position(list1.get(i));
+                markerOption.draggable(true);//设置Marker可拖动
+                markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                        .decodeResource(getResources(), R.drawable.dianziwei)));
+                // 将Marker设置为贴地显示，可以双指下拉地图查看效果
+                markerOption.setFlat(false);//设置marker平贴地图效果
+                marker = aMap.addMarker(markerOption);
+                marker.setObject(new BikeBean("--i--" + i, list1.get(i).latitude, list1.get(i).longitude));
+                marker.showInfoWindow();
             }
-        });
+            //mark点击事件
+            aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    if (null != walkRouteOverlay) {
+                        walkRouteOverlay.removeFromMap();
+                    }
+                    final BikeBean bikebean = (BikeBean) marker.getObject();
+                    mStartPoint = new LatLonPoint(latitude, longitude);
+                    mEndPoint = new LatLonPoint(bikebean.getLat(), bikebean.getLon());
+                    searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WalkDefault);
+                    SpUtils.putString(MainActivity.this, "xuanze", "dianziwei");
+                    return true;
+                }
+            });
+        }else {
+            return;
+        }
     }
 
     public void addmark() {
         list1 = new ArrayList<>();
-        LatLng lat = new LatLng(39.5427, 116.2317);
-        list1.add(lat);
-        LatLng lat1 = new LatLng(39.4698041, 116.27);
-        list1.add(lat1);
-        LatLng lat2 = new LatLng(39.96, 116.3445);
-        list1.add(lat2);
-        for (int i = 0; i < list1.size(); i++) {
-            Log.d("list", list1.size() + "");
-            markerOption = new MarkerOptions();
-            markerOption.position(list1.get(i));
-            markerOption.draggable(true);//设置Marker可拖动
-            markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                    .decodeResource(getResources(), R.drawable.chebiao)));
-            // 将Marker设置为贴地显示，可以双指下拉地图查看效果
-            markerOption.setFlat(false);//设置marker平贴地图效果
-            marker = aMap.addMarker(markerOption);
-            marker.setObject(new BikeBean("--i--" + i, list1.get(i).latitude, list1.get(i).longitude));
-           // marker.showInfoWindow();
+        if(bike!=null&&bike.size()>0) {
+            for (int i = 0; i < bike.size(); i++) {
+                Log.d("list", list1.size() + "");
+                LatLng lat = new LatLng(Double.valueOf(bike.get(i).getLatitude().toString().trim()), Double.valueOf(bike.get(i).getLongitude().toString().trim()));
+                list1.add(lat);
+                markerOption = new MarkerOptions();
+                markerOption.position(list1.get(i));
+                markerOption.draggable(true);//设置Marker可拖动
+                markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                        .decodeResource(getResources(), R.drawable.chebiao)));
+                // 将Marker设置为贴地显示，可以双指下拉地图查看效果
+                markerOption.setFlat(false);//设置marker平贴地图效果
+                marker = aMap.addMarker(markerOption);
+                marker.setObject(new BikeBean("--i--" + i, list1.get(i).latitude, list1.get(i).longitude));
+                // marker.showInfoWindow();
+            }
         }
         //mark点击事件
         aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
@@ -853,7 +1656,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                              int dis = (int) walkPath.getDistance();
                               int dur = (int) walkPath.getDuration();
                             Log.e("dur",dur+"");
-                          time = AMapUtil.getFriendlyTimeArray(dur);
+                            time = AMapUtil.getFriendlyTimeArray(dur);
                             distance = AMapUtil.getFriendlyLength(dis);
                             des = AMapUtil.getFriendlyTime(dur);
                             Log.d("time",time+"");
@@ -908,12 +1711,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void clickMap() {
         clickInitInfo();
-//        if (latLng != null) {
-//            CameraUpdate cameraUpate = CameraUpdateFactory.newLatLngZoom(
-//                    latLng, 17f);
-//            aMap.animateCamera(cameraUpate);
-//
-//        }
     }
 
     private void clickInitInfo() {
@@ -942,15 +1739,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                formatAddress = regeocodeResult.getRegeocodeAddress().getFormatAddress();
                    Log.v("ttt", formatAddress +"");
 
-//               List<PoiItem> pois = regeocodeResult.getRegeocodeAddress().getPois();
-//                     for (PoiItem poiItem : pois) {
-//                         Log.v("zhangzida", poiItem.getTitle());//输出周边poi的信息
-//
-//
-//                 }
-
                String xuanze = SpUtils.getString(MainActivity.this, "xuanze", null);
-               // String address = SpUtils.getString(this, "ads", null);
 
                if(xuanze!=null) {
                    if (xuanze.equals("diandianxing")) {
@@ -983,5 +1772,70 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
            }
        });
+    }
+
+
+
+    @Override
+    public void onLocationChanged(AMapLocation amapLocation) {
+        if (mListener != null && amapLocation != null) {
+            if (amapLocation != null
+                    && amapLocation.getErrorCode() == 0) {
+                mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
+                SpUtils.putString(this,"la",  amapLocation.getLatitude()+"");
+                SpUtils.putString(this,"lo",amapLocation.getLongitude()+"");
+             Log.d("ass", amapLocation.getLatitude()+"dddd"+amapLocation.getLongitude()+"") ;
+
+
+            } else {
+                String errText = "定位失败," + amapLocation.getErrorCode()+ ": " + amapLocation.getErrorInfo();
+                Log.e("AmapErr",errText);
+            }
+        }
+
+    }
+
+    @Override
+    public void activate(OnLocationChangedListener onLocationChangedListener) {
+
+        mListener = onLocationChangedListener;
+        if (mlocationClient == null) {
+            mlocationClient = new AMapLocationClient(this);
+            mLocationOption = new AMapLocationClientOption();
+            //设置定位监听
+            mlocationClient.setLocationListener(this);
+            //设置为高精度定位模式
+            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+            //设置定位参数
+            mlocationClient.setLocationOption(mLocationOption);
+            // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
+            // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
+            // 在定位结束后，在合适的生命周期调用onDestroy()方法
+            // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
+            mlocationClient.startLocation();
+        }
+    }
+
+    @Override
+    public void deactivate() {
+        mListener = null;
+        if (mlocationClient != null) {
+            mlocationClient.stopLocation();
+            mlocationClient.onDestroy();
+        }
+        mlocationClient = null;
+    }
+    /*
+       返回键退出程序
+     */
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() > preTime + 2000) {
+            Toast.makeText(this, "再按一次退出", Toast.LENGTH_SHORT).show();
+            preTime = System.currentTimeMillis();
+        } else {
+            super.onBackPressed();//相当于finish()
+            realBack();//删除所有引用
+        }
     }
 }

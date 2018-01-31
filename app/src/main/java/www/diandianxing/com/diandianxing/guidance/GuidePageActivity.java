@@ -81,7 +81,7 @@ public class GuidePageActivity extends BaseActivity {
                     /*
                        存boolean值获取状态
                      */
-                    SpUtils.putBoolean(GuidePageActivity.this, "guide", true);
+
                     SpUtils.putBoolean(GuidePageActivity.this,"sousou",false);
                     Intent intent = new Intent(GuidePageActivity.this, LoginActivity.class);
                     startActivity(intent);

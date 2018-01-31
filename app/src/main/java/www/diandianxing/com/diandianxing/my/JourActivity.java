@@ -14,13 +14,18 @@ import com.liaoinstan.springview.container.DefaultHeader;
 import com.liaoinstan.springview.widget.SpringView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import www.diandianxing.com.diandianxing.R;
+import java.util.Map;
 import www.diandianxing.com.diandianxing.adapter.xingchengadapter;
+import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
 import www.diandianxing.com.diandianxing.bean.Jourbean;
+import www.diandianxing.com.diandianxing.bean.Xingchengbean;
+import www.diandianxing.com.diandianxing.network.BaseObserver1;
+import www.diandianxing.com.diandianxing.network.RetrofitManager;
 import www.diandianxing.com.diandianxing.utils.MyContants;
+import www.diandianxing.com.diandianxing.utils.SpUtils;
 
 /**
  * date : ${Date}
@@ -36,53 +41,68 @@ public class JourActivity extends BaseActivity {
     private TextView tex_all;
     private TextView text_allday;
     private SpringView springView;
+    private www.diandianxing.com.diandianxing.adapter.xingchengadapter xingchengadapter;
 
+    int i=1;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MyContants.windows(this);
         setContentView(R.layout.activity_journey);
         initView();
+          network();
         data();
-        xingchengadapter xingchengadapter=new xingchengadapter(this,list);
-        jour_recycle.setLayoutManager(new LinearLayoutManager(this));
-        jour_recycle.setAdapter(xingchengadapter);
+
+    }
+
+    private void network() {
+
+        Map<String,String> map=new HashMap<>();
+         map.put("token",SpUtils.getString(this,"token",null));
+          map.put("uid", SpUtils.getString(this,"userid",null));
+          map.put("page",i+"");
+        RetrofitManager.post(MyContants.BASEURL + "s=LockBalance/tripLists", map, new BaseObserver1<Xingchengbean>("") {
+
+
+
+            @Override
+            public void onSuccess(Xingchengbean result, String tag) {
+                      if(result.getCode()==200){
+                          List<Xingchengbean.DatasBean.ListBean> list = result.getDatas().getList();
+                          Xingchengbean.DatasBean.UinfoBean uinfo = result.getDatas().getUinfo();
+
+                           //加载数据
+                          String mileage = uinfo.getMileage();
+                          double v = Double.valueOf(mileage).doubleValue();//距离
+                          String mile = String.valueOf(v);
+                          tex_all.setText(mile);
+                          String dayNum = uinfo.getDayNum();//天数
+                          text_allday.setText(dayNum);
+                          xingchengadapter = new xingchengadapter(JourActivity.this,list);
+                          jour_recycle.setLayoutManager(new LinearLayoutManager(JourActivity.this));
+                          jour_recycle.setAdapter(xingchengadapter);
+
+                      }
+            }
+
+            @Override
+            public void onFailed(int code, String data) {
+
+            }
+        });
+
+
     }
 
     private void data() {
-
-        Jourbean jourbean = new Jourbean();
-        jourbean.setAll("1361.1");
-        jourbean.setAllday("121");
-        jourbean.setHeji("10");
-        jourbean.setMoney("1.00");
-        jourbean.setTime("9:36");
-        list.add(jourbean);
-        Jourbean jourbean1 = new Jourbean();
-        jourbean1.setHeji("10");
-        jourbean1.setMoney("1.00");
-        jourbean1.setTime("9:20");
-        list.add(jourbean1);
-        Jourbean jourbean2 = new Jourbean();
-        jourbean2.setHeji("10");
-        jourbean2.setMoney("1.00");
-        jourbean2.setTime("9:20");
-        list.add(jourbean2);
-        Jourbean jourbean3 = new Jourbean();
-        jourbean3.setHeji("10");
-        jourbean3.setMoney("1.00");
-        jourbean3.setTime("9:36");
-        list.add(jourbean3);
-        tex_all.setText(list.get(0).getAll());
-        text_allday.setText(list.get(0).getAllday());
         springView.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-//                        quwanadapter.notifyDataSetChanged();
 
+                        xingchengadapter.notifyDataSetChanged();
                     }
                 }, 5000);
                 springView.onFinishFreshAndLoad();
@@ -93,7 +113,8 @@ public class JourActivity extends BaseActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                      //  Toast.makeText(getActivity(), "ahha", Toast.LENGTH_SHORT).show();
+                       i++;
+                        network();
 
                     }
                 }, 5000);
