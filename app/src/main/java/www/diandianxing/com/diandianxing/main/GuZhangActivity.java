@@ -95,13 +95,13 @@ public class GuZhangActivity extends BaseActivity {
         Map<String,String> map=new HashMap<>();
          map.put("uid", SpUtils.getString(this,"userid",null));
          map.put("token",SpUtils.getString(this,"token",null));
-        RetrofitManager.get(MyContants.BASEURL +"s=Bike/feedbackType", map, new BaseObserver1<Guzhanxuanbean>("") {
+        RetrofitManager.post(MyContants.BASEURL +"s=Bike/feedbackType", map, new BaseObserver1<Guzhanxuanbean>("") {
             @Override
             public void onSuccess(Guzhanxuanbean result, String tag) {
                    if(result.getCode()==200){
                        datas = result.getDatas();
                        guzhangadapter=new Guzhangadapter(R.layout.item_guzhang,datas);
-                       recycler_guzhang.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+                       recycler_guzhang.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
                        recycler_guzhang.setAdapter(guzhangadapter);
                        data();
 
@@ -125,7 +125,7 @@ public class GuZhangActivity extends BaseActivity {
         real_ok = (RelativeLayout) findViewById(R.id.real_ok);
         fu_edtext1 = (EditText) findViewById(R.id.fu_edtext);
         recycler_guzhang = (RecyclerView) findViewById(R.id.recycler_guzhang);
-        zhong.setText("客户服务");
+        zhong.setText("故障申报");
         recycler_guzhang.setNestedScrollingEnabled(false);
         img_create = (ImageView) findViewById(R.id.img_increate);
         real_ok.setOnClickListener(new View.OnClickListener() {
@@ -199,7 +199,7 @@ public class GuZhangActivity extends BaseActivity {
                     if(file!=null){
                         maps.put("file",file) ;
                     }
-                    s1 = UploadUtil.uploadFile(map, maps, MyContants.BASEURL + "s=Bike/feedback");
+                    s1 = UploadUtil.uploadFile(map, maps, MyContants.BASEURL +"s=Bike/feedback");
                     Gson gson=new Gson();
                     gubackbean = gson.fromJson(s1, Gubackbean.class);
 
@@ -236,11 +236,13 @@ public class GuZhangActivity extends BaseActivity {
                 datas.get(position).setaBoolean(!datas.get(position).isaBoolean());
                 guzhangadapter.notifyDataSetChanged();
                 Log.d("ppp",datas.get(position).isaBoolean()+"");
+                Log.d("sss",datas.get(position).getName());
 
 
             }
         });
     }
+
     class Guzhangadapter extends BaseQuickAdapter<Guzhanxuanbean.DatasBean, BaseViewHolder> {
 
 

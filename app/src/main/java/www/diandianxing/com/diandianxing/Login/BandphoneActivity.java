@@ -5,12 +5,18 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 
 import org.zackratos.ultimatebar.UltimateBar;
 
@@ -21,6 +27,7 @@ import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
 import www.diandianxing.com.diandianxing.bean.Loginsuccess;
 import www.diandianxing.com.diandianxing.bean.Successbean;
+import www.diandianxing.com.diandianxing.guidance.GuidePageActivity;
 import www.diandianxing.com.diandianxing.network.BaseObserver1;
 import www.diandianxing.com.diandianxing.network.RetrofitManager;
 import www.diandianxing.com.diandianxing.utils.ClickFilter;
@@ -153,8 +160,9 @@ public class BandphoneActivity extends BaseActivity {
     private void gomain() {
         ArrayMap map=new ArrayMap<String,String>();
         //先验证手机号是否正确，然后在注册
+        String trim = register_yanzhen.getText().toString().trim();
         map.put("mobile",bound_phone.getText().toString());
-        map.put("code",register_yanzhen.getText().toString().trim());
+        map.put("code",trim);
         RetrofitManager.post(MyContants.BASEURL + "s=Sms/verify", map, new BaseObserver1<Successbean>("") {
             @Override
             public void onSuccess(Successbean result, String tag) {
@@ -174,11 +182,28 @@ public class BandphoneActivity extends BaseActivity {
 
     }
     private void bind() {
+//        HttpParams httparam=new HttpParams();
+//        httparam.put("contact",bound_phone.getText().toString().trim());
+//        httparam.put("type",type);
+//        httparam.put("openid",openid);
+//        httparam.put("name",name);
+//        OkGo.<String>post(MyContants.BASEURL+"s=Login/threeRegister")
+//                .tag(this)
+//                .params(httparam)
+//                .execute(new StringCallback() {
+//                    @Override
+//                    public void onSuccess(Response<String> response) {
+//                        String body = response.body();
+//                    }
+//                });
+                
         Map<String,String> map=new ArrayMap<>();
         map.put("contact",bound_phone.getText().toString().trim());
         map.put("type",type);
         map.put("openid",openid);
         map.put("name",name);
+        Log.d("TAGSS",bound_phone.getText().toString().trim()+"leixing:"+type
+        +"id："+openid+"名字"+name);
         RetrofitManager.post(MyContants.BASEURL +"s=Login/threeRegister", map, new BaseObserver1<Loginsuccess>("") {
 
             @Override
@@ -186,9 +211,10 @@ public class BandphoneActivity extends BaseActivity {
                   if(result.getCode()==200){
                       SpUtils.putString(BandphoneActivity.this,"userid",result.getDatas().getId());
                       SpUtils.putString(BandphoneActivity.this,"token",result.getDatas().getToken());
+                      SpUtils.putInt(BandphoneActivity.this, "guid", 1);
                       //绑定成功跳登录
                        Intent intent=new Intent(BandphoneActivity.this, MainActivity.class);
-                      startActivity(intent);
+                        startActivity(intent);
 
                   }
                 else if(result.getCode()==404){
@@ -200,7 +226,7 @@ public class BandphoneActivity extends BaseActivity {
             @Override
             public void onFailed(int code,String data) {
 
-                ToastUtils.show(BandphoneActivity.this,data,1);
+               // ToastUtils.show(BandphoneActivity.this,data,1);
             }
         });
 

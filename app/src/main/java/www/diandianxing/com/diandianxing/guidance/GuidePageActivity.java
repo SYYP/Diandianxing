@@ -17,9 +17,9 @@ import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
 import www.diandianxing.com.diandianxing.utils.SpUtils;
 
-
 /**
- * Created by Administrator on 2017/8/24.
+ * date : ${Date}
+ * author:衣鹏宇(ypu)
  */
 
 public class GuidePageActivity extends BaseActivity {
@@ -43,7 +43,7 @@ public class GuidePageActivity extends BaseActivity {
         }
 
         vp.setAdapter(mGuidePagerAdapter);
-//        vp.setOnPageChangeListener(new ViewPagerIndicator(this,vp,liner,5));
+      //  vp.setOnPageChangeListener(new ViewPagerIndicator(this,vp,liner,5));
         vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

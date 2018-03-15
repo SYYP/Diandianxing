@@ -82,6 +82,7 @@ public class LoginActivitys extends UMLoginActivity implements View.OnClickListe
         login_sso.setOnClickListener(this);
         forgetpwd.setOnClickListener(this);
         iv_weixin.setOnClickListener(this);
+        iv_qq.setOnClickListener(this);
     }
     private void submit() {
         if (TextUtils.isEmpty(login_phone.getText().toString())) {
@@ -116,7 +117,7 @@ public class LoginActivitys extends UMLoginActivity implements View.OnClickListe
                     //将 token与userid保存
                     SpUtils.putString(LoginActivitys.this,"token",token);
                     SpUtils.putString(LoginActivitys.this,"userid",id);
-                    SpUtils.putBoolean(LoginActivitys.this, "guide", true);
+                    SpUtils.putInt(LoginActivitys.this, "guid", 1);
                     Intent intent=new Intent(LoginActivitys.this, MainActivity.class);
                     startActivity(intent);
                     finish();

@@ -93,6 +93,20 @@ public class BaseActivity extends AppCompatActivity {
             activityList = null;
         }
     }
+//    private void UMPush() {
+//        UmengMessageHandler umengMessageHandler=new UmengMessageHandler(){
+//            @Override
+//            public Notification getNotification(Context context, UMessage uMessage) {
+//                EventMessage eventMessage=new EventMessage("tuisong");
+//                EventBus.getDefault().postSticky(eventMessage);
+//                return super.getNotification(context, uMessage);
+//
+//            }
+//        };
+//
+//
+//
+//    }
 
 
 }

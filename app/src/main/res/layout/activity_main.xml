@@ -96,7 +96,7 @@
                     android:id="@+id/qi_time"
                     android:layout_marginLeft="70dp"
                     android:padding="8dp"
-                    android:text="1分钟"
+                    android:text="0分钟"
                     android:textSize="16sp"
                     android:textColor="@color/text_orage"
                     android:layout_width="wrap_content"
@@ -106,7 +106,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="70dp"
                     android:padding="8dp"
-                    android:text="1.1米"
+                    android:text="0.0米"
                     android:textSize="16sp"
                     android:textColor="@color/text_orage"
                     android:layout_width="wrap_content"
@@ -236,7 +236,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:visibility="gone"
+       android:visibility="gone"
         android:layout_marginTop="200dp"
         android:id="@+id/liner_mark"
         android:layout_toLeftOf="@id/linearLayout3"

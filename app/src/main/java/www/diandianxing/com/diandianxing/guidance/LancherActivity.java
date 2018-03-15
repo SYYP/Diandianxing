@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import www.diandianxing.com.diandianxing.Login.LoginActivity;
 import www.diandianxing.com.diandianxing.MainActivity;
 import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
@@ -15,9 +16,9 @@ import www.diandianxing.com.diandianxing.utils.SpUtils;
 
 
 /**
- * Created by Administrator on 2017/8/24.
+ * date : ${Date}
+ * author:衣鹏宇(ypu)
  */
-
 public class LancherActivity extends BaseActivity {
 
     private int time = 3;
@@ -25,21 +26,7 @@ public class LancherActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (msg.what == 1) {
-                time--;
-                if (time == 0) {
-                    boolean isguide = SpUtils.getBoolean(LancherActivity.this, "guide", false);
-                    if (isguide) {
-                        startActivity(new Intent(LancherActivity.this, MainActivity.class));
-                    } else {
-                        startActivity(new Intent(LancherActivity.this, GuidePageActivity.class));
-                    }
-                    finish();
-                } else {
-                    Message message = mHandler.obtainMessage(1);
-                    mHandler.sendMessageDelayed(message, 1000);
-                }
-            }
+
         }
     };
 
@@ -51,10 +38,13 @@ public class LancherActivity extends BaseActivity {
                 new Runnable() {
             @Override
             public void run() {
-                boolean isguide = SpUtils.getBoolean(LancherActivity.this, "guide", false);
-                if (isguide) {
+                int guid = SpUtils.getInt(LancherActivity.this, "guid", 0);
+                if (guid==1) {
                     startActivity(new Intent(LancherActivity.this,MainActivity.class));
-                } else {
+                }else if(guid==2){
+                    startActivity(new Intent(LancherActivity.this,LoginActivity.class));
+                }
+                else if(guid==0){
                     startActivity(new Intent(LancherActivity.this, GuidePageActivity.class));
                 }
                 finish();

@@ -5,7 +5,8 @@ package www.diandianxing.com.diandianxing.bean;
  * author:衣鹏宇(ypu)
  */
 
-public class Failbean {
+public class Failbean
+{
 
 
     /**

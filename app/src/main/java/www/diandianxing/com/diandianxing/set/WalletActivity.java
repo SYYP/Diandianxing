@@ -1,8 +1,12 @@
 package www.diandianxing.com.diandianxing.set;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,9 +14,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +38,7 @@ import www.diandianxing.com.diandianxing.network.BaseObserver1;
 import www.diandianxing.com.diandianxing.network.RetrofitManager;
 import www.diandianxing.com.diandianxing.utils.BaseDialog;
 import www.diandianxing.com.diandianxing.utils.EventMessage;
+import www.diandianxing.com.diandianxing.utils.GGUtils;
 import www.diandianxing.com.diandianxing.utils.MyContants;
 import www.diandianxing.com.diandianxing.utils.SpUtils;
 import www.diandianxing.com.diandianxing.utils.ToastUtils;
@@ -53,6 +65,9 @@ public class WalletActivity extends BaseActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         MyContants.windows(this);
         setContentView(R.layout.activity_mywallet);
+//        IntentFilter intentFilter = new IntentFilter();
+//        intentFilter.addAction(GGUtils.SX_DATA);
+//        registerReceiver(receiver,intentFilter);
         EventBus.getDefault().register(this);//注册eventbus
         initView();
     }
@@ -81,6 +96,26 @@ public class WalletActivity extends BaseActivity implements View.OnClickListener
         wallet_yue.setText(yue+"元");
     }
 
+
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+                    if(GGUtils.SX_DATA.equals(intent.getAction())){
+
+                        String yajin=intent.getStringExtra("securityDeposit");
+                        Log.e("TAG","支付广播接受到了yajin=="+yajin);
+                        wallet_yanjin.setText(yajin+"元");
+                        String yue=intent.getStringExtra("balances");
+                        Log.e("TAG","支付广播接受到了yue=="+yue);
+                        wallet_yue.setText(yue+"元");
+
+                    }
+
+        }
+    };
+
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -88,7 +123,8 @@ public class WalletActivity extends BaseActivity implements View.OnClickListener
                 finish();
                 break;
             case R.id.real_yanjin:
-                if(wallet_yanjin.getText().toString().equals("0.00元")){
+                Log.e("TAG","点击到里面");
+                if("0.00元".equals(wallet_yanjin.getText().toString())){
                  //跳转到叫押金
                     Intent intent=new Intent(this, CashpayActivity.class);
                     startActivity(intent);
@@ -150,29 +186,57 @@ public class WalletActivity extends BaseActivity implements View.OnClickListener
         dialog.show();
     }
     private void networkmoney() {
+        HttpParams params = new HttpParams();
+        params.put("uid", SpUtils.getString(this, "userid", null));
+        params.put("token", SpUtils.getString(this, "token", null));
+        OkGo.<String>post(MyContants.BASEURL +"s=Payment/refundDeposit")
+                .tag(this)
+                .params(params)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
 
-        Map<String,String> map=new HashMap<>();
-         map.put("uid",SpUtils.getString(this,"userid",null));
-         map.put("token",SpUtils.getString(this,"token",null));
-        RetrofitManager.post(MyContants.BASEURL+"s=Payment/refundDeposit", map, new BaseObserver1<Tuikuanbean>("") {
-            @Override
-            public void onSuccess(Tuikuanbean result, String tag) {
-                if(result.getCode()==200){
+                        String body = response.body();
+                        Log.d("Tag","押金"+body);
+                        try {
+                            JSONObject jsonobj = new JSONObject(body);
+                            int code = jsonobj.getInt("code");
+                            String datas = jsonobj.getString("datas");
+                            if (code == 200) {
+                                ToastUtils.show(WalletActivity.this, "退还成功", 1);
+                                wallet_yanjin.setText("0.00元");
+                            } else {
+                                ToastUtils.show(WalletActivity.this, datas, 1);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
-                    ToastUtils.show(WalletActivity.this,result.getDatas().toString(),1);
-                    wallet_yanjin.setText(0.00+"元");
-                }
-            }
+                    }
 
-            @Override
-            public void onFailed(int code, String data) {
-
-            }
-        });
+                });
+//        Map<String,String> map=new HashMap<>();
+//         map.put("uid",SpUtils.getString(this,"userid",null));
+//         map.put("token",SpUtils.getString(this,"token",null));
+//        RetrofitManager.post(MyContants.BASEURL+"s=Payment/refundDeposit", map, new BaseObserver1<Tuikuanbean>("") {
+//            @Override
+//            public void onSuccess(Tuikuanbean result, String tag) {
+//                if(result.getCode()==200){
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onFailed(int code, String data) {
+//
+//            }
+//        });
+//    }
     }
     @Override
     protected void onDestroy() {
         super.onDestroy();
+//        unregisterReceiver(receiver);
         EventBus.getDefault().unregister(this);
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -182,6 +246,12 @@ public class WalletActivity extends BaseActivity implements View.OnClickListener
             String yajin = SpUtils.getString(this, "yajin", null);
             wallet_yanjin.setText(yajin+"元");
             String yue = SpUtils.getString(this, "yue", null);
+            wallet_yue.setText(yue+"元");
+        }
+        if(eventMessage.getMsg().equals("chongzhi")){
+            String yajin = SpUtils.getString(this, "securityDeposit", null);
+            wallet_yanjin.setText(yajin+"元");
+            String yue = SpUtils.getString(this, "balances", null);
             wallet_yue.setText(yue+"元");
         }
     }

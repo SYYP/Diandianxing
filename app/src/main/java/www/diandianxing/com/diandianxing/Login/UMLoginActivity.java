@@ -80,9 +80,9 @@ public class UMLoginActivity extends BaseActivity {
             //            SpUtils.putString(MyApplication.getGloableContext(), "logintype", "three");
             String type = "";
             if (platform.equals(SHARE_MEDIA.QQ)) {
-                type = "1";
-            } else if (platform.equals(SHARE_MEDIA.WEIXIN)) {
                 type = "2";
+            } else if (platform.equals(SHARE_MEDIA.WEIXIN)) {
+                type = "1";
             } else if (platform.equals(SHARE_MEDIA.SINA)) {
                 type = "3";
             }
@@ -106,7 +106,7 @@ public class UMLoginActivity extends BaseActivity {
                                   Intent intent = new Intent(mContext, BandphoneActivity.class);
                                   intent.putExtra("type", finalType);
                                   intent.putExtra("openid", uid);
-                                  intent.putExtra("name", username);
+                                  intent.putExtra("name",username);
                                   mContext.startActivity(intent);
 
                               }

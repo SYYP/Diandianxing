@@ -44,6 +44,12 @@
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="55dp">
+    <RelativeLayout
+        android:id="@+id/relan_sao"
+        android:background="@color/back_bei"
+        android:layout_marginTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="55dp">
         <ImageView
             android:layout_centerVertical="true"
             android:id="@+id/img_sao"
@@ -59,9 +65,10 @@
             android:layout_toRightOf="@id/img_sao"
             android:textSize="16sp"
             android:padding="10dp"
-            android:text="扫码或手动输入二维码"
+            android:text="对准车上的二维码"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        </RelativeLayout>
     </RelativeLayout>
     <RelativeLayout
         android:background="@drawable/shape_radioline"

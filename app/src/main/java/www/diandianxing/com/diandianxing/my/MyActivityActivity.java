@@ -26,8 +26,8 @@ import www.diandianxing.com.diandianxing.base.BaseActivity;
 import www.diandianxing.com.diandianxing.set.SetActivity;
 import www.diandianxing.com.diandianxing.set.WalletActivity;
 import www.diandianxing.com.diandianxing.utils.BaseDialog;
-import www.diandianxing.com.diandianxing.utils.CircleImageView;
 import www.diandianxing.com.diandianxing.utils.EventMessage;
+import www.diandianxing.com.diandianxing.utils.ImageViewPuls;
 import www.diandianxing.com.diandianxing.utils.MyContants;
 import www.diandianxing.com.diandianxing.utils.SpUtils;
 
@@ -42,7 +42,7 @@ public class MyActivityActivity extends BaseActivity implements View.OnClickList
     private TextView zhong;
     private ImageView you;
     private RelativeLayout rela;
-    private CircleImageView my_photo;
+    private ImageViewPuls my_photo;
     private TextView diandianxing;
     private TextView my_wallet;
     private RelativeLayout real_myallet;
@@ -74,7 +74,7 @@ public class MyActivityActivity extends BaseActivity implements View.OnClickList
         zhong = (TextView) findViewById(R.id.zhong);
         you = (ImageView) findViewById(R.id.you);
         rela = (RelativeLayout) findViewById(R.id.rela);
-        my_photo = (CircleImageView) findViewById(R.id.my_photo);
+        my_photo = (ImageViewPuls) findViewById(R.id.my_photo);
         diandianxing = (TextView) findViewById(R.id.diandianxing);
         my_wallet = (TextView) findViewById(R.id.my_wallet);
         real_myallet = (RelativeLayout) findViewById(R.id.real_myallet);
@@ -82,7 +82,7 @@ public class MyActivityActivity extends BaseActivity implements View.OnClickList
         real_car = (RelativeLayout) findViewById(R.id.real_car);
         my_yaoqing = (TextView) findViewById(R.id.my_yaoqing);
         real_yaoqing = (RelativeLayout) findViewById(R.id.real_yaoqing);
-        my_kefu = (TextView) findViewById(R.id.my_kefu);
+//        my_kefu = (TextView) findViewById(R.id.my_kefu);
         real_kefu = (RelativeLayout) findViewById(R.id.real_kefu);
         my_xingyong = (TextView) findViewById(R.id.my_xinyong);
         my_photo.setOnClickListener(this);
@@ -174,10 +174,10 @@ public class MyActivityActivity extends BaseActivity implements View.OnClickList
                 Intent intent4=new Intent(this,ShareActivity.class);
                 startActivity(intent4);
                 break;
-            //我的客服
-            case R.id.real_kefu:
-                showphotoDialog(Gravity.BOTTOM,R.style.Bottom_Top_aniamtion);
-                break;
+//            //我的客服
+//            case R.id.real_kefu:
+//                showphotoDialog(Gravity.BOTTOM,R.style.Bottom_Top_aniamtion);
+//                break;
             //我的行程
             case R.id.real_car:
                 Intent intent5=new Intent(this,JourActivity.class);

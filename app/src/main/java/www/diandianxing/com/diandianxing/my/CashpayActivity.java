@@ -102,14 +102,16 @@ public class CashpayActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.chongzhi_ok:
                   if(i==1){
-                     //微信
-                      ToastUtils.show(CashpayActivity.this,"微信",0);
+                      PayUtils payUtils=new PayUtils(this,2,1,yajin+"");
+                      payUtils.weixinPay();
+//                     //微信
+//                      ToastUtils.show(CashpayActivity.this,"微信",0);
                   }
                 else  if(i==2){
                       PayUtils payUtils=new PayUtils(this,2,2,yajin+"");
                         payUtils.goAlipay();
                       //支付宝
-                      ToastUtils.show(CashpayActivity.this,"支付宝",0);
+                //      ToastUtils.show(CashpayActivity.this,"支付宝",0);
                   }
                 break;
         }

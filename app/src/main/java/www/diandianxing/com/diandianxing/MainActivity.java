@@ -59,10 +59,16 @@ import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkPath;
 import com.amap.api.services.route.WalkRouteResult;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -97,6 +103,7 @@ import www.diandianxing.com.diandianxing.server.BackService;
 import www.diandianxing.com.diandianxing.sousuo.SearchActivity;
 import www.diandianxing.com.diandianxing.utils.AMapUtil;
 import www.diandianxing.com.diandianxing.utils.BaseDialog;
+import www.diandianxing.com.diandianxing.utils.ClickFilter;
 import www.diandianxing.com.diandianxing.utils.CustomProgressDialog;
 import www.diandianxing.com.diandianxing.utils.EventMessage;
 import www.diandianxing.com.diandianxing.utils.MyContants;
@@ -151,7 +158,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     private LatLng latLng;
     private boolean isClickIdentification = false;
     private WalkRouteOverlay walkRouteOverlay;
-    private String [] time;
+    private String time;
     private String distance;
     private TextView tv_address;
     private TextView tv_time;
@@ -185,11 +192,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     private EditText ed_shuru;
     private Intent mServiceIntent;
     private IBackserver iBackService;
+    int  k=0;
+    boolean bo=true;
+    boolean weigui;
+    ServiceConnection conn;
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             if(msg.what==1){
                 ToastUtils.show(MainActivity.this,"开锁失败",1);
+            }
+            else if(msg.what==2){
+                boochang=true;
             }
             super.handleMessage(msg);
         }
@@ -206,6 +220,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     TimerTask timerTasks;
     boolean aBoolean=true;
     boolean suo=false;
+    private String surplusbike;
+    boolean boochang =false;
+    private int iss;
+    private int zx;
+
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -218,7 +237,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
         mMapView.onCreate(savedInstanceState);
         mServiceIntent = new Intent(this, BackService.class);
-        startService(mServiceIntent);
+       // startService(mServiceIntent);
+        //首先页面初始化时加载的是点点行车页面，保存当前状态
+        SpUtils.putString(this, "address", "gongxiang");
         Log.d("TAG","Create===============================");
 
         /*
@@ -226,16 +247,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
          */
 //加载uI
         initView();
-
         datamap();
         //data加载数据
         network();
-//加载点点行自行车
-        addmark();
-        //首先页面初始化时加载的是点点行车页面，保存当前状态
-        SpUtils.putString(this, "address", "gongxiang");
         //网络请求车
         networkbike();
+        sss();
+        //加载点点行自行车
+        addmark();
       //  mtimers.schedule(timerTasks,1000,1000);
     }
     /*
@@ -244,44 +263,48 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     private void networkbike() {
            Map<String,String> map=new HashMap<>();
         Log.d("lo",SpUtils.getString(this,"lo",null)+"cccccc");
-        Location myLocation = aMap.getMyLocation();
-        if(myLocation!=null) {
-            Log.d("los", myLocation.getLatitude() + "cccccc");
-        }
         Log.d("la",SpUtils.getString(this,"la",null)+"ccc");
              map.put("longitude",SpUtils.getString(this,"lo",null));
              map.put("latitude",SpUtils.getString(this,"la",null));
              map.put("uid",SpUtils.getString(this,"userid",null));
              map.put("token",SpUtils.getString(this,"token",null));
-       RetrofitManager.get(MyContants.BASEURL +"s=Bike/indexInfo", map, new BaseObserver1<MainBikebean>("") {
-
-
-
+       RetrofitManager.get(MyContants.BASEURL+"s=Bike/indexInfo",map,new BaseObserver1<MainBikebean>("") {
            @Override
            public void onSuccess(MainBikebean result, String tag) {
-
                 if(result.getCode()==200){
                     //电子围栏
                     enclosure = result.getDatas().getEnclosure();
+                    if(enclosure.size()>0) {
+                        surplusbike = enclosure.get(0).getSurplusbike();
+                    }
                     //共享单车
                     bike = result.getDatas().getBike();
-                    list1 = new ArrayList<>();
-                    if(bike!=null&&bike.size()>0) {
-                        for (int i = 0; i < bike.size(); i++) {
-                            Log.d("list", list1.size() + "");
-                            LatLng lat = new LatLng(Double.valueOf(bike.get(i).getLatitude().toString().trim()), Double.valueOf(bike.get(i).getLongitude().toString().trim()));
-                            list1.add(lat);
-                            markerOption = new MarkerOptions();
-                            markerOption.position(list1.get(i));
-                            markerOption.draggable(true);//设置Marker可拖动
-                            markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                                    .decodeResource(getResources(), R.drawable.chebiao)));
-                            // 将Marker设置为贴地显示，可以双指下拉地图查看效果
-                            markerOption.setFlat(false);//设置marker平贴地图效果
-                            marker = aMap.addMarker(markerOption);
-                            marker.setObject(new BikeBean("--i--" + i, list1.get(i).latitude, list1.get(i).longitude));
-                            // marker.showInfoWindow();
-                        }
+//                    list1 = new ArrayList<>();
+//                    if(bike!=null&&bike.size()>0) {
+//                        for (int i = 0; i < bike.size(); i++) {
+//                            Log.d("list", list1.size() + "");
+//                            LatLng lat = new LatLng(Double.valueOf(bike.get(i).getLatitude().toString().trim()), Double.valueOf(bike.get(i).getLongitude().toString().trim()));
+//                            list1.add(lat);
+//                            markerOption = new MarkerOptions();
+//                            markerOption.position(list1.get(i));
+//                            markerOption.draggable(true);//设置Marker可拖动
+//                            markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+//                                    .decodeResource(getResources(), R.drawable.chebiao)));
+//                            // 将Marker设置为贴地显示，可以双指下拉地图查看效果
+//                            markerOption.setFlat(false);//设置marker平贴地图效果
+//                            marker = aMap.addMarker(markerOption);
+//                            marker.setObject(new BikeBean("--i--" + i, list1.get(i).latitude, list1.get(i).longitude));
+//                            // marker.showInfoWindow();
+//                        }
+              //      }
+                    String address1 = SpUtils.getString(MainActivity.this, "address", null);
+                    if(address1.equals("gongxiang")){
+                        //刷新
+                        addmark();
+                    }
+                    else if(address1.equals("dianzi")){
+                        adddianzimark();
+
                     }
                     //mark点击事件
                     aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
@@ -367,14 +390,30 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     }
                     String cartStatus = datas.getCartStatus();
                     Log.d("cart",cartStatus+"--------违规-------");
-                    int iss = Integer.parseInt(cartStatus);
+                    iss = Integer.parseInt(cartStatus);
                     Log.d("carts",cartStatus+"--------违规停放-------");
-                    if(iss==1){
-                        weiguidailog(Gravity.CENTER,R.style.Alpah_aniamtion);
-                      }
+
                     Log.d("ff",ride+"");
                      if(ride==1){
-                        Log.d("ss","sssssssssssssssssssss");
+                         //首先页面初始化时加载的是点点行车页面，保存当前状态
+                         SpUtils.putString(MainActivity.this, "address", "dianzi");
+                         Log.d("ss","sssssssssssssssssssss");
+                         networkbike();
+                         if(iss ==1){
+                             bo=true;
+                             weigui=false;
+                             if (conn != null&&iBackService!=null) {
+                                 suo = false;
+                                 // 注销广播 最好在onPause上注销
+                                 LocalBroadcastManager.getInstance(MainActivity.this).unregisterReceiver(mReceiver);
+                                 // 注销服务
+                                 Log.d("server","注销服务----------");
+                                 unbindService(conn);
+
+                             }
+                             weiguidailog(Gravity.CENTER,R.style.Alpah_aniamtion);
+                         }
+
                         real_gongxiang.setVisibility(View.GONE);
                         real_dianzi.setVisibility(View.GONE);
                         iv_lock.setVisibility(View.GONE);
@@ -389,12 +428,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                            /*
                           建立长连接
                           */
-                         if(aBoolean) {
-                             Log.d("start","---------------");
-                             netchang();
-                         }
-                          if(mtimers!=null){
-                              mtimers.schedule(timerTasks,1000,1000);
+                          if(iss==0) {
+                              if (aBoolean) {
+                                  Log.d("start", aBoolean + "---------------");
+                                  netchang();
+                              }
+                              if (mtimers != null) {
+                                  mtimers.schedule(timerTasks, 1000, 1000);
+                              }
                           }
 
                     }
@@ -438,7 +479,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                          }
                      }
                      if(istemp==0){
-
                          text_tingche.setText("临时停车");
                      }
                     else if(istemp==1){
@@ -493,11 +533,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     int i = Integer.parseInt(addTime);
                     int i1 = i / 60;
                     Log.d("msd","成功");
-                    qi_time.setText(i1+"分钟");
+                    if(i1!=0) {
+                        qi_time.setText(i1 + "分钟");
+                    }
 
                     String route = result.getDatas().getRoute();
                     if(route!=null) {
                         double v = Double.valueOf(route).doubleValue();
+                        Log.d("TAG","距离----"+v);
                         String s = String.valueOf(v);
                         qi_juli.setText(s + "米");
                     }
@@ -516,102 +559,91 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventMessage eventMessage) {
+        if(eventMessage.getMsg().equals("tuisong")){
+            network();
+        }
         //支付完好跳到详情，看完后返回主界面
         if(eventMessage.getMsg().equals("xiangqing")){
 
               network();
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            iBackService.qidong();
-//                            network();
-//
-//                            Log.d("tagss",mReceiver+"----"+conn+"");
-//
-//                        } catch (Exception e){
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }).start();
 
-
-
-//            bindService(mServiceIntent, conn, BIND_AUTO_CREATE);
-//            // 开始服务
-//            registerReceiver();
-
-            // 注销广播 最好在onPause上注销
 
 
         }
+         if(eventMessage.getMsg().equals("kai")){
+             Log.d("kaisuo","----------成功开锁------------");
+             kaisuo();//短连接开锁
+         }
          //扫码成功后刷新主页面
         if (eventMessage.getMsg().equals("zxing")) {
-            suo=true;
+                suo = true;
+            zx = 1;//用于判断违规弹窗；
+                if (suo) {
+                    bindService(mServiceIntent, conn, BIND_AUTO_CREATE);
+                    // 开始服务
+                    registerReceiver();
+                    Log.d("tagsssssss", "start-------------");
 
-            if(suo) {
-
-                bindService(mServiceIntent, conn, BIND_AUTO_CREATE);
-                // 开始服务
-                registerReceiver();
-                Log.d("tagsssssss","start-------------");
-
-            }
-          //  liner_mark.setVisibility(View.GONE);
-           //扫码开锁
-            Log.d("start1111111","---------------");
-            mDialog.show();
-            SpUtils.putString(this, "address", "dianzi");
-            img_che.setImageResource(R.drawable.img_gongxiangfalse);
-            img_wei.setImageResource(R.drawable.img_dian_true);
-            aMap.clear();
-            datamap();
-            mtimer=new Timer();
-
-            timerTask=new TimerTask() {
-                @Override
-                public void run() {
-                    j++;
-                   if(abool){
-                       j=0;
-                      mDialog.dismiss();
-                       if(mtimer!=null) {
-                           mtimer.cancel();
-                           mtimer = null;
-                       }
-                       if(timerTask!=null) {
-                           timerTask.cancel();
-                           timerTask = null;
-                       }
-
-
-                   }
-                     if(j==39){
-                         j=0;
-                          mDialog.dismiss();
-
-                         handler.sendEmptyMessage(1);
-
-                         if(mtimer!=null) {
-                             mtimer.cancel();
-                             mtimer = null;
-                         }
-                         if(timerTask!=null) {
-                             timerTask.cancel();
-                             timerTask = null;
-                         }
-                     }
-
-                    Log.d("ssssddds",i+"");
                 }
 
-            };
-            kaisuo();//短连接开锁
+                dingshi();
+                //  liner_mark.setVisibility(View.GONE);
+                //扫码开锁
+                Log.d("start1111111", "---------------");
+                mDialog.show();
+                SpUtils.putString(this, "address", "dianzi");
+                img_che.setImageResource(R.drawable.img_gongxiangfalse);
+                img_wei.setImageResource(R.drawable.img_dian_true);
+                aMap.clear();
+                datamap();
+                mtimer = new Timer();
 
-            adddianzimark();//电子围栏
-            if(timerTask!=null) {
-                mtimer.schedule(timerTask, 1000, 1000);
-            }
+                timerTask = new TimerTask() {
+                    @Override
+                    public void run() {
+                        j++;
+                        if (abool) {
+                            j = 0;
+                            mDialog.dismiss();
+                            if (mtimer != null) {
+                                mtimer.cancel();
+                                mtimer = null;
+                            }
+                            if (timerTask != null) {
+                                timerTask.cancel();
+                                timerTask = null;
+                            }
+
+
+                        }
+                         if(j==3){
+                             kaisuo();
+                         }
+                        if (j == 39) {
+                            mDialog.dismiss();
+                            handler.sendEmptyMessage(1);
+                            if (mtimer != null) {
+                                mtimer.cancel();
+                                mtimer = null;
+                            }
+                            if (timerTask != null) {
+                                timerTask.cancel();
+                                timerTask = null;
+                            }
+                        }
+
+                        Log.d("ssssddds", j + "--------35秒----");
+                    }
+
+                };
+                Log.d("boolean", boochang + "----开锁---");
+//                if (boochang) {
+
+           //     }
+                //   adddianzimark();//电子围栏
+                if (timerTask != null) {
+                    mtimer.schedule(timerTask, 1000, 1000);
+                }
 
 
 
@@ -627,7 +659,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 timerTasks.cancel();
                 timerTasks = null;
             }
-
             network();
 
         }
@@ -713,12 +744,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 // TODO Auto-generated method stub
                 try {
                     Log.i("tag", "是否为空：" + iBackService);
-                    if (iBackService == null) {
-                        Toast.makeText(getApplicationContext(),
-                                "没有连接，可能是服务器已断开", Toast.LENGTH_SHORT).show();
-                    } else {
-
-
+                  if(iBackService!=null) {
                         String bikenum = SpUtils.getString(MainActivity.this, "bianhao", null);
                              Log.d("bian",bikenum+"");
                         if(bikenum!=null) {
@@ -841,28 +867,35 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
     @Override
     protected void onDestroy() {
-        if (conn != null && iBackService != null) {
+        if (conn!=null&&iBackService != null) {
             suo=false;
-            // 注销广播 最好在onPause上注销
-            LocalBroadcastManager.getInstance(MainActivity.this).unregisterReceiver(mReceiver);
-            // 注销服务
-            unbindService(conn);
-            Log.d("jj-----","注销");
-              conn = null;
-            iBackService = null;
+             if(weigui){
+                 // 注销广播 最好在onPause上注销
+                 LocalBroadcastManager.getInstance(MainActivity.this).unregisterReceiver(mReceiver);
+                 // 注销服务
+                 unbindService(conn);
+                 Log.d("jj-----","注销");
+                 conn = null;
+                 iBackService = null;
+             }
+            else {
+                 conn = null;
+                 iBackService = null;
+             }
+
 
 
         }
 
-//        if(mtimers!=null){
-//            mtimers.cancel();
-//            mtimers=null;
-//
-//        }
-//        if(timerTasks!=null){
-//            timerTasks.cancel();
-//            timerTasks=null;
-//        }
+        if(mtimers!=null){
+            mtimers.cancel();
+            mtimers=null;
+
+        }
+        if(timerTasks!=null){
+            timerTasks.cancel();
+            timerTasks=null;
+        }
         //在activity执行onDestroy时执行mMapView.onDestroy()，销毁地图
         mMapView.onDestroy();
         EventBus.getDefault().unregister(this);
@@ -890,14 +923,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     @Override
     protected void onStart() {
         super.onStart();
-//        if(suo) {
-//
-//            bindService(mServiceIntent, conn, BIND_AUTO_CREATE);
-//            // 开始服务
-//            registerReceiver();
-//            Log.d("tagsssssss","start-------------");
-//
-//        }
+
+         if(iss==1){
+             if(zx==1){
+                 zx=2;
+             }
+             else {
+                 weiguidailog(Gravity.CENTER, R.style.Alpah_aniamtion);
+             }
+         }
+
         Log.d("ffffff","startssss-------------");
 
 
@@ -939,11 +974,39 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                   }
                       if(result.getDatas().equals("车辆使用中")){
                           mDialog.dismiss();
+                          if(mtimer!=null) {
+                              mtimer.cancel();
+                              mtimer = null;
+                          }
+                          if(timerTask!=null) {
+                              timerTask.cancel();
+                              timerTask = null;
+                          }
                           ToastUtils.show(MainActivity.this, "车辆使用中", 1);
                       }
                       if(result.getDatas().equals("车俩失踪")){
                           mDialog.dismiss();
+                          if(mtimer!=null) {
+                              mtimer.cancel();
+                              mtimer = null;
+                          }
+                          if(timerTask!=null) {
+                              timerTask.cancel();
+                              timerTask = null;
+                          }
                           ToastUtils.show(MainActivity.this, "车俩失踪", 1);
+                      }
+                      if(result.getDatas().equals("单车不存在！")){
+                          mDialog.dismiss();
+                          if(mtimer!=null) {
+                              mtimer.cancel();
+                              mtimer = null;
+                          }
+                          if(timerTask!=null) {
+                              timerTask.cancel();
+                              timerTask = null;
+                          }
+                          ToastUtils.show(MainActivity.this, "单车不存在", 1);
                       }
 
 
@@ -987,17 +1050,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                     Log.d("ddddss", code + "");
 
                     if (code == 93000) {
-                        if (mtimers != null) {
-                            mtimers.cancel();
-                            mtimers = null;
-                        }
-                        if (timerTasks != null) {
-                            timerTasks.cancel();
-                            timerTasks = null;
-                        }
+                        abool=false;
+                if (mtimers != null) {
+                    mtimers.cancel();
+                    mtimers = null;
+                }
+                if (timerTasks != null) {
+                    timerTasks.cancel();
+                    timerTasks = null;
+                }
+
+//                        if (conn != null&&iBackService!=null) {
+//                            suo = false;
+//                            // 注销广播 最好在onPause上注销
+//                            LocalBroadcastManager.getInstance(MainActivity.this).unregisterReceiver(mReceiver);
+//                            // 注销服务
+//                            Log.d("server", "注销服务----------");
+//                            unbindService(conn);
+//                        }
                         network();
 
-                    } else if (code == 96300) {
+                    } else if (code ==96300) {
 
                         network();
 
@@ -1012,9 +1085,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 //                         e.printStackTrace();
 //                     }
 
-                    } else if (code == 0) {
+                    } else if (code==0) {
+                        if (ClickFilter.isFastClick()) {
+                             if(bo) {
+                                 Log.d("Tag","zou没有");
+                                 //写你相关操作即可
+                                 networkser(stringExtra);
+                                 bo=false;
+                             }
+                        }
 
-                        networkser(stringExtra);
                     }
                 }
                  /*
@@ -1027,47 +1107,93 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         }
     };
 
-    private ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            // 未连接为空
-            iBackService = null;
-        }
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            // 已连接
-            iBackService = IBackserver.Stub.asInterface(service);
-            Log.d("iback",iBackService+"-------------");
-        }
-    };
-
-    public  void networkser(final String stringextra){
-        Map<String,String> map=new HashMap<>();
-        map.put("uid",SpUtils.getString(this,"userid",null));
-        map.put("token",SpUtils.getString(this,"token",null));
-        map.put("json",stringextra);
-        RetrofitManager.post(MyContants.BASEURL + "s=LockBalance/equipOperation", map, new BaseObserver1<Changbackbean>("") {
+    public  void sss() {
+        conn=  new ServiceConnection() {
             @Override
-            public void onSuccess(Changbackbean result, String tag) {
-                if(result.getCode()==200) {
-                    abool=true;
-                    mDialog.dismiss();
-                    aBoolean=false;
-                    network();
-                }
-
-
+            public void onServiceDisconnected(ComponentName name) {
+                // 未连接为空
+                iBackService = null;
+                Log.d("conn", "ooooooooooooo");
             }
 
             @Override
-            public void onFailed(int code,String data) {
-                if(code==1001){
-                    mDialog.dismiss();
-                    ToastUtils.show(MainActivity.this,data,1);
-                }
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                // 已连接
+                iBackService = IBackserver.Stub.asInterface(service);
+                Log.d("iback", iBackService + "-------------");
+                //  handler.sendEmptyMessage(2);
+                //调用Eventbus
+//                if (bo) {
+//                    Log.d("conn--", "-----------次数-------");
+//                     boochang=true;
+//                    EventMessage eventMessage = new EventMessage("kai");
+//                    EventBus.getDefault().postSticky(eventMessage);
+//                    bo = false;
+//                }
             }
-        });
+        };
+    }
+    public  void networkser(final String stringextra) {
+        HttpParams httpParams = new HttpParams();
+        httpParams.put("uid", SpUtils.getString(this, "userid", null));
+        httpParams.put("token", SpUtils.getString(this, "token", null));
+        httpParams.put("json", stringextra);
+        String umpushid = SpUtils.getString(MainActivity.this, "UMPUSHID", null);
+        if (umpushid != null) {
+            httpParams.put("deviceTokens", umpushid);
+        }
+        OkGo.<String>post(MyContants.BASEURL + "s=LockBalance/equipOperation")
+                .tag(this)
+                .params(httpParams)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String body = response.body();
+                        try {
+                            JSONObject jsonObject = new JSONObject(body);
+                            int code = jsonObject.getInt("code");
+                            if (code == 200) {
+                                abool = true;
+                                mDialog.dismiss();
+                                aBoolean = false;
+                                network();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+//        Map<String,String> map=new HashMap<>();
+//        map.put("uid",SpUtils.getString(this,"userid",null));
+//        map.put("token",SpUtils.getString(this,"token",null));
+//        map.put("json",stringextra);
+//        String umpushid = SpUtils.getString(MainActivity.this, "UMPUSHID", null);
+//        if(umpushid!=null){
+//            map.put("deviceTokens",umpushid);
+//        }
+//        RetrofitManager.post(MyContants.BASEURL + "s=LockBalance/equipOperation", map, new BaseObserver1<Changbackbean>("") {
+//            @Override
+//            public void onSuccess(Changbackbean result, String tag) {
+//                if(result.getCode()==200) {
+//                    abool=true;
+//                    mDialog.dismiss();
+//                    aBoolean=false;
+//                    network();
+//                }
+//
+//
+//            }
+//
+//            @Override
+//            public void onFailed(int code,String data) {
+//                if(code==1001){
+//                    mDialog.dismiss();
+//                    ToastUtils.show(MainActivity.this,data,1);
+//                }
+//            }
+//        });
+//    }
     }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -1139,34 +1265,38 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         //立即用车
         bike_sso = (TextView) findViewById(R.id.bike_sso);
         bike_sso.setOnClickListener(this);
+    //  dingshi();
+
+    }
+
+    private void dingshi() {
         //开启定时器每三分钟穿数据
-        mtimers=new Timer();
-        timerTasks=new TimerTask() {
-            @Override
-            public void run() {
-                i++;
-                if(i==10){
-                    i=0;
-                    //上传数据库自己的定位
-                    if(tripld!=null&&tripld.length()>0) {
-                        lanetwork();
-                    }
-                    else {
-                        mtimers.cancel();
-                        mtimers=null;
-                        timerTasks.cancel();
-                        timerTasks=null;
-                    }
+         if(mtimers==null) {
+             mtimers = new Timer();
+             timerTasks = new TimerTask() {
+                 @Override
+                 public void run() {
+                     i++;
+                     if (i == 10) {
+                         i = 0;
+                         //上传数据库自己的定位
+                         if (tripld != null && tripld.length() > 0) {
+                             lanetwork();
+                         } else {
+                             mtimers.cancel();
+                             mtimers = null;
+                             timerTasks.cancel();
+                             timerTasks = null;
+                         }
 
-                }
+                     }
 
-                Log.d("ssssddd",i+"");
-            }
+                     Log.d("ssssddd", i + "");
+                 }
 
 
-
-        };
-
+             };
+         }
     }
 
     @Override
@@ -1196,12 +1326,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 if(bool){
                     //临时停车,再次点击变为继续骑行
                     showxingDialog(Gravity.CENTER,R.style.Alpah_aniamtion);
-                    text_tingche.setText("临时停车");
+
                 }
                 else {
                     showqixingDialog(Gravity.CENTER,R.style.Alpah_aniamtion);
-                    //临时停车,再次点击变为继续骑行
-                    netlinshi();
+
 
                 }
                 bool=!bool;
@@ -1268,16 +1397,30 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 //定位
                 break;
             case R.id.iv_refresh:
+
                 mlocationClient.startLocation();
-                //刷新
-                addmark();
+                //网络请求车
+                networkbike();
+                String address1 = SpUtils.getString(this, "address", null);
+                 if(address1.equals("gongxiang")){
+                     //刷新
+                     addmark();
+                 }
+                else if(address1.equals("dianzi")){
+                     adddianzimark();
+
+                 }
+
                 break;
             case R.id.real_gongxiang:
                 mlocationClient.startLocation();
                 liner_mark.setVisibility(View.GONE);
                 SpUtils.putString(this, "address", "gongxiang");
                 aMap.clear();
-                addmark();
+                //网络请求车
+                networkbike();
+          //     addmark();
+
                 img_che.setImageResource(R.drawable.img_gongbick);
                 img_wei.setImageResource(R.drawable.img_dianziwei);
                 break;
@@ -1288,7 +1431,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 img_che.setImageResource(R.drawable.img_gongxiangfalse);
                 img_wei.setImageResource(R.drawable.img_dian_true);
                 aMap.clear();
-                adddianzimark();
+                networkbike();
+             //   adddianzimark();
+
                 break;
             case R.id.jiaona:
                 Intent intent3 = new Intent(this, CashpayActivity.class);
@@ -1309,7 +1454,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             public void onSuccess(Zhanshi result, String tag) {
                 if(result.getCode()==200){
                      ToastUtils.show(MainActivity.this,result.getDatas().toString(),1);
-                    text_tingche.setText("继续骑行");
+                     text_tingche.setText("继续骑行");
                 }
             }
 
@@ -1386,6 +1531,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         dialog.getView(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //临时停车,再次点击变为继续骑行
+                netlinshi();
                 dialog.dismiss();
 
             }
@@ -1394,7 +1541,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     }
     private void weiguidailog(int grary, int animationStyle) {
         BaseDialog.Builder builder = new BaseDialog.Builder(this);
-              
+
         final BaseDialog dialog = builder.setViewId(R.layout.activity_weigui)
                 //设置dialogpadding
                 .setPaddingdp(0, 0, 0, 0)
@@ -1415,24 +1562,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
         dialog.getView(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mtimers != null) {
-                    mtimers.cancel();
-                    mtimers = null;
-                }
-                if (timerTasks != null) {
-                    timerTasks.cancel();
-                    timerTasks = null;
-                }
-                if (conn != null && iBackService != null) {
-                    suo = false;
-                    // 注销广播 最好在onPause上注销
-                    LocalBroadcastManager.getInstance(MainActivity.this).unregisterReceiver(mReceiver);
-                    // 注销服务
-                    unbindService(conn);
-                }
+                    dialog.dismiss();
                    Intent it=new Intent(MainActivity.this,ZiXingActivity.class);
                    startActivity(it);
-                  dialog.dismiss();
+
 
             }
         });
@@ -1476,6 +1609,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
+                text_tingche.setText("临时停车");
                 //跳扫码
                 Intent intent=new Intent(MainActivity.this,ZiXingActivity.class);
                 startActivity(intent);
@@ -1542,11 +1676,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     }
 
     public void addmark() {
+
         list1 = new ArrayList<>();
         if(bike!=null&&bike.size()>0) {
             for (int i = 0; i < bike.size(); i++) {
                 Log.d("list", list1.size() + "");
-                LatLng lat = new LatLng(Double.valueOf(bike.get(i).getLatitude().toString().trim()), Double.valueOf(bike.get(i).getLongitude().toString().trim()));
+                LatLng lat = new LatLng(Double.valueOf(bike.get(i).getLatitude().toString().trim()).doubleValue(), Double.valueOf(bike.get(i).getLongitude().toString().trim()).doubleValue());
                 list1.add(lat);
                 markerOption = new MarkerOptions();
                 markerOption.position(list1.get(i));
@@ -1656,10 +1791,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                              int dis = (int) walkPath.getDistance();
                               int dur = (int) walkPath.getDuration();
                             Log.e("dur",dur+"");
-                            time = AMapUtil.getFriendlyTimeArray(dur);
+                            time = AMapUtil.getFriendlyTime(dur);
                             distance = AMapUtil.getFriendlyLength(dis);
                             des = AMapUtil.getFriendlyTime(dur);
-                            Log.d("time",time+"");
+                            Log.d("time",time.toString()+"");
                             Log.d("distance",distance+"");
 
                              handler.post(new Runnable() {
@@ -1746,12 +1881,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 /*
                   点点行页面
                  */
-                       tv_chewei.setText(des+"");
                        miao_juli.setText("每30分钟");
+                       tv_juli.setText("1.0元");
                        miao_time.setText("距离起始位置");
+                       tv_address.setText(formatAddress);
                        miao_shengyu.setText("步行可到达");
                        tv_time.setText(distance+"");
-                            tv_address.setText(formatAddress);
+                       tv_chewei.setText(time+"");
+
 
 
                    }
@@ -1761,7 +1898,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                        miao_shengyu.setText("剩余停车位");
                        tv_time.setText(des+"");
                        tv_juli.setText(distance+"");
-                       tv_chewei.setText(5+"辆");
+                       if(surplusbike!=null) {
+                            tv_chewei.setText(surplusbike + "辆");
+                        }
                           tv_address.setText(formatAddress);
                    }
                }
@@ -1778,6 +1917,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
 
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
+        boolean chebool = SpUtils.getBoolean(MainActivity.this, "chebool", true);
+        if(chebool) {
+            k++;
+            if (k == 3) {
+                SpUtils.getBoolean(MainActivity.this, "chebool", false);
+                Log.d("tagkkk", "-------K---" + k);
+                networkbike();
+            }
+        }
         if (mListener != null && amapLocation != null) {
             if (amapLocation != null
                     && amapLocation.getErrorCode() == 0) {

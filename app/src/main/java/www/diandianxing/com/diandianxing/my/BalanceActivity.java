@@ -137,13 +137,15 @@ public class BalanceActivity extends BaseActivity implements View.OnClickListene
             case R.id.chongzhi_ok:
                 String banlacn = SpUtils.getString(this, "banlacn", null);
                 if(i==1){
-                    if (banlacn!=null)
-                    ToastUtils.show(this,"微信支付"+banlacn,1);
+                    if (banlacn!=null) {
+                        PayUtils payutil = new PayUtils(this, 1, 1, banlacn);
+                        payutil.weixinPay();
+                    }
                  }
                 else if(i==2){
                     if (banlacn!=null) {
                        // ToastUtils.show(this, "支付宝支付" + banlacn, 1);
-                        PayUtils payutil = new PayUtils(this, 1, 2, "0.01");
+                        PayUtils payutil = new PayUtils(this, 1, 2, banlacn);
                         payutil.goAlipay();
                     }
 

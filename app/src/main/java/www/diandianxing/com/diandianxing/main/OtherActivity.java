@@ -11,6 +11,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +27,7 @@ import www.diandianxing.com.diandianxing.base.BaseActivity;
 import www.diandianxing.com.diandianxing.bean.Gubackbean;
 import www.diandianxing.com.diandianxing.network.BaseObserver1;
 import www.diandianxing.com.diandianxing.network.RetrofitManager;
+import www.diandianxing.com.diandianxing.set.Feedback;
 import www.diandianxing.com.diandianxing.utils.MyContants;
 import www.diandianxing.com.diandianxing.utils.SpUtils;
 import www.diandianxing.com.diandianxing.utils.ToastUtils;
@@ -51,7 +60,7 @@ public class OtherActivity extends BaseActivity {
         feel_edtext = (EditText) findViewById(R.id.feel_edtext);
         login_sso = (TextView) findViewById(R.id.login_sso);
         tv_shengyu = (TextView) findViewById(R.id.tv_shengyu);
-        zhong.setText("客户服务");
+        zhong.setText("其他");
 
         feel_edtext.addTextChangedListener(new TextWatcher() {
             @Override
@@ -82,7 +91,7 @@ public class OtherActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 network();
-                finish();
+
             }
 
 
@@ -91,25 +100,31 @@ public class OtherActivity extends BaseActivity {
 
     }
     private void network() {
-        Map<String,String> map=new HashMap<>();
-           map.put("uid", SpUtils.getString(this,"userid",null));
-           map.put("token",SpUtils.getString(this,"token",null));
-           map.put("content",feel_edtext.getText().toString().trim());
-        RetrofitManager.get(MyContants.BASEURL + "s=Bike/feedback", map, new BaseObserver1<Gubackbean>("") {
-            @Override
-            public void onSuccess(Gubackbean result, String tag) {
+        HttpParams httpar=new HttpParams();
+        httpar.put("uid", SpUtils.getString(this, "userid", null));
+        httpar.put("token", SpUtils.getString(this, "token", null));
+        httpar.put("type",3);
+        httpar.put("content", feel_edtext.getText().toString());
 
-                if(result.getCode()==200){
-                    ToastUtils.showLong(OtherActivity.this,"提交成功");
-                    finish();
-                }
-            }
-
-            @Override
-            public void onFailed(int code,String data) {
-
-            }
-        });
+        OkGo.<String>post(MyContants.BASEURL+"s=Bike/feedback")
+                .tag(this)
+                .params(httpar)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String body = response.body();
+                        try {
+                            JSONObject jsonobj=new JSONObject(body);
+                            int code = jsonobj.getInt("code");
+                            if(code==200){
+                                ToastUtils.showShort(OtherActivity.this,"提交成功");
+                                finish();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
     private void submit() {
         // validate

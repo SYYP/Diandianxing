@@ -11,6 +11,7 @@ import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,37 +41,55 @@ public class UmshareActivity extends BaseActivity {
 
     protected static void SharebyQQ(Activity context) {
         mContext = context;
+        UMWeb web = new UMWeb("http://android.myapp.com/myapp/detail.htm?apkName=www.diandianxing.com.diandianxing&ADTAG=mobile");
+        web.setTitle("智慧燕郊-点点行");//标题
+        web.setThumb(new UMImage(mContext,R.drawable.img_diandianlogo));  //缩略图
+        web.setDescription("点击下载“点点行”，开启燕郊骑行之旅~");//描述
+
         new ShareAction(mContext)
-                .withMedia(new UMImage(mContext,R.drawable.img_motou))
+                .withMedia(web)
                 .setPlatform(SHARE_MEDIA.QQ)//传入平台
-                .withText("hello")//分享内容
+                .withText("点击下载“点点行”，开启燕郊骑行之旅~")//分享内容
                 .setCallback(umShareListener)//回调监听器
                 .share();
     }
 
     protected static void SharebyQzon(Activity context) {
         mContext = context;
+        UMWeb web = new UMWeb("http://android.myapp.com/myapp/detail.htm?apkName=www.diandianxing.com.diandianxing&ADTAG=mobile");
+        web.setTitle("智慧燕郊-点点行");//标题
+        web.setThumb(new UMImage(mContext,R.drawable.img_diandianlogo));  //缩略图
+        web.setDescription("点击下载“点点行”，开启燕郊骑行之旅~");//描述
         new ShareAction(mContext)
                 .setPlatform(SHARE_MEDIA.QZONE)//传入平台
-                .withText("hello")//分享内容
+                .withMedia(web)
+                .withText("点击下载“点点行”，开启燕郊骑行之旅~")//分享内容
                 .setCallback(umShareListener)//回调监听器
                 .share();
     }
 
     protected static void SharebyWeixin(Activity context) {
         mContext = context;
+        UMWeb web = new UMWeb("http://android.myapp.com/myapp/detail.htm?apkName=www.diandianxing.com.diandianxing&ADTAG=mobile");
+        web.setTitle("智慧燕郊-点点行");//标题
+        web.setThumb(new UMImage(mContext,R.drawable.img_diandianlogo));  //缩略图
+        web.setDescription("点击下载“点点行”，开启燕郊骑行之旅~");//描述
         new ShareAction(mContext)
                 .setPlatform(SHARE_MEDIA.WEIXIN)//传入平台
-                .withText("hello")//分享内容
-
+                .withMedia(web)
+                .withText("点击下载“点点行”，开启燕郊骑行之旅~")//分享内容
                 .setCallback(umShareListener)//回调监听器
                 .share();
     }
     protected static void SharebyWeixincenter(Activity context) {
         mContext = context;
+        UMWeb web = new UMWeb("http://android.myapp.com/myapp/detail.htm?apkName=www.diandianxing.com.diandianxing&ADTAG=mobile");
+        web.setTitle("智慧燕郊-点点行");//标题
+        web.setThumb(new UMImage(mContext,R.drawable.img_diandianlogo));  //缩略图
+        web.setDescription("点击下载“点点行”，开启燕郊骑行之旅~");//描述
         new ShareAction(mContext)
                 .setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE)//传入平台
-                .withText("hello")//分享内容
+                .withText("点击下载“点点行”，开启燕郊骑行之旅~")//分享内容
                 .setCallback(umShareListener)//回调监听器
                 .share();
     }
@@ -123,7 +142,7 @@ public class UmshareActivity extends BaseActivity {
 
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
-            Toast.makeText(Myapplication.getGloableContext(), platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(Myapplication.getGloableContext(), platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
             if (t != null) {
                 //                Log.d("throw", "throw:" + t.getMessage());
             }
@@ -131,7 +150,7 @@ public class UmshareActivity extends BaseActivity {
 
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-            Toast.makeText(Myapplication.getGloableContext(), platform + " 分享取消了", Toast.LENGTH_SHORT).show();
+        //    Toast.makeText(Myapplication.getGloableContext(), platform + " 分享取消了", Toast.LENGTH_SHORT).show();
         }
     };
     @Override

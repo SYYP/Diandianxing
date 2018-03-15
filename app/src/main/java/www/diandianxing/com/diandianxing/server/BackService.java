@@ -65,11 +65,11 @@ public class BackService extends Service {
 
       @Override
       public void qidong() {
-//          try {
-//              initSocket();
-//          } catch (IOException e) {
-//              e.printStackTrace();
-//          }
+          try {
+              initSocket();
+          } catch (IOException e) {
+              e.printStackTrace();
+          }
           new InitSocketThread().start();
       }
   };

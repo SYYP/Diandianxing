@@ -49,6 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"></View>
         <RelativeLayout
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
@@ -84,6 +85,7 @@
                 android:layout_height="1dp"></View>
         </RelativeLayout>
         <RelativeLayout
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
@@ -137,7 +139,7 @@
             <TextView
                 android:id="@+id/email_num"
                 android:layout_marginRight="15dp"
-                android:text="12345678901"
+                android:text="daqianjieyong@sina.com"
                 android:textColor="@color/textcolcr"
                 android:textSize="16sp"
                 android:layout_centerVertical="true"
@@ -172,7 +174,7 @@
             <TextView
                 android:id="@+id/call_guanwang"
                 android:layout_marginRight="15dp"
-                android:text="12345678901"
+                android:text="www.daqianjietong.com"
                 android:textColor="@color/textcolcr"
                 android:textSize="16sp"
                 android:layout_centerVertical="true"

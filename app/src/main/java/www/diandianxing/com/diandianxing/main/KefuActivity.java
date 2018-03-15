@@ -80,6 +80,8 @@ public class KefuActivity extends BaseActivity implements View.OnClickListener {
     private List<LocalMedia> selectList = new ArrayList<>();
     private String cutPath;
     private File file;
+    private ImageView img_delete;
+    private RelativeLayout relan_sao;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,11 +104,13 @@ public class KefuActivity extends BaseActivity implements View.OnClickListener {
         fu_tijiao = (TextView) findViewById(R.id.fu_tijiao);
         zishu = (TextView) findViewById(R.id.zishu);
         tv_bianhao = (TextView) findViewById(R.id.tv_bianhao);
-        zhong.setText("客户服务");
+        relan_sao = (RelativeLayout) findViewById(R.id.relan_sao);
+        zhong.setText("违停举报");
         img_sao.setOnClickListener(this);
         img_increate.setOnClickListener(this);
         iv_callback.setOnClickListener(this);
         fu_tijiao.setOnClickListener(this);
+        relan_sao.setOnClickListener(this);
         fu_edtext.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -155,7 +159,7 @@ public class KefuActivity extends BaseActivity implements View.OnClickListener {
             //    showphotoDialog(Gravity.BOTTOM,R.style.Bottom_Top_aniamtion);
                 break;
             //扫一扫
-            case R.id.img_sao:
+            case R.id. relan_sao:
                 /*
                   跳扫码
                  */
@@ -292,6 +296,7 @@ public class KefuActivity extends BaseActivity implements View.OnClickListener {
                 .builder();
 
         ed = (EditText) dialog.getView(R.id.ed_shuru).findViewById(R.id.ed_shuru);
+        img_delete = dialog.getView(R.id.img_delete).findViewById(R.id.img_delete);
         SoftKeyboardTool.showSoftKeyboard(ed);
         dialog.getView(R.id.bike_sso).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -299,6 +304,13 @@ public class KefuActivity extends BaseActivity implements View.OnClickListener {
                 SoftKeyboardTool.closeKeyboard(ed);
                 dialog.dismiss();
                 tv_bianhao.setText(ed.getText().toString().trim());
+            }
+        });
+        dialog.getView(R.id.img_delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SoftKeyboardTool.closeKeyboard(ed);
+                dialog.dismiss();
             }
         });
         dialog.show();

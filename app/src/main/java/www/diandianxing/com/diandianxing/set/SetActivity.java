@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import util.UpdateAppUtils;
+import www.diandianxing.com.diandianxing.Login.BandphoneActivity;
 import www.diandianxing.com.diandianxing.Login.LoginActivity;
 import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
@@ -20,6 +21,7 @@ import www.diandianxing.com.diandianxing.my.ProtocolActivity;
 import www.diandianxing.com.diandianxing.utils.BaseDialog;
 import www.diandianxing.com.diandianxing.utils.CacheDataManager;
 import www.diandianxing.com.diandianxing.utils.MyContants;
+import www.diandianxing.com.diandianxing.utils.SpUtils;
 
 /**
  * date : ${Date}
@@ -187,11 +189,15 @@ public class SetActivity extends BaseActivity implements View.OnClickListener {
         tv_yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SpUtils.putInt(SetActivity.this, "guid", 2);
+
                 //更新页面
+                dialog.dismiss();
                 Intent intent3=new Intent(SetActivity.this,LoginActivity.class);
                 startActivity(intent3);
-                finish();
-                dialog.dismiss();
+                realBack();
+                //finish();
+
             }
         });
     }
