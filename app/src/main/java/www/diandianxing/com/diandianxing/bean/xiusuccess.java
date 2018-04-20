@@ -10,7 +10,7 @@ public class xiusuccess {
     /**
      * code : 200
      * msg : success
-     * datas : 2
+     * datas :
      */
 
     private int code;

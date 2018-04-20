@@ -4,27 +4,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.HashMap;
 import java.util.Map;
 
-import www.diandianxing.com.diandianxing.MainActivity;
 import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
+import www.diandianxing.com.diandianxing.bean.Shouyebean;
 import www.diandianxing.com.diandianxing.bean.xingbean;
-import www.diandianxing.com.diandianxing.bean.xiusuccess;
 import www.diandianxing.com.diandianxing.network.BaseObserver1;
 import www.diandianxing.com.diandianxing.network.RetrofitManager;
 import www.diandianxing.com.diandianxing.utils.BaseDialog;
-import www.diandianxing.com.diandianxing.utils.EventMessage;
 import www.diandianxing.com.diandianxing.utils.MyContants;
 import www.diandianxing.com.diandianxing.utils.SpUtils;
 
@@ -117,15 +115,16 @@ public class JieshuActivity extends BaseActivity implements View.OnClickListener
         you.setText("故障");
         zhifu_ok.setOnClickListener(this);
         iv_callback.setOnClickListener(this);
+        iv_callback.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.iv_callback:
-                  Intent intent=new Intent(this, MainActivity.class);
-                  startActivity(intent);
-                  finish();
+//                EventMessage eventMessage = new EventMessage("xiangqing");
+//                EventBus.getDefault().postSticky(eventMessage);
+//                finish();
                 break;
             case R.id.you://跳故障
                 break;
@@ -142,12 +141,15 @@ public class JieshuActivity extends BaseActivity implements View.OnClickListener
         Map<String,String> map=new HashMap<>();
         map.put("uid", SpUtils.getString(this,"userid",null));
         map.put("token",SpUtils.getString(this,"token",null));
-        RetrofitManager.get(MyContants.BASEURL + "s=Bike/bikeStatus", map, new BaseObserver1<xiusuccess>("") {
+        RetrofitManager.get(MyContants.BASEURL + "s=Bike/bikeStatus", map, new BaseObserver1<Shouyebean>("") {
+
+
             @Override
-            public void onSuccess(xiusuccess result, String tag) {
+            public void onSuccess(Shouyebean result, String tag) throws RemoteException {
                 Intent intent=new Intent(JieshuActivity.this,JourdetailActivity.class);
-                  startActivity(intent);
-                  finish();
+                startActivity(intent);
+                finish();
+
             }
 
             @Override
@@ -185,10 +187,10 @@ public class JieshuActivity extends BaseActivity implements View.OnClickListener
     }
 
     @Override
-    public void onBackPressed() {
-        //如果按返回键调用eventbus刷新页面
-        super.onBackPressed();
-        EventMessage eventMessage = new EventMessage("xiangqing");
-        EventBus.getDefault().postSticky(eventMessage);
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

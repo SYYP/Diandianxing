@@ -3,6 +3,7 @@ package www.diandianxing.com.diandianxing.my;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -58,9 +59,11 @@ public class CredibilityActivity extends BaseActivity implements View.OnClickLis
                    if(result.getCode()==200){
                        Xinyongbean.DatasBean datas = result.getDatas();
                        xinyong_fen.setText(datas.getCredit()+"");
+                       Log.d("Tags",datas.getCredit()+"");
                        xin_time.setText("评估于"+datas.getMonth()+"");
                        text_date.setText("评估时间"+datas.getEvaluation_date());
-                       text_fen.setText("+"+datas.getMount()+"");
+                       text_fen.setText(datas.getMount()+"");
+                       Log.d("TSDD",datas.getMount()+"");
 
 
                    }

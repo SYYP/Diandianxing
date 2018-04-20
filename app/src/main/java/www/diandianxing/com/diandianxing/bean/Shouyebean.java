@@ -11,7 +11,7 @@ public class Shouyebean {
     /**
      * code : 200
      * msg : success
-     * datas : {"uid":"31","token":"08a8ff0924d942566e559df98bb0c919","nickName":"","credit":"146","id_ident":"1","balance":"0.00","securityDeposit":"0.01","ridingState":"1","cartStatus":"1","realType":"0","headImageUrl":"","bikeNumber":"171200770","bikeDistance":"42.49","bikeTime":"0","tripId":"2893","isTemporary":"0"}
+     * datas : {"uid":"1","token":"89ae099e9fa0cdc1b8aa296f510009db","nickName":"啊咯","contact":"18310482720","credit":"95","id_ident":"1","balance":"2.00","securityDeposit":"1.00","ridingState":"0","deposit_status":"4","fanbei":"0","credit_normal":"50","wechat":"","tencent_qq":"DF70E82323425B308C58D2ABEBB77DC7","cartStatus":"0","realType":"0","headImageUrl":"/server/uploads/head/20180306/5a9deef364f9a.jpg","bikeNumber":"","bikeDistance":"","bikeTime":"","isTemporary":"","tripId":""}
      */
 
     private int code;
@@ -44,40 +44,52 @@ public class Shouyebean {
 
     public static class DatasBean {
         /**
-         * uid : 31
-         * token : 08a8ff0924d942566e559df98bb0c919
-         * nickName :
-         * credit : 146
+         * uid : 1
+         * token : 89ae099e9fa0cdc1b8aa296f510009db
+         * nickName : 啊咯
+         * contact : 18310482720
+         * credit : 95
          * id_ident : 1
-         * balance : 0.00
-         * securityDeposit : 0.01
-         * ridingState : 1
-         * cartStatus : 1
+         * balance : 2.00
+         * securityDeposit : 1.00
+         * ridingState : 0
+         * deposit_status : 4
+         * fanbei : 0
+         * credit_normal : 50
+         * wechat :
+         * tencent_qq : DF70E82323425B308C58D2ABEBB77DC7
+         * cartStatus : 0
          * realType : 0
-         * headImageUrl :
-         * bikeNumber : 171200770
-         * bikeDistance : 42.49
-         * bikeTime : 0
-         * tripId : 2893
-         * isTemporary : 0
+         * headImageUrl : /server/uploads/head/20180306/5a9deef364f9a.jpg
+         * bikeNumber :
+         * bikeDistance :
+         * bikeTime :
+         * isTemporary :
+         * tripId :
          */
 
         private String uid;
         private String token;
         private String nickName;
+        private String contact;
         private String credit;
         private String id_ident;
         private String balance;
         private String securityDeposit;
         private String ridingState;
+        private String deposit_status;
+        private String fanbei;
+        private String credit_normal;
+        private String wechat;
+        private String tencent_qq;
         private String cartStatus;
         private String realType;
         private String headImageUrl;
         private String bikeNumber;
         private String bikeDistance;
         private String bikeTime;
-        private String tripId;
         private String isTemporary;
+        private String tripId;
 
         public String getUid() {
             return uid;
@@ -101,6 +113,14 @@ public class Shouyebean {
 
         public void setNickName(String nickName) {
             this.nickName = nickName;
+        }
+
+        public String getContact() {
+            return contact;
+        }
+
+        public void setContact(String contact) {
+            this.contact = contact;
         }
 
         public String getCredit() {
@@ -141,6 +161,46 @@ public class Shouyebean {
 
         public void setRidingState(String ridingState) {
             this.ridingState = ridingState;
+        }
+
+        public String getDeposit_status() {
+            return deposit_status;
+        }
+
+        public void setDeposit_status(String deposit_status) {
+            this.deposit_status = deposit_status;
+        }
+
+        public String getFanbei() {
+            return fanbei;
+        }
+
+        public void setFanbei(String fanbei) {
+            this.fanbei = fanbei;
+        }
+
+        public String getCredit_normal() {
+            return credit_normal;
+        }
+
+        public void setCredit_normal(String credit_normal) {
+            this.credit_normal = credit_normal;
+        }
+
+        public String getWechat() {
+            return wechat;
+        }
+
+        public void setWechat(String wechat) {
+            this.wechat = wechat;
+        }
+
+        public String getTencent_qq() {
+            return tencent_qq;
+        }
+
+        public void setTencent_qq(String tencent_qq) {
+            this.tencent_qq = tencent_qq;
         }
 
         public String getCartStatus() {
@@ -191,20 +251,20 @@ public class Shouyebean {
             this.bikeTime = bikeTime;
         }
 
-        public String getTripId() {
-            return tripId;
-        }
-
-        public void setTripId(String tripId) {
-            this.tripId = tripId;
-        }
-
         public String getIsTemporary() {
             return isTemporary;
         }
 
         public void setIsTemporary(String isTemporary) {
             this.isTemporary = isTemporary;
+        }
+
+        public String getTripId() {
+            return tripId;
+        }
+
+        public void setTripId(String tripId) {
+            this.tripId = tripId;
         }
     }
 }

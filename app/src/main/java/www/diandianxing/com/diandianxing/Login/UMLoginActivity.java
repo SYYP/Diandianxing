@@ -4,22 +4,27 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.util.ArrayMap;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Map;
 
-import www.diandianxing.com.diandianxing.MainActivity;
+import www.diandianxing.com.diandianxing.DianDianActivity;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
 import www.diandianxing.com.diandianxing.base.Myapplication;
 import www.diandianxing.com.diandianxing.bean.Loginsuccess;
-import www.diandianxing.com.diandianxing.network.BaseObserver1;
-import www.diandianxing.com.diandianxing.network.RetrofitManager;
 import www.diandianxing.com.diandianxing.utils.MyContants;
 import www.diandianxing.com.diandianxing.utils.SpUtils;
 
@@ -70,12 +75,13 @@ public class UMLoginActivity extends BaseActivity {
         * 因此为了便于开发者使用，我们将一些常用的字段做了统一封装，开发者可以直接获取，
         * 不再需要对不同平台的不同字段名做转换，这里列出我们封装的字段及含义
         * */
+            Log.d("TSs",data.toString());
             //            Toast.makeText(MyApplication.getGloableContext(), "登陆成功", Toast.LENGTH_SHORT).show();
             final String username = data.get("name");
             final String userhead = data.get("iconurl");
-            final String uid = data.get("uid");
+            final String uid = data.get("openid");
             Log.d("opend",uid+"```````");
-            SpUtils.putBoolean(mContext, "guide", true);
+            SpUtils.putInt(Myapplication.getApplication(), "guid", 1);
             //            SpUtils.putString(MyApplication.getGloableContext(), "threeid", uid);
             //            SpUtils.putString(MyApplication.getGloableContext(), "logintype", "three");
             String type = "";
@@ -86,46 +92,45 @@ public class UMLoginActivity extends BaseActivity {
             } else if (platform.equals(SHARE_MEDIA.SINA)) {
                 type = "3";
             }
-            ArrayMap arrayMap2 = new ArrayMap();
-            arrayMap2.put("openid", uid);
-            arrayMap2.put("type", type);
+            HttpParams httpParams=new HttpParams();
+            httpParams.put("openid", uid);
+            httpParams.put("type", type);
             final String finalType = type;
-//            LoginActivitys loginActivity = (LoginActivitys) mContext;
-//            loginActivity.closeDialog();
-            RetrofitManager.post(MyContants.BASEURL +"s=Login/threeLogin", arrayMap2, new BaseObserver1<Loginsuccess>("") {
-                @Override
-                public void onSuccess(Loginsuccess result, String tag) {
-                    if (result.getCode() == 200) {
-                              if(result.getDatas().getContact().length()>0&&result.getDatas().getContact()!=null){
-                                  SpUtils.putString(mContext, "userid", result.getDatas().getId() + "");
-                                  SpUtils.putString(mContext, "token", result.getDatas().getToken() + "");
-                                  mContext.startActivity(new Intent(mContext, MainActivity.class));
-                              }
-                        else {
-                                  //跳帮手机号
-                                  Intent intent = new Intent(mContext, BandphoneActivity.class);
-                                  intent.putExtra("type", finalType);
-                                  intent.putExtra("openid", uid);
-                                  intent.putExtra("name",username);
-                                  mContext.startActivity(intent);
+            OkGo.<String>post(MyContants.BASEURL+"s=Login/threeLogin")
+                    .tag(this)
+                    .params(httpParams)
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(Response<String> response) {
+                            String body = response.body();
+                            try {
+                                JSONObject jsonobj=new JSONObject(body);
+                                int code = jsonobj.getInt("code");
+                                String msg = jsonobj.getString("msg");
+                                if(code==200){
+                                    if(msg.equals("failed")){
+                                        Intent intent = new Intent(mContext, BandphoneActivity.class);
+                                        intent.putExtra("type", finalType);
+                                        intent.putExtra("openid", uid);
+                                        intent.putExtra("name",username);
+                                        mContext.startActivity(intent);
+                                    }
+                                    else {
+                                        Gson gson = new Gson();
+                                        Loginsuccess loginsuccess = gson.fromJson(body, Loginsuccess.class);
+                                        SpUtils.putString(mContext, "userid", loginsuccess.getDatas().getId() + "");
+                                        SpUtils.putString(mContext, "token", loginsuccess.getDatas().getToken() + "");
+                                        mContext.startActivity(new Intent(mContext, DianDianActivity.class));
+                                        mContext.finish();
 
-                              }
+                                    }
 
-                         }
-
-                }
-                @Override
-                public void onFailed(int code,String data) {
-                     if(data.equals("未绑定手机号")){
-                         //跳帮手机号
-                         Intent intent = new Intent(mContext, BandphoneActivity.class);
-                         intent.putExtra("type", finalType);
-                         intent.putExtra("openid", uid);
-                         intent.putExtra("name", username);
-                         mContext.startActivity(intent);
-                     }
-                }
-            });
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
         }
         @Override
         public void onError(SHARE_MEDIA platform, int action, Throwable t) {

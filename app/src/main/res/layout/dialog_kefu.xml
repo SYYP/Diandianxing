@@ -14,7 +14,7 @@
            android:layout_centerHorizontal="true"
            android:layout_centerVertical="true"
            android:drawablePadding="10dp"
-           android:text="010-12353215"
+           android:text=""
            android:gravity="center"
            android:textSize="18sp"
            android:textColor="@color/textcolcr"

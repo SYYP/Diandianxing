@@ -24,11 +24,17 @@ import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.socks.library.KLog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -133,18 +139,34 @@ public class KefuActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void submit() {
+        boolean numeric = isNumeric(tv_bianhao.getText().toString());
+        if(!(numeric)){
+            Toast.makeText(this, "请扫车辆编码", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(file==null){
+            Toast.makeText(this, "请上传照片", Toast.LENGTH_SHORT).show();
+            return;
+        }
         // validate
         String edtext = fu_edtext.getText().toString().trim();
         if (TextUtils.isEmpty(edtext)) {
-            Toast.makeText(this, "edtext不能为空", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "请输入反馈内容", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        networks();
 
         // TODO validate success, do something
 
 
     }
-
+    public final static boolean isNumeric(String s) {
+        if (s != null && !"".equals(s.trim()))
+            return s.matches("^[0-9]*$");
+        else
+            return false;
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -172,54 +194,42 @@ public class KefuActivity extends BaseActivity implements View.OnClickListener {
                 break;
             //提交
             case R.id.fu_tijiao:
-                network();
-                finish();
+                submit();
+
+
                 break;
         }
     }
-
-    private void network() {
-
-
-            final Thread thred = new Thread(new Runnable() {
-                private Gubackbean gubackbean;
-                private String s1;
-
-                @Override
-                public void run() {
-                    Map<String,String> map=new HashMap<>();
-                    map.put("uid", SpUtils.getString(KefuActivity.this,"userid",null));
-                    map.put("token",SpUtils.getString(KefuActivity.this,"token",null));
-                    map.put("identnum",tv_bianhao.getText().toString());
-                    Map<String,File> maps=new HashMap<>();
-                    if(file!=null) {
-                        maps.put("file", file);
-                    }
-                    s1 = UploadUtil.uploadFile(map, maps, MyContants.BASEURL + "s=Bike/feedback");
-                    Gson gson=new Gson();
-                    gubackbean = gson.fromJson(s1, Gubackbean.class);
-
-
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            KLog.a("Tag", s1);
-                            if(gubackbean.getCode()==200){
+    private void networks(){
+        HttpParams httpParams=new HttpParams();
+        httpParams.put("uid", SpUtils.getString(KefuActivity.this,"userid",null));
+        httpParams.put("token",SpUtils.getString(KefuActivity.this,"token",null));
+        httpParams.put("identnum",tv_bianhao.getText().toString());
+        httpParams.put("type",1+"");
+        Map<String,File> maps=new HashMap<>();
+        if(file!=null) {
+            maps.put("file", file);
+        }
+        OkGo.<String>post(MyContants.BASEURL+"s=Bike/feedback")
+                .params(httpParams)
+                .tag(this)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String body = response.body();
+                        try {
+                            JSONObject jsobobj=new JSONObject(body);
+                            int code = jsobobj.getInt("code");
+                            if(code==200){
                                 ToastUtils.show(KefuActivity.this,"提交成功",1);
                                 finish();
-
                             }
-                            // ToastUtils.showShort(PersoninforActivity.this, s);
-                            //Glide.with(PersonActivity.this).load(MyContants.FILENAME+datas.getHeadImageUrl()).into(per_pho);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    });
-
-                }
-            });
-            thred.start();
-        }
-
-
+                    }
+                });
+    }
 
     private void requestCamera() {
         PictureSelector.create(this)
@@ -267,12 +277,12 @@ public class KefuActivity extends BaseActivity implements View.OnClickListener {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventMessage eventMessage) {
         //扫码成功后刷新主页面
-        if (eventMessage.getMsg().equals("zxing")) {
-            String bikenum = SpUtils.getString(this, "bikenum", null);
+        if (eventMessage.getMsg().equals("weiting")) {
+            String bikenum = SpUtils.getString(this, "bianhao", null);
             tv_bianhao.setText(bikenum);
 
         }
-        else if(eventMessage.getMsg().equals("shoushi")){
+        else if(eventMessage.getMsg().equals("shoush")){
             showCarDialog(R.style.Alpah_aniamtion);
 
         }

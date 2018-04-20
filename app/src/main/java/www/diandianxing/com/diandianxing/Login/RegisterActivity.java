@@ -113,10 +113,11 @@ public class RegisterActivity extends UMLoginActivity implements View.OnClickLis
             Toast.makeText(this, "请输入6-20位密码", Toast.LENGTH_SHORT).show();
             return;
         }
-         gomain();
+        gomain();
+
 
     }
-
+    //改写逻辑，将操作放到协议页面
     private void gomain() {
                 ArrayMap map=new ArrayMap<String,String>();
              //先验证手机号是否正确，然后在注册
@@ -125,12 +126,18 @@ public class RegisterActivity extends UMLoginActivity implements View.OnClickLis
         RetrofitManager.post(MyContants.BASEURL + "s=Sms/verify", map, new BaseObserver1<Successbean>("") {
             @Override
             public void onSuccess(Successbean result, String tag) {
-
                 if(result.getCode()==200){
                      /*
                        注册
                      */
-                      register();
+                    Intent intent=new Intent(RegisterActivity.this,AgreementActivity.class);
+                    intent.putExtra("contact",register_phone.getText().toString().trim());
+                    intent.putExtra("password",register_pwd.getText().toString().trim());
+                    intent.putExtra("register_or_bind","register");
+                    intent.putExtra("type","");
+                    intent.putExtra("openid","");
+                    intent.putExtra("name","");
+                    startActivity(intent);
                 }
             }
             @Override

@@ -8,8 +8,8 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import www.diandianxing.com.diandianxing.DianDianActivity;
 import www.diandianxing.com.diandianxing.Login.LoginActivity;
-import www.diandianxing.com.diandianxing.MainActivity;
 import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
 import www.diandianxing.com.diandianxing.utils.SpUtils;
@@ -40,7 +40,7 @@ public class LancherActivity extends BaseActivity {
             public void run() {
                 int guid = SpUtils.getInt(LancherActivity.this, "guid", 0);
                 if (guid==1) {
-                    startActivity(new Intent(LancherActivity.this,MainActivity.class));
+                    startActivity(new Intent(LancherActivity.this,DianDianActivity.class));
                 }else if(guid==2){
                     startActivity(new Intent(LancherActivity.this,LoginActivity.class));
                 }

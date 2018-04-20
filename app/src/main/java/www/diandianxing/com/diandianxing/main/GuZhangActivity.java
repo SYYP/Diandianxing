@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -28,7 +30,17 @@ import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.socks.library.KLog;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -44,7 +56,9 @@ import www.diandianxing.com.diandianxing.bean.Guzhanxuanbean;
 import www.diandianxing.com.diandianxing.network.BaseObserver1;
 import www.diandianxing.com.diandianxing.network.RetrofitManager;
 import www.diandianxing.com.diandianxing.utils.BaseDialog;
+import www.diandianxing.com.diandianxing.utils.EventMessage;
 import www.diandianxing.com.diandianxing.utils.MyContants;
+import www.diandianxing.com.diandianxing.utils.SoftKeyboardTool;
 import www.diandianxing.com.diandianxing.utils.SpUtils;
 import www.diandianxing.com.diandianxing.utils.ToastUtils;
 import www.diandianxing.com.diandianxing.utils.UploadUtil;
@@ -55,7 +69,7 @@ import www.diandianxing.com.diandianxing.utils.UploadUtil;
  */
 
 public class GuZhangActivity extends BaseActivity {
-
+    private List<String> s;
     private ImageView iv_callback;
     private TextView zhong;
     private TextView you;
@@ -75,11 +89,19 @@ public class GuZhangActivity extends BaseActivity {
     private List<LocalMedia> selectList = new ArrayList<>();
     private String cutPath;
     private File file;
+    List<String> lists;
+    int ii=0;
+    private RelativeLayout relan_sao;
+    private TextView tv_bianhao;
+    private EditText ed;
+    private ImageView img_delete;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MyContants.windows(this);
         setContentView(R.layout.activity_guzhang);
+        EventBus.getDefault().register(this);
         initView();
         network();
 
@@ -100,6 +122,7 @@ public class GuZhangActivity extends BaseActivity {
             public void onSuccess(Guzhanxuanbean result, String tag) {
                    if(result.getCode()==200){
                        datas = result.getDatas();
+                       recycler_guzhang.setNestedScrollingEnabled(false);
                        guzhangadapter=new Guzhangadapter(R.layout.item_guzhang,datas);
                        recycler_guzhang.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
                        recycler_guzhang.setAdapter(guzhangadapter);
@@ -124,14 +147,30 @@ public class GuZhangActivity extends BaseActivity {
         you = (TextView) findViewById(R.id.you);
         real_ok = (RelativeLayout) findViewById(R.id.real_ok);
         fu_edtext1 = (EditText) findViewById(R.id.fu_edtext);
+        relan_sao = (RelativeLayout) findViewById(R.id.relan_sao);
         recycler_guzhang = (RecyclerView) findViewById(R.id.recycler_guzhang);
         zhong.setText("故障申报");
         recycler_guzhang.setNestedScrollingEnabled(false);
         img_create = (ImageView) findViewById(R.id.img_increate);
+        tv_bianhao = (TextView) findViewById(R.id.tv_bianhao);
+        //扫码输入车辆编号
+        relan_sao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+  /*
+                  跳扫码
+                 */
+                Intent intent=new Intent(GuZhangActivity.this,ZiXingActivity.class);
+                intent.putExtra("abool",true);
+                startActivity(intent);
+            }
+        });
         real_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                           fankui();
+
+
+                submit();
 
             }
 
@@ -177,65 +216,152 @@ public class GuZhangActivity extends BaseActivity {
     /*
         网络请求
      */
-
-    private void fankui() {
-
-            final Thread thred = new Thread(new Runnable() {
-                private Gubackbean gubackbean;
-                private String s1;
-
-                @Override
-                public void run() {
-
-                    Map<String,String>map=new HashMap<>();
-                    map.put("uid",SpUtils.getString(GuZhangActivity.this,"userid",null));
-                    map.put("token",SpUtils.getString(GuZhangActivity.this,"token",null));
-                    map.put("type",2+"");
-                    map.put("content",fu_edtext1.getText().toString().trim());
-                    for (int i = 0; i <datas.size() ; i++) {
-                        map.put("label",datas.get(i).getName()+" ");
-                    }
-                    Map<String,File> maps=new HashMap<>();
-                    if(file!=null){
-                        maps.put("file",file) ;
-                    }
-                    s1 = UploadUtil.uploadFile(map, maps, MyContants.BASEURL +"s=Bike/feedback");
-                    Gson gson=new Gson();
-                    gubackbean = gson.fromJson(s1, Gubackbean.class);
-
-
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            KLog.a("Tag", s1);
-                            if(gubackbean.getCode()==200){
-                                ToastUtils.show(GuZhangActivity.this,"提交成功",1);
-                                finish();
-
-                            }
-                            // ToastUtils.showShort(PersoninforActivity.this, s);
-                            //Glide.with(PersonActivity.this).load(MyContants.FILENAME+datas.getHeadImageUrl()).into(per_pho);
-                        }
-                    });
-
-                }
-            });
-            thred.start();
+public void submit(){
+    boolean numeric = isNumeric(tv_bianhao.getText().toString());
+    if(!(numeric)){
+        Toast.makeText(this, "请扫车辆编码", Toast.LENGTH_SHORT).show();
+        return;
+    }
+   // int jihe = SpUtils.getInt(GuZhangActivity.this, "ss", 8);
+    if(ii==0){
+        ToastUtils.showShort(this,"请选择一个车辆故障");
+        return;
+    }
+    else {
+      if (file == null) {
+            ToastUtils.showShort(this, "请上传照片");
+            return;
+        } if (TextUtils.isEmpty(fu_edtext1.getText().toString().trim())) {
+            ToastUtils.showShort(this, "请输入反馈内容");
+            return;
         }
+    }
+    fankuis();
+}
+    /*
+        判断只能输入数字
+     */
+    public final static boolean isNumeric(String s) {
+        if (s != null && !"".equals(s.trim()))
+            return s.matches("^[0-9]*$");
+        else
+            return false;
+    }
+    /*
+       返回
+     */
+    private void fankuis(){
+        HttpParams httpParams=new HttpParams();
+
+        httpParams.put("uid",SpUtils.getString(GuZhangActivity.this,"userid",null));
+        httpParams.put("token",SpUtils.getString(GuZhangActivity.this,"token",null));
+        httpParams.put("identnum",tv_bianhao.getText().toString());
+        httpParams.put("type",2+"");
+        httpParams.put("content",fu_edtext1.getText().toString().trim());
+        for (int i = 0; i <datas.size() ; i++) {
+            if(datas.get(i).isaBoolean()==true){
+                httpParams.put("label",datas.get(i).getName()+" ");
+            }
+
+        }
+        OkGo.<String>post(MyContants.BASEURL+"s=Bike/feedback")
+                .params(httpParams)
+                .tag(this)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String body = response.body();
+                        try {
+                            JSONObject jsonobj=new JSONObject(body);
+                            int code = jsonobj.getInt("code");
+                            if(code==200){
+                                ToastUtils.show(GuZhangActivity.this,"提交成功",0);
+                                finish();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+    }
 
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventMessage eventMessage) {
+        //扫码成功后刷新主页面
+        if (eventMessage.getMsg().equals("weiting")) {
+            String bikenum = SpUtils.getString(this, "bianhao", null);
+            tv_bianhao.setText(bikenum);
 
+        }
+      if(eventMessage.getMsg().equals("shoush")){
+            showCarDialog(R.style.Alpah_aniamtion);
 
+        }
+    }
+/*
+    手动输入车辆编号
+ */
+    private void showCarDialog( int animationStyle) {
+        BaseDialog.Builder builder = new BaseDialog.Builder(this);
+        final BaseDialog dialog = builder.setViewId(R.layout.dialog_shuru)
+                //设置dialogpadding
+                .setPaddingdp(0, 0, 0, 0)
+                //设置显示位置
+                .setGravity(580)
+                //设置动画
+                .setAnimation(animationStyle)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(false)
+
+                //设置监听事件
+                .builder();
+
+        ed = (EditText) dialog.getView(R.id.ed_shuru).findViewById(R.id.ed_shuru);
+        img_delete = dialog.getView(R.id.img_delete).findViewById(R.id.img_delete);
+        SoftKeyboardTool.showSoftKeyboard(ed);
+        dialog.getView(R.id.bike_sso).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SoftKeyboardTool.closeKeyboard(ed);
+                dialog.dismiss();
+                tv_bianhao.setText(ed.getText().toString().trim());
+            }
+        });
+        dialog.getView(R.id.img_delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SoftKeyboardTool.closeKeyboard(ed);
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
 
     private void data() {
 
         guzhangadapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+
+
+            private int i1=8;
+
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Log.d("pos",position+"");
                 datas.get(position).setaBoolean(!datas.get(position).isaBoolean());
                 guzhangadapter.notifyDataSetChanged();
-                Log.d("ppp",datas.get(position).isaBoolean()+"");
+               Log.d("ppp",datas.get(position).isaBoolean()+"");
+
+                if(datas.get(position).isaBoolean()==true){
+                     ii=ii+1;
+                }
+                else if(datas.get(position).isaBoolean()==false){
+                    ii=ii-1;
+                }
+
                 Log.d("sss",datas.get(position).getName());
 
 
@@ -334,5 +460,12 @@ public class GuZhangActivity extends BaseActivity {
         }
 
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //注销Eventbus
+        EventBus.getDefault().unregister(this);
     }
 }

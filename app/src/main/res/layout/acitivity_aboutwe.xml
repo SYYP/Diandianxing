@@ -34,11 +34,12 @@
                 android:id="@+id/imageView2"
                 android:layout_centerHorizontal="true" />
             <TextView
+                android:id="@+id/tv_bbh"
                 android:textStyle="bold"
                 android:layout_marginTop="30dp"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/imageView2"
-                android:text="V1.0.0"
+                android:text="V1.7"
                 android:textColor="@color/black_san"
                 android:textSize="17sp"
                 android:layout_width="wrap_content"
@@ -139,7 +140,7 @@
             <TextView
                 android:id="@+id/email_num"
                 android:layout_marginRight="15dp"
-                android:text="daqianjieyong@sina.com"
+                android:text=""
                 android:textColor="@color/textcolcr"
                 android:textSize="16sp"
                 android:layout_centerVertical="true"
@@ -174,7 +175,7 @@
             <TextView
                 android:id="@+id/call_guanwang"
                 android:layout_marginRight="15dp"
-                android:text="www.daqianjietong.com"
+                android:text=""
                 android:textColor="@color/textcolcr"
                 android:textSize="16sp"
                 android:layout_centerVertical="true"

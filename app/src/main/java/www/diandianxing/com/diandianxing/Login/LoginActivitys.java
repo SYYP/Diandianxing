@@ -17,7 +17,7 @@ import org.zackratos.ultimatebar.UltimateBar;
 
 import java.util.Map;
 
-import www.diandianxing.com.diandianxing.MainActivity;
+import www.diandianxing.com.diandianxing.DianDianActivity;
 import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.bean.Loginbean;
 import www.diandianxing.com.diandianxing.network.BaseObserver1;
@@ -107,6 +107,7 @@ public class LoginActivitys extends UMLoginActivity implements View.OnClickListe
              Map<String,String> map=new ArrayMap<>();
              map.put("mobile",login_phone.getText().toString().trim());
              map.put("password",login_pwd.getText().toString().trim());
+        SpUtils.putString(LoginActivitys.this,"contact",login_phone.getText().toString());
         RetrofitManager.post(MyContants.BASEURL + "s=Login/login", map, new BaseObserver1<Loginbean>("") {
             @Override
             public void onSuccess(Loginbean result, String tag) {
@@ -118,7 +119,7 @@ public class LoginActivitys extends UMLoginActivity implements View.OnClickListe
                     SpUtils.putString(LoginActivitys.this,"token",token);
                     SpUtils.putString(LoginActivitys.this,"userid",id);
                     SpUtils.putInt(LoginActivitys.this, "guid", 1);
-                    Intent intent=new Intent(LoginActivitys.this, MainActivity.class);
+                    Intent intent=new Intent(LoginActivitys.this, DianDianActivity.class);
                     startActivity(intent);
                     finish();
 
@@ -151,10 +152,12 @@ public class LoginActivitys extends UMLoginActivity implements View.OnClickListe
             case R.id.iv_qq:
                 mDialog.show();
                 loginByQQ(this);
+
                 break;
             case R.id.iv_weixin:
               //  mDialog.show();
                 loginByWeiXin(this);
+                finish();
                 break;
             case R.id.iv_weibo:
                 break;

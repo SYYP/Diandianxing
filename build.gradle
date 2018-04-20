@@ -17,6 +17,7 @@ allprojects {
     repositories {
         jcenter()
         maven { url "https://jitpack.io" }//recycler框架需要
+        maven { url "https://dl.bintray.com/thelasterstar/maven/" }
     }
 }
 

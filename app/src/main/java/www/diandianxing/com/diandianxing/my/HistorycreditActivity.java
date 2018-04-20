@@ -8,10 +8,20 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.liaoinstan.springview.container.DefaultFooter;
 import com.liaoinstan.springview.container.DefaultHeader;
 import com.liaoinstan.springview.widget.SpringView;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +50,7 @@ public class HistorycreditActivity extends BaseActivity {
     private SpringView spring_view;
     int i=1;
     private List<Xinyongdetailbean.DatasBean> datas;
+    private List<Xinyongdetailbean.DatasBean> data=new ArrayList<>();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +58,7 @@ public class HistorycreditActivity extends BaseActivity {
         setContentView(R.layout.activity_historycredit);
         //加载布局
         initView();
-        network();//网络请求
+        networkmore();
 
         data();//刷新
 
@@ -64,11 +75,11 @@ public class HistorycreditActivity extends BaseActivity {
                     public void run() {
 
                         i=1;
-                        network();
+                        networkmore();
 
                     }
                 }, 5000);
-                spring_view.onFinishFreshAndLoad();
+
             }
 
             @Override
@@ -76,12 +87,12 @@ public class HistorycreditActivity extends BaseActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                       i++;
-                        network();
+                         i++;
+                        networkmore();
 
                     }
                 }, 5000);
-                spring_view.onFinishFreshAndLoad();
+
             }
         });
         spring_view.setFooter(new DefaultFooter(this));
@@ -90,36 +101,85 @@ public class HistorycreditActivity extends BaseActivity {
     }
 
 
-    private void network() {
-        Map<String,String> map=new HashMap<>();
-        map.put("uid", SpUtils.getString(this,"userid",null));
-        map.put("token",SpUtils.getString(this,"token",null));
-        map.put("page",i+"");
-        RetrofitManager.get(MyContants.BASEURL + "s=User/creditList", map, new BaseObserver1<Xinyongdetailbean>("") {
+    private void networkmore() {
+        HttpParams httpParams = new HttpParams();
+        httpParams.put("uid", SpUtils.getString(this, "userid", null));
+        httpParams.put("token", SpUtils.getString(this, "token", null));
+        httpParams.put("page", i );
+        OkGo.<String>post(MyContants.BASEURL + "s=User/creditList")
+                .params(httpParams)
+                .tag(this)
+                .execute(new StringCallback() {
 
 
 
-            @Override
-            public void onSuccess(Xinyongdetailbean result, String tag) {
-                if(result.getCode()==200){
-                    datas = result.getDatas();
-                        /*
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String body = response.body();
+                        try {
+                            JSONObject jsonobj = new JSONObject(body);
+                            int code = jsonobj.getInt("code");
+                            if (code == 200) {
+                                spring_view.onFinishFreshAndLoad();
+                                Gson gson = new Gson();
+                                Xinyongdetailbean xinyongdetailbean = gson.fromJson(body, Xinyongdetailbean.class);
+                                datas = xinyongdetailbean.getDatas();
+                                  data.addAll(datas);
+
+                               /*
                           加载数据
                        */
-                    if(datas!=null&&datas.size()>0) {
-                        Historycredieadapter historycredieadapter = new Historycredieadapter(HistorycreditActivity.this, datas);
-                        list_history.setAdapter(historycredieadapter);
+                                if (HistorycreditActivity.this.data != null && HistorycreditActivity.this.data.size() > 0) {
+                                    Historycredieadapter historycredieadapter = new Historycredieadapter(HistorycreditActivity.this, data);
+                                    list_history.setAdapter(historycredieadapter);
+                                }
+
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
-            }
+                });
+    }
+    private void network() {
+        HttpParams httpParams = new HttpParams();
+        httpParams.put("uid", SpUtils.getString(this, "userid", null));
+        httpParams.put("token", SpUtils.getString(this, "token", null));
+        httpParams.put("page", i + "");
+        OkGo.<String>post(MyContants.BASEURL + "s=User/creditList")
+                .params(httpParams)
+                .tag(this)
+                .execute(new StringCallback() {
 
-            @Override
-            public void onFailed(int code,String data) {
-                ToastUtils.showShort(HistorycreditActivity.this,code+"");
 
-            }
-        });
 
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String body = response.body();
+                        try {
+                            JSONObject jsonobj = new JSONObject(body);
+                            int code = jsonobj.getInt("code");
+                            if (code == 200) {
+                                Gson gson = new Gson();
+                                Xinyongdetailbean xinyongdetailbean = gson.fromJson(body, Xinyongdetailbean.class);
+                                datas = xinyongdetailbean.getDatas();
+
+                               /*
+                          加载数据
+                       */
+                                if (HistorycreditActivity.this.datas != null && HistorycreditActivity.this.datas.size() > 0) {
+                                    Historycredieadapter historycredieadapter = new Historycredieadapter(HistorycreditActivity.this, datas);
+                                    list_history.setAdapter(historycredieadapter);
+                                }
+
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
     private void initView() {
         iv_callback = (ImageView) findViewById(R.id.iv_callback);

@@ -11,9 +11,10 @@ android {
 
         applicationId "www.diandianxing.com.diandianxing"
         minSdkVersion 19
-        targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 26
+        versionCode 4
+        versionName "1.7"
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
@@ -21,13 +22,14 @@ android {
             keyAlias 'syyp'
             keyPassword '123456'
             storePassword '123456'
-            storeFile file('F:/keystore.jks')
+            storeFile file('D:/keystore.jks')
         }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled false
@@ -49,6 +51,8 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
     testCompile 'junit:junit:4.12'
+    //解决655536
+    compile 'com.android.support:multidex:1.0.0'
     //沉浸式
     compile 'org.zackratos:ultimatebar:1.0.3'
     //eventbus
@@ -57,13 +61,11 @@ dependencies {
     compile project(':UpdateAppUtils')
     //springview
     compile 'com.liaoinstan.springview:library:1.2.6'
-    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
     //日志
     compile 'com.github.zhaokaiqiang.klog:library:1.6.0'
     //fastjson
     compile 'com.alibaba:fastjson:1.1.62.android'
-
-//网络
+    //网络
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.1.0'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
@@ -72,4 +74,21 @@ dependencies {
     compile 'com.google.code.gson:gson:2.4'
     //加载图片
     compile 'com.github.bumptech.glide:glide:3.7.0'
+    //友盟
+    compile files('libs/SocialSDK_QQ_Simplify.jar')
+    compile files('libs/umeng_social_shareview.jar')
+    compile files('libs/umeng-analytics-v6.1.2.jar')
+    compile files('libs/umeng_shareboard_widget.jar')
+    compile files('libs/umeng_social_shareboard.jar')
+    compile files('libs/SocialSDK_WeChat_Simplify.jar')
+    compile files('libs/umeng_social_tool.jar')
+    compile files('libs/SocialSDK_Sina_Simplify.jar')
+    compile files('libs/umeng_social_net.jar')
+    compile files('libs/umeng_social_api.jar')
+    //图片选择
+    compile 'com.github.LuckSiege.PictureSelector:picture_library:v2.1.1'
+    //友盟推送
+    compile project(':PushSDK')
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
+    compile 'com.lzy.net:okgo:3.0.4'
 }

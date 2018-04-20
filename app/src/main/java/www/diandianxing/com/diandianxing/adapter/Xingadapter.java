@@ -11,6 +11,7 @@ import java.util.List;
 
 import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.bean.Xingchengbean;
+import www.diandianxing.com.diandianxing.bean.databean;
 
 /**
  * date : ${Date}
@@ -19,9 +20,9 @@ import www.diandianxing.com.diandianxing.bean.Xingchengbean;
 
 public class Xingadapter extends RecyclerView.Adapter<Xingadapter.MyviewHolder> {
       private Context context;
-    List<Xingchengbean.DatasBean.ListBean> list;
+       List<databean> list;
     private OnItemClickListener mOnItemClickListener = null;
-    public Xingadapter(Context context,  List<Xingchengbean.DatasBean.ListBean> list) {
+    public Xingadapter(Context context, List<databean> list) {
         this.context = context;
         this.list = list;
     }
@@ -36,6 +37,7 @@ public class Xingadapter extends RecyclerView.Adapter<Xingadapter.MyviewHolder> 
 
     @Override
     public void onBindViewHolder( final MyviewHolder holder, int position) {
+        holder.setIsRecyclable(false);
         if (mOnItemClickListener != null) {
             //注意这里使用getTag方法获取position
             holder.itemView.setOnClickListener(new View.OnClickListener() {

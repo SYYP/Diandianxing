@@ -59,6 +59,7 @@ public class WalletActivity extends BaseActivity implements View.OnClickListener
     private TextView look_mingxi;
     private TextView wallet_ok;
     private RelativeLayout real_yanjin,real_yue;
+    private String credit_normal;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,10 +92,15 @@ public class WalletActivity extends BaseActivity implements View.OnClickListener
         real_yue.setOnClickListener(this);
         zhong.setText("我的钱包");
         String yajin = SpUtils.getString(this, "yajin", null);
-        wallet_yanjin.setText(yajin+"元");
+        wallet_yanjin.setText(yajin + "元");
         String yue = SpUtils.getString(this, "yue", null);
-        wallet_yue.setText(yue+"元");
+        wallet_yue.setText(yue + "元");
+        String fanbei = SpUtils.getString(WalletActivity.this, "fanbei", null);
+        credit_normal = SpUtils.getString(WalletActivity.this, "credit_normal", null);
     }
+
+
+
 
 
 

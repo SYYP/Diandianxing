@@ -90,7 +90,8 @@ public class OtherActivity extends BaseActivity {
         login_sso.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                network();
+                submit();
+
 
             }
 
@@ -133,7 +134,7 @@ public class OtherActivity extends BaseActivity {
             Toast.makeText(this, "请输入反馈消息", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        network();
         // TODO validate success, do something
 
 

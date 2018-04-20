@@ -1,66 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="www.diandianxing.com.diandianxing">
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <!-- 访问网络，网络定位需要上网 -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-feature android:name="android.hardware.camera.autofocus"/>
-    <uses-feature android:name="android.hardware.camera"/>
-    <!--地图SDK（包含其搜索功能）需要的基础权限-->
-    <!--允许程序打开网络套接字-->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!--允许程序设置内置sd卡的写权限-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!--允许程序获取网络状态-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--允许程序访问WiFi网络信息-->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!--允许程序读写手机状态和身份-->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!--允许程序访问CellID或WiFi热点来获取粗略的位置-->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!--用于进行网络定位-->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
-    <!--用于访问GPS定位-->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
-    <!--用于获取运营商信息，用于支持提供运营商信息相关的接口-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
-    <!--用于访问wifi网络信息，wifi信息会用于进行网络定位-->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
-    <!--用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
-    <!--用于访问网络，网络定位需要上网-->
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-    <!--用于读取手机当前的状态-->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
-    <!--用于写入缓存数据到扩展存储卡-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
-    <!--用于申请调用A-GPS模块-->
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"></uses-permission>
-    <!--用于申请获取蓝牙信息进行室内定位-->
-    <uses-permission android:name="android.permission.BLUETOOTH"></uses-permission>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"></uses-permission>
-    <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
 
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 访问网络，网络定位需要上网 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.hardware.camera" />
+    <!-- 地图SDK（包含其搜索功能）需要的基础权限 -->
+    <!-- 允许程序打开网络套接字 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 允许程序设置内置sd卡的写权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 允许程序获取网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 允许程序访问WiFi网络信息 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 允许程序读写手机状态和身份 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 允许程序访问CellID或WiFi热点来获取粗略的位置 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- 用于获取运营商信息，用于支持提供运营商信息相关的接口 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!-- 用于访问网络，网络定位需要上网 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 用于读取手机当前的状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 用于写入缓存数据到扩展存储卡 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 用于申请调用A-GPS模块 -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <!-- 用于申请获取蓝牙信息进行室内定位 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
 
     <application
-        android:hardwareAccelerated="true"
-         android:name=".base.Myapplication"
+        android:name=".base.Myapplication"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/icon_tu"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -76,128 +79,134 @@
         <service
             android:name=".server.MyServers"
             android:process=":push" />
-        <service android:name=".server.BackService"></service>
-        <service android:name="com.amap.api.location.APSService"></service>
-        <activity android:name=".guidance.GuidePageActivity"></activity>
-        <activity android:name=".Login.LoginActivity"
-            android:launchMode="singleTop"></activity>
-        <activity android:name=".Login.LoginActivitys"
-            android:launchMode="singleTop"></activity>
-        <activity android:name=".Login.RegisterActivity"
-            android:launchMode="singleTop"></activity>
-        <activity android:name=".my.MyActivityActivity"></activity>
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".my.PersonActivity"></activity>
-        <activity android:name=".set.SetActivity"></activity>
-        <activity android:name=".my.RenzhenActivity"></activity>
-        <activity android:name=".my.AlternameActivity"></activity>
-        <activity android:name=".my.CredibilityActivity"></activity>
-        <activity android:name=".set.AlterpwdActivity"></activity>
-        <activity android:name=".my.HistorycreditActivity"></activity>
-        <activity android:name=".my.JiedudetailActivity"></activity>
-        <activity android:name=".set.WalletActivity"></activity>
-        <activity android:name=".set.AboutweActivity"></activity>
-        <activity android:name=".my.CashpayActivity"></activity>
-        <activity android:name=".my.ShareActivity"></activity>
-        <activity android:name=".my.MessageActivity"></activity>
-        <activity android:name=".my.MingxiActivity"></activity>
-        <activity android:name=".my.BalanceActivity"></activity>
-        <activity android:name=".set.Feedback"></activity>
-        <activity android:name=".my.ProtocolActivity"></activity>
-        <activity android:name=".Login.ForgetActivity"></activity>
-        <activity android:name=".my.JourActivity"></activity>
-        <activity android:name=".main.GuZhangActivity"
-            android:windowSoftInputMode="adjustPan"></activity>
-        <activity android:name=".main.KefuActivity"
-            android:windowSoftInputMode="adjustPan"></activity>
-        <activity android:name=".main.OtherActivity"></activity>
-        <activity android:name=".main.ZiXingActivity"></activity>
-        <activity android:name=".my.JourdetailActivity"
-            android:windowSoftInputMode="adjustPan"></activity>
-        <activity android:name=".sousuo.SearchActivity"></activity>
-        <activity android:name=".Login.XieyiActivity"></activity>
-        <activity android:name=".my.XiangxiActivity"></activity>
-        <activity android:name=".main.zhinanActivity"></activity>
-        <activity android:name=".my.MessagedetailActivity"></activity>
-        <activity android:name=".Login.BandphoneActivity"></activity>
-        <activity android:name=".my.JieshuActivity"></activity>
+        <service android:name=".server.BackService" />
+        <service android:name="com.amap.api.location.APSService" />
+
+        <activity android:name=".guidance.GuidePageActivity" />
+        <activity
+            android:name=".Login.LoginActivity"
+            android:launchMode="singleTask" />
+        <activity android:name=".Login.LoginActivitys" />
+        <activity android:name=".Login.RegisterActivity" />
+        <activity android:name=".my.MyActivityActivity" />
+        <activity
+            android:name=".DianDianActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask" />
+        <activity android:name=".my.PersonActivity" />
+        <activity android:name=".set.SetActivity" />
+        <activity android:name=".my.RenzhenActivity" />
+        <activity android:name=".my.AlternameActivity" />
+        <activity android:name=".my.CredibilityActivity" />
+        <activity android:name=".set.AlterpwdActivity" />
+        <activity android:name=".my.HistorycreditActivity" />
+        <activity android:name=".my.JiedudetailActivity" />
+        <activity android:name=".set.WalletActivity" />
+        <activity android:name=".set.AboutweActivity" />
+        <activity android:name=".my.CashpayActivity" />
+        <activity android:name=".my.ShareActivity" />
+        <activity android:name=".my.MessageActivity" />
+        <activity android:name=".my.MingxiActivity" />
+        <activity android:name=".my.BalanceActivity" />
+        <activity android:name=".set.Feedback" />
+        <activity android:name=".my.ProtocolActivity" />
+        <activity android:name=".Login.ForgetActivity" />
+        <activity android:name=".my.JourActivity" />
+        <activity
+            android:name=".main.GuZhangActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".main.KefuActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".main.OtherActivity" />
+        <activity android:name=".main.ZiXingActivity" />
+        <activity
+            android:name=".my.JourdetailActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".sousuo.DCSearchActivity" />
+        <activity android:name=".Login.XieyiActivity" />
+        <activity android:name=".my.XiangxiActivity" />
+        <activity android:name=".main.zhinanActivity" />
+        <activity android:name=".my.MessagedetailActivity" />
+        <activity android:name=".Login.BandphoneActivity" />
+        <activity android:name=".my.JieshuActivity" />
+
         <meta-data
             android:name="android.max_aspect"
             android:value="2.1" />
         <!-- 友盟第三方登录及分享start -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="5a3b4aa4f29d98430e000167"/>
+            android:value="5a3b4aa4f29d98430e000167" />
         <!-- 友盟推送 -->
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
-            android:value="9871356adbfd9f3582d19edefe94fb4d"/>
+            android:value="9871356adbfd9f3582d19edefe94fb4d" />
         <!-- 新浪分享 -->
         <activity
             android:name="com.umeng.socialize.media.WBShareCallBackActivity"
             android:configChanges="keyboardHidden|orientation"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.sina.weibo.sdk.share.WbShareTransActivity"
             android:launchMode="singleTask"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
             <intent-filter>
-                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY"/>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <!--zhifu-->
-        <activity android:name=".wxapi.WXPayEntryActivity"
+        <!-- zhifu -->
+        <activity
+            android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
-            android:launchMode="singleTop"></activity>
+            android:launchMode="singleTop" />
         <!-- 微信分享 -->
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <!-- qq精简版分享 -->
         <activity
             android:name="com.umeng.qq.tencent.AuthActivity"
             android:launchMode="singleTask"
             android:noHistory="true">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="tencent1106567631"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent1106567631" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.umeng.qq.tencent.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <!-- 分享编辑页(只有新浪微博精简版，豆瓣人人腾讯微博领英twitter需要)： -->
         <activity
             android:name="com.umeng.socialize.editorpage.ShareActivity"
             android:excludeFromRecents="true"
-            android:theme="@style/Theme.UMDefault"/>
+            android:theme="@style/Theme.UMDefault" />
         <!-- 友盟第三方登录及分享end -->
         <!-- 解决7.0照相机崩溃问题 -->
 
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
-        </provider>
 
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="d1d980fc23c094077288bb1215410549">
-        </meta-data>
-        <!--d1d980fc23c094077288bb1215410549-->
 
+
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="d1d980fc23c094077288bb1215410549"></meta-data>
+        <!-- d1d980fc23c094077288bb1215410549 -->
+
+        <activity android:name=".Login.AgreementActivity"></activity>
     </application>
+
 </manifest>

@@ -74,7 +74,7 @@ public class BalanceActivity extends BaseActivity implements View.OnClickListene
         wei.setOnClickListener(this);
         shi.setOnClickListener(this);
         zhi.setOnClickListener(this);
-        SpUtils.putString(this,"banlacn",200+"");
+        SpUtils.putString(this,"banlacn",10+"");
 
 
     }
@@ -92,7 +92,7 @@ public class BalanceActivity extends BaseActivity implements View.OnClickListene
                 wushi.setBackgroundResource(R.drawable.shape_backhuiradioline);
                 ershi.setBackgroundResource(R.drawable.shape_backhuiradioline);
                 qita.setBackgroundResource(R.drawable.shape_backhuiradioline);
-                SpUtils.putString(this,"banlacn",erbai.getText().toString());
+                SpUtils.putString(this,"banlacn","200");
 
                 break;
             case R.id.shi:
@@ -102,7 +102,7 @@ public class BalanceActivity extends BaseActivity implements View.OnClickListene
                 wushi.setBackgroundResource(R.drawable.shape_backhuiradioline);
                 ershi.setBackgroundResource(R.drawable.shape_backhuiradioline);
                 qita.setBackgroundResource(R.drawable.shape_backhuiradioline);
-                SpUtils.putString(this,"banlacn",erbai.getText().toString());
+                SpUtils.putString(this,"banlacn","10");
                 break;
             case R.id.yibai:
                 shi.setBackgroundResource(R.drawable.shape_backhuiradioline);
@@ -111,7 +111,7 @@ public class BalanceActivity extends BaseActivity implements View.OnClickListene
                 wushi.setBackgroundResource(R.drawable.shape_backhuiradioline);
                 ershi.setBackgroundResource(R.drawable.shape_backhuiradioline);
                 qita.setBackgroundResource(R.drawable.shape_backhuiradioline);
-                SpUtils.putString(this,"banlacn",yibai.getText().toString());
+                SpUtils.putString(this,"banlacn","100");
                 break;
             case R.id.wushi:
                 shi.setBackgroundResource(R.drawable.shape_backhuiradioline);
@@ -120,7 +120,7 @@ public class BalanceActivity extends BaseActivity implements View.OnClickListene
                 yibai.setBackgroundResource(R.drawable.shape_backhuiradioline);
                 ershi.setBackgroundResource(R.drawable.shape_backhuiradioline);
                 qita.setBackgroundResource(R.drawable.shape_backhuiradioline);
-                SpUtils.putString(this,"banlacn",wushi.getText().toString());
+                SpUtils.putString(this,"banlacn","50");
                 break;
             case R.id.ershi:
                 shi.setBackgroundResource(R.drawable.shape_backhuiradioline);
@@ -129,7 +129,7 @@ public class BalanceActivity extends BaseActivity implements View.OnClickListene
                 wushi.setBackgroundResource(R.drawable.shape_backhuiradioline);
                 yibai.setBackgroundResource(R.drawable.shape_backhuiradioline);
                 qita.setBackgroundResource(R.drawable.shape_backhuiradioline);
-                SpUtils.putString(this,"banlacn",ershi.getText().toString());
+                SpUtils.putString(this,"banlacn","20");
                 break;
             case R.id.qita:
                  showphotoDialog(Gravity.CENTER,R.style.Alpah_aniamtion);
@@ -140,6 +140,7 @@ public class BalanceActivity extends BaseActivity implements View.OnClickListene
                     if (banlacn!=null) {
                         PayUtils payutil = new PayUtils(this, 1, 1, banlacn);
                         payutil.weixinPay();
+                        SpUtils.putInt(this,"yas",2);//跳到押金
                     }
                  }
                 else if(i==2){
@@ -148,7 +149,6 @@ public class BalanceActivity extends BaseActivity implements View.OnClickListene
                         PayUtils payutil = new PayUtils(this, 1, 2, banlacn);
                         payutil.goAlipay();
                     }
-
                 }
                 break;
             case R.id.wei:

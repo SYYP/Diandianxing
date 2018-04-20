@@ -5,7 +5,7 @@ import android.content.Intent;
 
 import com.umeng.message.UmengBaseIntentService;
 
-import www.diandianxing.com.diandianxing.MainActivity;
+import www.diandianxing.com.diandianxing.DianDianActivity;
 
 /**
  * date : ${Date}
@@ -21,7 +21,7 @@ public class MyServers extends UmengBaseIntentService {
             try
             {
                 Intent data = new Intent(intent);
-                data.setClass(context, MainActivity.class);
+                data.setClass(context, DianDianActivity.class);
                 data.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//需为Intent添加Flag：Intent.FLAG_ACTIVITY_NEW_TASK，否则无法启动Activity。
                 context.startActivity(data);
             } catch (Exception e)

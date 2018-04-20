@@ -8,10 +8,11 @@ import java.util.List;
  */
 
 public class Xinyongdetailbean {
+
     /**
      * code : 200
      * msg : success
-     * datas : [{"id":"2","uid":"1","num":"-10","reason":"恶意申报","add_time":"2017-11-29 06:11:25"},{"id":"1","uid":"1","num":"20","reason":"增加","add_time":"2017-11-22 14:17:20"}]
+     * datas : [{"id":"198","uid":"1","num":"5","reason":"故障申报信息真实","add_time":"2018-03-21 17:47:51"},{"id":"149","uid":"1","num":"-10","reason":"违规骑行171200140","add_time":"2018-03-21 12:34:03"},{"id":"112","uid":"1","num":"-10","reason":"违规骑行171200140","add_time":"2018-03-20 16:34:19"},{"id":"95","uid":"1","num":"-10","reason":"违规骑行171200140","add_time":"2018-03-16 10:03:37"},{"id":"94","uid":"1","num":"1","reason":"骑行171200140","add_time":"2018-03-15 20:23:33"},{"id":"92","uid":"1","num":"-10","reason":"违规骑行171200140","add_time":"2018-03-15 20:03:59"},{"id":"90","uid":"1","num":"-10","reason":"违规骑行171200140","add_time":"2018-03-15 19:48:25"},{"id":"88","uid":"1","num":"-10","reason":"违规骑行171200140","add_time":"2018-03-15 19:33:28"},{"id":"74","uid":"1","num":"5","reason":"分享","add_time":"2018-03-14 09:40:44"},{"id":"60","uid":"1","num":"5","reason":"分享","add_time":"2018-03-13 11:59:51"}]
      */
 
     private int code;
@@ -44,11 +45,11 @@ public class Xinyongdetailbean {
 
     public static class DatasBean {
         /**
-         * id : 2
+         * id : 198
          * uid : 1
-         * num : -10
-         * reason : 恶意申报
-         * add_time : 2017-11-29 06:11:25
+         * num : 5
+         * reason : 故障申报信息真实
+         * add_time : 2018-03-21 17:47:51
          */
 
         private String id;

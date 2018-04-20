@@ -30,6 +30,7 @@ public class Guzhangadapter extends RecyclerView.Adapter<Guzhangadapter.Myviewho
     }
 
     private void data() {
+//aaa
          Guzhangbean guzhang=new Guzhangbean();
         guzhang.setCount("车太重，骑不动");
         list.add(guzhang);

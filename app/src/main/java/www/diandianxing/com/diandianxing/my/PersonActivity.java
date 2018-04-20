@@ -1,6 +1,8 @@
 package www.diandianxing.com.diandianxing.my;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -24,13 +26,22 @@ import com.luck.picture.lib.compress.Luban;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.socks.library.KLog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,11 +51,13 @@ import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
 import www.diandianxing.com.diandianxing.base.Myapplication;
 import www.diandianxing.com.diandianxing.bean.Photobean;
+import www.diandianxing.com.diandianxing.bean.Shouyebean;
 import www.diandianxing.com.diandianxing.utils.BaseDialog;
 import www.diandianxing.com.diandianxing.utils.CircleImageView;
 import www.diandianxing.com.diandianxing.utils.EventMessage;
 import www.diandianxing.com.diandianxing.utils.MyContants;
 import www.diandianxing.com.diandianxing.utils.SpUtils;
+import www.diandianxing.com.diandianxing.utils.ToastUtils;
 import www.diandianxing.com.diandianxing.utils.UploadUtil;
 
 /**
@@ -53,7 +66,7 @@ import www.diandianxing.com.diandianxing.utils.UploadUtil;
  */
 
 public class PersonActivity extends BaseActivity implements View.OnClickListener {
-    private Photobean.DatasBean datas;
+    private Shouyebean.DatasBean datas;
      List<String> list=new ArrayList<>();
     private ImageView iv_callback;
     private TextView zhong;
@@ -85,6 +98,8 @@ public class PersonActivity extends BaseActivity implements View.OnClickListener
     private List<LocalMedia> selectList = new ArrayList<>();
     private String cutPath;
     private File file;
+    private BaseDialog dialog;
+    private File filess = new File(Environment.getExternalStorageDirectory().getPath() + "/crop_photo.jpg");;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -151,9 +166,8 @@ public class PersonActivity extends BaseActivity implements View.OnClickListener
         if(paizhao!=null&&paizhao.length()>0) {
             RequestOptions options = new RequestOptions()
                     .error(R.drawable.img_motou)
-                    .priority(Priority.NORMAL)
-                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-            Glide.with(this).load(paizhao).apply(options).into(per_pho);
+                    .priority(Priority.NORMAL);
+            Glide.with(this).load(MyContants.PHOTO+paizhao).apply(options).into(per_pho);
         }
         String nickname = SpUtils.getString(this, "nickname", null);
         alter_name.setText(nickname);
@@ -202,10 +216,6 @@ public class PersonActivity extends BaseActivity implements View.OnClickListener
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.iv_callback:
-                //sp存头像
-                if(list!=null&&list.size()>0) {
-                    SpUtils.putString(PersonActivity.this, "paiphoto", list.get(0) + "");
-                }
                 EventMessage eventMessage = new EventMessage("personphoto");
                 EventBus.getDefault().postSticky(eventMessage);
                 finish();
@@ -228,7 +238,13 @@ public class PersonActivity extends BaseActivity implements View.OnClickListener
     }
     private void showphotoDialog(int grary, int animationStyle) {
         BaseDialog.Builder builder = new BaseDialog.Builder(this);
-        final BaseDialog dialog = builder.setViewId(R.layout.dialog_photo)
+        //设置dialogpadding
+//设置显示位置
+//设置动画
+//设置dialog的宽高
+//设置触摸dialog外围是否关闭
+//设置监听事件
+        dialog = builder.setViewId(R.layout.dialog_photo)
                 //设置dialogpadding
                 .setPaddingdp(0, 0, 0, 0)
                 //设置显示位置
@@ -248,6 +264,7 @@ public class PersonActivity extends BaseActivity implements View.OnClickListener
                 //相机选取
                 requestCamera();
                 dialog.dismiss();
+
             }
         });
         //相册
@@ -257,6 +274,7 @@ public class PersonActivity extends BaseActivity implements View.OnClickListener
                 //相册选取
                 requestPhoto();
                 dialog.dismiss();
+
             }
         });
         //取消
@@ -296,8 +314,8 @@ public class PersonActivity extends BaseActivity implements View.OnClickListener
 //                .withAspectRatio(aspect_ratio_x, aspect_ratio_y)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
                 .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
                 .isGif(false)// 是否显示gif图片
-                .freeStyleCropEnabled(false)// 裁剪框是否可拖拽
-                .circleDimmedLayer(false)// 是否圆形裁剪
+                .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
+                .circleDimmedLayer(true)// 是否圆形裁剪
                 .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
                 .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
                 .openClickSound(false)// 是否开启点击声音
@@ -326,12 +344,12 @@ public class PersonActivity extends BaseActivity implements View.OnClickListener
                 .enableCrop(true)// 是否裁剪
                 .compress(true)// 是否压缩
                 .compressMode(PictureConfig.SYSTEM_COMPRESS_MODE)//系统自带 or 鲁班压缩 PictureConfig.SYSTEM_COMPRESS_MODE or LUBAN_COMPRESS_MODE
-                .freeStyleCropEnabled(false)// 裁剪框是否可拖拽
+                .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
                 .circleDimmedLayer(true)// 是否圆形裁剪
                 .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
                 .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
                 .scaleEnabled(false)// 裁剪是否可放大缩小图片
-//                .glideOverride(160, 160)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
+               .glideOverride(160, 160)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
 //                .selectionMedia(list)// 是否传入已选图片
 //                .previewEggs(true)//预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
                 .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
@@ -346,65 +364,84 @@ public class PersonActivity extends BaseActivity implements View.OnClickListener
                 case PictureConfig.CHOOSE_REQUEST:
                     // 图片选择结果回调
                     selectList = PictureSelector.obtainMultipleResult(data);
-                    cutPath = selectList.get(0).getPath();
+                    cutPath = selectList.get(0).getCutPath();
                     file = new File(cutPath);
-                    Glide.with(this).load(cutPath).into(per_pho);
-                    photowork();
+                    Log.d("TAg",cutPath);
+                    Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                    int byteCount = bitmap.getByteCount();
+                    Log.d("TAG",byteCount+"-----size----"+file.length());
+                    /*
+                       质量压缩
+                     */
+                    FileOutputStream baos = null;
+                    try {
+
+                        baos = new FileOutputStream(filess);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 2, baos);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+//                    int quality =2;
+
+                    list.clear();
+                    list.add(cutPath);
+                    Log.d("Tag",list.toString());
+                    photoworks();
                     break;
             }
         }
     }
 
-    private void photowork() {
 
-        final Thread thred = new Thread(new Runnable() {
+    public void photoworks(){
+        HttpParams httpParams=new HttpParams();
+
+        httpParams.put("file", filess);
+        Log.d("ffff",file+"");
+        httpParams.put("uid",SpUtils.getString(Myapplication.getApplication(),"userid",null));
+        httpParams.put("token",SpUtils.getString(PersonActivity.this,"token",null));
+
+            OkGo.<String>post(MyContants.BASEURL+"s=User/updateHeadImg")
+                    .params(httpParams)
+                    .tag(this)
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(Response<String> response) {
+                            String body = response.body();
+                            try {
+                                JSONObject jsonobj=new JSONObject(body);
+                                int code = jsonobj.getInt("code");
+                                String datas = jsonobj.getString("datas");
+                                if(code==200){
+                                    ToastUtils.showShort(PersonActivity.this,"上传成功");
+                                    Gson gson = new Gson();
+                                    Photobean photobean = gson.fromJson(body, Photobean.class);
+                                    String headImageUrl = photobean.getDatas().getHeadImageUrl();
+                                    Glide.with(PersonActivity.this).load(MyContants.PHOTO+headImageUrl).into(per_pho);
+                                    //sp存头像
+                                    SpUtils.putString(PersonActivity.this, "paiphoto",headImageUrl);
+                                    Log.d("TAg",headImageUrl);
 
 
 
-            private String s;
+                                }
+                                else {
+                                    ToastUtils.showShort(PersonActivity.this,datas.toString());
+                                }
 
-            @Override
-            public void run() {
-                Map<String,File > files = new HashMap<>();
-                files.put("file", file);
-                Log.d("ffff",file+"");
-                Map<String,String> map=new HashMap<>();
-                map.put("uid",SpUtils.getString(Myapplication.getApplication(),"userid",null));
-                map.put("token",SpUtils.getString(PersonActivity.this,"token",null));
-                /*
-                  图片上传
-                 */
-                s = UploadUtil.uploadFile(map,files, MyContants.BASEURL + "s=User/updateHeadImg");
-                Gson gson = new Gson();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
 
-                Photobean photobean = gson.fromJson(s, Photobean.class);
-                datas = photobean.getDatas();
-                list.clear();
-                list.add(MyContants.PHOTO+datas.getHeadImageUrl());
-                //保存上传头像
-
-
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        KLog.a("Tag", s);
-                        // ToastUtils.showShort(PersoninforActivity.this, s);
-                       //Glide.with(PersonActivity.this).load(MyContants.FILENAME+datas.getHeadImageUrl()).into(per_pho);
-                    }
-                });
-
-            }
-        });
-        thred.start();
     }
+
+
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        //sp存头像
-        if(list!=null&&list.size()>0) {
-            SpUtils.putString(PersonActivity.this, "paiphoto", list.get(0) + "");
-        }
         EventMessage eventMessage = new EventMessage("personphoto");
         EventBus.getDefault().postSticky(eventMessage);
     }

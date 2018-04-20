@@ -234,6 +234,7 @@ public class PayUtils {
                 req.extData = "app data"; // optional
 //                // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
                 api.sendReq(req);//调起支付
+                ((Activity) context).finish();
 //                //微信支付的金额我用sp存的，之前用eventbus不管用
 //                SpUtils.putString(context,"wxprice",datas.getPay_price());
 //                EventMessage eventMessage = new EventMessage("pay");

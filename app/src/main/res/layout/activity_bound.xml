@@ -18,7 +18,7 @@
             android:id="@+id/logio"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/login_lo"
+            android:src="@drawable/icon_lo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
@@ -84,7 +84,6 @@
             android:layout_height="wrap_content" />
         <EditText
             android:layout_toRightOf="@id/login_lpwd"
-            android:cursorVisible="false"
             android:padding="10dp"
             android:textCursorDrawable="@null"
             android:inputType="number"

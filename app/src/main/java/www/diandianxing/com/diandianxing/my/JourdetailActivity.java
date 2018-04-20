@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,11 +28,13 @@ import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkPath;
 import com.amap.api.services.route.WalkRouteResult;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import www.diandianxing.com.diandianxing.MainActivity;
+import www.diandianxing.com.diandianxing.DianDianActivity;
 import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
 import www.diandianxing.com.diandianxing.bean.xingbean;
@@ -42,6 +42,7 @@ import www.diandianxing.com.diandianxing.network.BaseObserver1;
 import www.diandianxing.com.diandianxing.network.RetrofitManager;
 import www.diandianxing.com.diandianxing.overlay.WalkRouteOverlay;
 import www.diandianxing.com.diandianxing.utils.CircleImageView;
+import www.diandianxing.com.diandianxing.utils.EventMessage;
 import www.diandianxing.com.diandianxing.utils.MyContants;
 import www.diandianxing.com.diandianxing.utils.SpUtils;
 import www.diandianxing.com.diandianxing.utils.ToastUtils;
@@ -76,18 +77,13 @@ public class JourdetailActivity extends BaseActivity implements View.OnClickList
     private TextView qi_j;
     private TextView qi_jl;
     private TextView qi_time;
+    private String xicheng;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MyContants.windows(this);
-        /*
-          禁止弹出虚拟键盘
-         */
-        Window window = getWindow();
-        WindowManager.LayoutParams params = window.getAttributes();
-        params.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_IMMERSIVE;
-        window.setAttributes(params);
+
         setContentView(R.layout.activity_jourdetail);
         initView();
         //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
@@ -96,6 +92,8 @@ public class JourdetailActivity extends BaseActivity implements View.OnClickList
         //计算骑行路线
       //  intnetwork();
        network();
+        Intent intent = getIntent();
+        xicheng = intent.getStringExtra("xicheng");
     }
 
     private void network() {
@@ -103,7 +101,8 @@ public class JourdetailActivity extends BaseActivity implements View.OnClickList
         Map<String,String> map=new HashMap<>();
          map.put("uid", SpUtils.getString(this,"userid",null));
         map.put("token",SpUtils.getString(this,"token",null));
-        map .put("log_id",SpUtils.getString(this,"ripedt",null));
+        map .put("log_id",SpUtils.getString(this,"triped",null));
+        Log.d("TAS",SpUtils.getString(this,"triped",null)+"");
         RetrofitManager.post(MyContants.BASEURL + "s=Bike/tripInfo", map, new BaseObserver1<xingbean>("") {
             @Override
             public void onSuccess(xingbean result, String tag) {
@@ -114,12 +113,17 @@ public class JourdetailActivity extends BaseActivity implements View.OnClickList
                     text_bian.setText("自行车编号"+datas.getBikenumber());
                     //骑行距离
                     String distance = datas.getDistance();
+                    Log.d("Tags",distance+"");
                     double v4 = Double.valueOf(distance).doubleValue();
-                    String s = String.valueOf(v4);
-                    qi_j.setText(s);
-                    qi_jl.setText(s);
+                    Log.d("TS",v4+"");
+                     int v5 = (int) (v4 * 1000);
+                    Log.d("TS",v5+"");
+                    String s = String.valueOf(v5);
+                    qi_j.setText(s+"");
+                    qi_jl.setText(s+"");
                     //骑行时间
                     String time = datas.getTime();
+                    Log.d("TGS",time+"");
                     int i2 = Integer.parseInt(time);
                     int i1 = i2 / 60;
                     qi_time.setText(i1+"");
@@ -257,14 +261,38 @@ public class JourdetailActivity extends BaseActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.iv_callback:
-                //调用eventbus刷新主页面
-                //调用Eventbus
-//                EventMessage eventMessage = new EventMessage("xiangqing");
-//                EventBus.getDefault().postSticky(eventMessage);
-                Intent intent=new Intent(this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                if("xing".equals(xicheng)){
+                 finish();
+
+                }
+                else {
+                    //调用eventbus刷新主页面
+                    //调用Eventbus
+                    EventMessage eventMessage = new EventMessage("xiangqing");
+                    EventBus.getDefault().postSticky(eventMessage);
+//                    Intent intent = new Intent(this, DianDianActivity.class);
+//                    startActivity(intent);
+                    finish();
+                }
                 break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if("xing".equals(xicheng)){
+            finish();
+
+        }
+        else {
+            //调用eventbus刷新主页面
+            //调用Eventbus
+                EventMessage eventMessage = new EventMessage("xiangqing");
+                EventBus.getDefault().postSticky(eventMessage);
+            Intent intent = new Intent(this, DianDianActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 
@@ -315,7 +343,7 @@ public class JourdetailActivity extends BaseActivity implements View.OnClickList
 //                              ToastUtil.show(mContext, R.string.no_result);
                         }
                     } else {
-//                          ToastUtils.show(MainActivity.this, R.string.no_result,);
+//                          ToastUtils.show(DianDianActivity.this, R.string.no_result,);
                     }
                 } else {
 //                      ToastUtil.showerror(this.getApplicationContext(), errorCode);

@@ -184,7 +184,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <ImageView
-
                 android:padding="3dp"
                 android:layout_marginRight="15dp"
                 android:layout_centerVertical="true"
@@ -201,6 +200,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"></View>
         </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/real_kefu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:padding="3dp"
+                android:layout_marginRight="15dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/set_next"
+                android:layout_width="25dp"
+                android:layout_height="25dp" />
+            <TextView
+                android:id="@+id/text_kefu"
+                android:drawablePadding="10dp"
+                android:drawableLeft="@drawable/img_kefu"
+                android:text="我的客服"
+                android:textSize="16sp"
+                android:padding="10dp"
+                android:textColor="@color/black_san"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"/>
+            <View
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/font_black_5"
+                android:layout_below="@id/text_kefu"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"></View>
+        </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/real_qq"
             android:layout_width="match_parent"
@@ -208,19 +243,17 @@
 
             <TextView
                 android:drawablePadding="10dp"
-                android:drawableLeft="@drawable/img_kefu"
+                android:drawableLeft="@drawable/icon_tentqq"
                 android:text="QQ"
-                android:id="@+id/my_kefu"
+                android:id="@+id/my_qq"
                 android:layout_centerVertical="true"
                 android:textSize="16sp"
                 android:padding="10dp"
                 android:textColor="@color/black_san"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-
             <ImageView
-                android:id="@+id/tv_back"
-
+              android:id="@+id/iv_backss"
                 android:padding="3dp"
                 android:layout_marginRight="15dp"
                 android:layout_centerVertical="true"
@@ -229,49 +262,43 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp" />
             <TextView
+                android:textColor="@color/black_san"
+                android:id="@+id/qq_text"
+                android:layout_marginRight="10dp"
                 android:textSize="16sp"
                 android:text="未绑定"
-                android:layout_marginRight="15dp"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/tv_back"
+                android:layout_toLeftOf="@id/iv_backss"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <View
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
-                android:layout_below="@id/my_kefu"
+                android:background="@color/font_black_5"
+                android:layout_below="@id/my_qq"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"></View>
         </RelativeLayout>
-        <View
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/font_black_5"
-            android:layout_below="@id/my_yaoqing"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"></View>
+
         <RelativeLayout
-            android:id="@+id/real_weixin"
+            android:id="@+id/real_wei"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
                 android:drawablePadding="10dp"
-                android:drawableLeft="@drawable/img_kefu"
+                android:drawableLeft="@drawable/icon_tent_wei"
                 android:text="微信"
-                android:id="@+id/my_wei"
+                android:id="@+id/my_weichat"
                 android:layout_centerVertical="true"
                 android:textSize="16sp"
                 android:padding="10dp"
                 android:textColor="@color/black_san"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-
             <ImageView
-                android:id="@+id/tv_backs"
-
+                  android:id="@+id/iv_backs"
                 android:padding="3dp"
                 android:layout_marginRight="15dp"
                 android:layout_centerVertical="true"
@@ -280,18 +307,20 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp" />
             <TextView
+                android:textColor="@color/black_san"
+                android:id="@+id/wei_text"
+                android:layout_marginRight="10dp"
                 android:textSize="16sp"
                 android:text="未绑定"
-                android:layout_marginRight="15dp"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/tv_backs"
+                android:layout_toLeftOf="@id/iv_backs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <View
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
-                android:layout_below="@id/my_wei"
+                android:layout_below="@id/my_weichat"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"></View>
         </RelativeLayout>

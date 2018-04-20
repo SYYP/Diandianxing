@@ -10,12 +10,12 @@ public class Photobean {
     /**
      * code : 200
      * msg : success
-     * datas : {"uid":"3","token":"5d34606546302b3760373c15017d8376","nickName":"昵称改变","credit":"80","id_ident":"3","balance":"100.00","securityDeposit":"199.00","ridingState":"0","realType":"3","headImageUrl":"/danche/uploads/head/20171227/5a43039bcd078.jpg","bikeNumber":"","bikeDistance":"","bikeTime":"","isTemporary":""}
+     * datas : {"uid":"1","token":"89ae099e9fa0cdc1b8aa296f510009db","nickName":"啊咯","contact":"18310482720","credit":"95","id_ident":"1","balance":"2.00","securityDeposit":"1.00","ridingState":"0","deposit_status":"4","fanbei":"0","credit_normal":"50","wechat":"","tencent_qq":"DF70E82323425B308C58D2ABEBB77DC7","cartStatus":"0","realType":"0","headImageUrl":"/server/uploads/head/20180306/5a9deef364f9a.jpg","bikeNumber":"","bikeDistance":"","bikeTime":"","isTemporary":"","tripId":""}
      */
 
     private int code;
     private String msg;
-    private DatasBean datas;
+    private Shouyebean.DatasBean datas;
 
     public int getCode() {
         return code;
@@ -33,46 +33,62 @@ public class Photobean {
         this.msg = msg;
     }
 
-    public DatasBean getDatas() {
+    public Shouyebean.DatasBean getDatas() {
         return datas;
     }
 
-    public void setDatas(DatasBean datas) {
+    public void setDatas(Shouyebean.DatasBean datas) {
         this.datas = datas;
     }
 
     public static class DatasBean {
         /**
-         * uid : 3
-         * token : 5d34606546302b3760373c15017d8376
-         * nickName : 昵称改变
-         * credit : 80
-         * id_ident : 3
-         * balance : 100.00
-         * securityDeposit : 199.00
+         * uid : 1
+         * token : 89ae099e9fa0cdc1b8aa296f510009db
+         * nickName : 啊咯
+         * contact : 18310482720
+         * credit : 95
+         * id_ident : 1
+         * balance : 2.00
+         * securityDeposit : 1.00
          * ridingState : 0
-         * realType : 3
-         * headImageUrl : /danche/uploads/head/20171227/5a43039bcd078.jpg
+         * deposit_status : 4
+         * fanbei : 0
+         * credit_normal : 50
+         * wechat :
+         * tencent_qq : DF70E82323425B308C58D2ABEBB77DC7
+         * cartStatus : 0
+         * realType : 0
+         * headImageUrl : /server/uploads/head/20180306/5a9deef364f9a.jpg
          * bikeNumber :
          * bikeDistance :
          * bikeTime :
          * isTemporary :
+         * tripId :
          */
 
         private String uid;
         private String token;
         private String nickName;
+        private String contact;
         private String credit;
         private String id_ident;
         private String balance;
         private String securityDeposit;
         private String ridingState;
+        private String deposit_status;
+        private String fanbei;
+        private String credit_normal;
+        private String wechat;
+        private String tencent_qq;
+        private String cartStatus;
         private String realType;
         private String headImageUrl;
         private String bikeNumber;
         private String bikeDistance;
         private String bikeTime;
         private String isTemporary;
+        private String tripId;
 
         public String getUid() {
             return uid;
@@ -96,6 +112,14 @@ public class Photobean {
 
         public void setNickName(String nickName) {
             this.nickName = nickName;
+        }
+
+        public String getContact() {
+            return contact;
+        }
+
+        public void setContact(String contact) {
+            this.contact = contact;
         }
 
         public String getCredit() {
@@ -136,6 +160,54 @@ public class Photobean {
 
         public void setRidingState(String ridingState) {
             this.ridingState = ridingState;
+        }
+
+        public String getDeposit_status() {
+            return deposit_status;
+        }
+
+        public void setDeposit_status(String deposit_status) {
+            this.deposit_status = deposit_status;
+        }
+
+        public String getFanbei() {
+            return fanbei;
+        }
+
+        public void setFanbei(String fanbei) {
+            this.fanbei = fanbei;
+        }
+
+        public String getCredit_normal() {
+            return credit_normal;
+        }
+
+        public void setCredit_normal(String credit_normal) {
+            this.credit_normal = credit_normal;
+        }
+
+        public String getWechat() {
+            return wechat;
+        }
+
+        public void setWechat(String wechat) {
+            this.wechat = wechat;
+        }
+
+        public String getTencent_qq() {
+            return tencent_qq;
+        }
+
+        public void setTencent_qq(String tencent_qq) {
+            this.tencent_qq = tencent_qq;
+        }
+
+        public String getCartStatus() {
+            return cartStatus;
+        }
+
+        public void setCartStatus(String cartStatus) {
+            this.cartStatus = cartStatus;
         }
 
         public String getRealType() {
@@ -184,6 +256,14 @@ public class Photobean {
 
         public void setIsTemporary(String isTemporary) {
             this.isTemporary = isTemporary;
+        }
+
+        public String getTripId() {
+            return tripId;
+        }
+
+        public void setTripId(String tripId) {
+            this.tripId = tripId;
         }
     }
 }

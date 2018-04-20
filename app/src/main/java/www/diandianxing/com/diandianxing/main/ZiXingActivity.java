@@ -107,6 +107,8 @@ public class ZiXingActivity extends BaseActivity implements SurfaceHolder.Callba
     private Handler handlers = new Handler();
     private IBackserver iBackserver;
     private Intent mServiceIntent;
+    private boolean abool;
+    private TextView text_shou;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -124,15 +126,20 @@ public class ZiXingActivity extends BaseActivity implements SurfaceHolder.Callba
         rl_smq = (RelativeLayout) findViewById(R.id.rl_smq);
         flash_btn = (LinearLayout) findViewById(R.id.flash_btn);
         flash_shou = (LinearLayout) findViewById(R.id.flash_shou);
+
+
         ll_pro = (LinearLayout) findViewById(R.id.ll_pro);
         pb_jd = (ProgressBar) findViewById(R.id.pb_jd);
         tv_kaisuo = (TextView) findViewById(R.id.tv_kaisuo);
         tv_jd = (TextView) findViewById(R.id.tv_jd);
         user_zhinan = (TextView) findViewById(R.id.user_zhinan);
+        text_shou = (TextView) findViewById(R.id.text_shou);
+        text_shou.setText("手动开锁");
         Intent intent = getIntent();
-        boolean abool = intent.getBooleanExtra("abool", false);
+        abool = intent.getBooleanExtra("abool", false);
         if (abool) {
             user_zhinan.setVisibility(View.GONE);
+            text_shou.setText("手动输入");
         }
 
         user_zhinan.setOnClickListener(new View.OnClickListener() {
@@ -165,9 +172,7 @@ public class ZiXingActivity extends BaseActivity implements SurfaceHolder.Callba
     @Override
     protected void onStart() {
         super.onStart();
-        //  bindService(mServiceIntent, conn, BIND_AUTO_CREATE);
-        // 开始服务
-        //  registerReceiver();
+
     }
 
     @Override
@@ -213,96 +218,13 @@ public class ZiXingActivity extends BaseActivity implements SurfaceHolder.Callba
             handler = null;
         }
         CameraManager.get().closeDriver();
-//        scanLeDevice(false);
-        // 注销广播 最好在onPause上注销
-        //  unregisterReceiver(mReceiver);
-        // 注销服务
-        //  unbindService(conn);
     }
 
-    // 注册广播
-    private void registerReceiver() {
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BackService.HEART_BEAT_ACTION);
-        intentFilter.addAction(BackService.MESSAGE_ACTION);
-        registerReceiver(mReceiver, intentFilter);
-    }
-
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-
-        private String stringExtra;
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            // 消息广播
-            if (action.equals(BackService.MESSAGE_ACTION)) {
-                stringExtra = intent.getStringExtra("message");
-                Map<String, String> map = new HashMap<>();
-                map.put("uid", SpUtils.getString(ZiXingActivity.this, "userid", null));
-                map.put("token", SpUtils.getString(ZiXingActivity.this, "token", null));
-                map.put("json", stringExtra);
-                RetrofitManager.post(MyContants.BASEURL + "s=LockBalance/equipOperation", map, new BaseObserver1<Changbackbean>("") {
-                    @Override
-                    public void onSuccess(Changbackbean result, String tag) {
-                        if (result.getCode() == 200) {
-                            Map<String, String> map = new HashMap<>();
-                            map.put("uid", SpUtils.getString(ZiXingActivity.this, "userid", null));
-                            map.put("token", SpUtils.getString(ZiXingActivity.this, "token", null));
-                            map.put("ident", stringExtra);
-                            RetrofitManager.get(MyContants.BASEURL + "s=LockBalance/unlock", map, new BaseObserver1<Kailockbean>("") {
-
-                                @Override
-                                public void onSuccess(Kailockbean result, String tag) {
-                                    if (result.getCode() == 200) {
-                                        Log.d("bikenum", stringExtra + "");
-                                        SpUtils.putString(ZiXingActivity.this, "bikenum", stringExtra);
-                                        //扫码成功返回主页面
-                               /*
-                          调用evevnbus刷新主页面，切换布局
-                              */
-                                        //调用Eventbus
-                                        EventMessage eventMessage = new EventMessage("zxing");
-                                        EventBus.getDefault().postSticky(eventMessage);
-
-                                        finish();
-                                    }
-                                }
-
-                                @Override
-                                public void onFailed(int code, String data) {
-
-                                }
-                            });
 
 
-                        }
-                    }
 
-                    @Override
-                    public void onFailed(int code, String data) {
 
-                    }
-                });
-                Log.d("aaaa", stringExtra + "");
-            } else if (action.equals(BackService.HEART_BEAT_ACTION)) {// 心跳广播
-            }
-        }
-    };
 
-    private ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            // 未连接为空
-            iBackserver = null;
-        }
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            // 已连接
-            iBackserver = IBackserver.Stub.asInterface(service);
-        }
-    };
 
     @Override
     protected void onDestroy() {
@@ -371,11 +293,20 @@ public class ZiXingActivity extends BaseActivity implements SurfaceHolder.Callba
             String[] split = resultString.split("=");
             String substring = split[1];
             SpUtils.putString(this, "bianhao", substring);
-            //调用Eventbus
-            EventMessage eventMessage = new EventMessage("zxing");
-            EventBus.getDefault().postSticky(eventMessage);
-            Log.d("ress", substring + "");
-            finish();
+              if(abool){
+                  //调用Eventbus
+                  EventMessage eventMessage = new EventMessage("weiting");
+                  EventBus.getDefault().postSticky(eventMessage);
+                  finish();
+              }
+            else {
+                  //调用Eventbus
+                  EventMessage eventMessage = new EventMessage("zxing");
+                  EventBus.getDefault().postSticky(eventMessage);
+                  Log.d("ress", substring + "");
+                  finish();
+              }
+
             //长连接
             //  initData(resultString);
         } else {//二维码正常
@@ -479,10 +410,19 @@ public class ZiXingActivity extends BaseActivity implements SurfaceHolder.Callba
                     finish();
                     break;
                 case R.id.flash_shou:
-                    //调用Eventbus
-                    EventMessage eventMessage = new EventMessage("shoushi");
-                    EventBus.getDefault().postSticky(eventMessage);
-                    finish();
+                    if(abool){
+                        //调用Eventbus
+                        EventMessage eventMessage = new EventMessage("shoush");
+                        EventBus.getDefault().postSticky(eventMessage);
+                        finish();
+                    }
+                    else {
+                        //调用Eventbus
+                        EventMessage eventMessage = new EventMessage("shoushi");
+                        EventBus.getDefault().postSticky(eventMessage);
+                        finish();
+                    }
+
                     break;
             }
         }

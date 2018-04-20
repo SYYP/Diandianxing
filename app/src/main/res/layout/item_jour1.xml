@@ -4,12 +4,20 @@
     android:layout_height="wrap_content"
     android:background="@color/back_bei"
     android:orientation="vertical">
+    <View
+        android:id="@+id/v2"
+        android:layout_marginTop="1dp"
+        android:background="@color/back_bei"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"></View>
     <LinearLayout
-        android:background="@drawable/shape_radioline"
+   android:background="@color/white"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <TextView
+
+        android:layout_marginBottom="10dp"
         android:id="@+id/text_date"
         android:padding="5dp"
         android:gravity="center"
@@ -21,17 +29,55 @@
         android:textSize="16sp"
         android:layout_width="80dp"
         android:layout_height="30dp" />
-
-    <android.support.v7.widget.RecyclerView
-        android:layout_marginTop="5dp"
-        android:id="@+id/lisview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
-
+        <RelativeLayout
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <View
+                android:id="@+id/v1"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="10dp"
+                android:background="@color/back_bei"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"></View>
+            <TextView
+                android:id="@+id/text_time"
+                android:padding="10dp"
+                android:textSize="16sp"
+                android:textColor="@color/textcolcr"
+                android:text="9:26"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/text_heji"
+                android:layout_toRightOf="@id/text_time"
+                android:padding="10dp"
+                android:textSize="16sp"
+                android:textColor="@color/textcolcr"
+                android:text="10分钟"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:padding="2dp"
+                android:layout_marginRight="15dp"
+                android:id="@+id/img_next"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/set_next"
+                android:layout_width="20dp"
+                android:layout_height="20dp" />
+            <TextView
+                android:id="@+id/text_money"
+                android:layout_toLeftOf="@id/img_next"
+                android:textSize="16sp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:text="1.00元"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
     </LinearLayout>
-    <View
-        android:layout_marginTop="1dp"
-        android:background="@color/back_bei"
-        android:layout_width="match_parent"
-        android:layout_height="10dp"></View>
+
 </LinearLayout>

@@ -100,7 +100,8 @@ public class UploadUtil {
 				 * 获取响应�? 200=成功
 				 * 当响应成功，获取响应的流  
 				 */
-				int res = conn.getResponseCode();  
+				int res = conn.getResponseCode();
+				Log.d("TAG",res+"");
 				Log.e(TAG, "response code:"+res);
 //				if(res==200)
 //				{

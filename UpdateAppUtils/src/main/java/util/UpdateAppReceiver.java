@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 
 import java.io.File;
 
@@ -44,11 +45,12 @@ public class UpdateAppReceiver extends BroadcastReceiver {
                         if (DownloadAppUtils.downloadUpdateApkFilePath != null) {
                             Intent i = new Intent(Intent.ACTION_VIEW);
                             File apkFile = new File(DownloadAppUtils.downloadUpdateApkFilePath);
+                            Log.d("Tag",context.getPackageName()+"");
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                 i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                 Uri contentUri = FileProvider.getUriForFile(
-                                        context, context.getPackageName() + ".fileprovider", apkFile);
-                                i.setDataAndType(contentUri, "application/vnd.android.package-archive");
+                                        context, context.getPackageName()+".provider", apkFile);
+                                i.setDataAndType(contentUri,"application/vnd.android.package-archive");
                             } else {
                                 i.setDataAndType(Uri.fromFile(apkFile),
                                         "application/vnd.android.package-archive");

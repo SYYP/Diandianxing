@@ -18,16 +18,16 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.zackratos.ultimatebar.UltimateBar;
 
 import java.util.Map;
 
-import www.diandianxing.com.diandianxing.MainActivity;
+import www.diandianxing.com.diandianxing.DianDianActivity;
 import www.diandianxing.com.diandianxing.R;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
 import www.diandianxing.com.diandianxing.bean.Loginsuccess;
-import www.diandianxing.com.diandianxing.bean.Successbean;
-import www.diandianxing.com.diandianxing.guidance.GuidePageActivity;
 import www.diandianxing.com.diandianxing.network.BaseObserver1;
 import www.diandianxing.com.diandianxing.network.RetrofitManager;
 import www.diandianxing.com.diandianxing.utils.ClickFilter;
@@ -81,6 +81,12 @@ public class BandphoneActivity extends BaseActivity {
         register_yanzhen = (EditText) findViewById(R.id.register_yanzhen);
         huoqu = (TextView) findViewById(R.id.huoqu);
         login_sso = (TextView) findViewById(R.id.login_sso);
+        iv_callback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         /*
            得到数据
          */
@@ -118,25 +124,32 @@ public class BandphoneActivity extends BaseActivity {
 
         }
         //进行网络请求
-        ArrayMap arrayMap=new ArrayMap<String,String>();
-        arrayMap.put("mobile",bound_phone.getText().toString().trim());
-        RetrofitManager.get(MyContants.BASEURL + "s=Sms/sendSms", arrayMap, new BaseObserver1<Successbean>("") {
-            @Override
-            public void onSuccess(Successbean result, String tag) {
-                if (result.getCode() == 200) {
-                    Toast.makeText(BandphoneActivity.this, "验证码已发送", Toast.LENGTH_SHORT).show();
-                    SendSmsTimerUtils sendSmsTimerUtils=new SendSmsTimerUtils(60*1000,1000,huoqu);
-                    sendSmsTimerUtils.start();
-                } else {
-                    Toast.makeText(BandphoneActivity.this, "验证码发送失败", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailed(int code,String data) {
-
-            }
-        });
+        HttpParams httpParams=new HttpParams();
+        httpParams.put("mobile",bound_phone.getText().toString().trim());
+        OkGo.<String>post(MyContants.BASEURL+"s=Sms/sendSms")
+                .params(httpParams)
+                .tag(this)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String body = response.body();
+                        try {
+                            JSONObject jsonobj=new JSONObject(body);
+                            int code = jsonobj.getInt("code");
+                            String datas = jsonobj.getString("datas");
+                            if(code==200){
+                                Toast.makeText(BandphoneActivity.this, "验证码已发送", Toast.LENGTH_SHORT).show();
+                                SendSmsTimerUtils sendSmsTimerUtils=new SendSmsTimerUtils(60*1000,1000,huoqu);
+                                sendSmsTimerUtils.start();
+                            }
+                            else if(code==404){
+                             ToastUtils.showShort(BandphoneActivity.this,datas);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
 
     }
     private void submit() {
@@ -158,45 +171,46 @@ public class BandphoneActivity extends BaseActivity {
         gomain();
     }
     private void gomain() {
-        ArrayMap map=new ArrayMap<String,String>();
-        //先验证手机号是否正确，然后在注册
+        HttpParams harr=new HttpParams();
         String trim = register_yanzhen.getText().toString().trim();
-        map.put("mobile",bound_phone.getText().toString());
-        map.put("code",trim);
-        RetrofitManager.post(MyContants.BASEURL + "s=Sms/verify", map, new BaseObserver1<Successbean>("") {
-            @Override
-            public void onSuccess(Successbean result, String tag) {
-
-                if(result.getCode()==200){
-                     /*
+        harr.put("mobile",bound_phone.getText().toString());
+        harr.put("code",trim);
+        OkGo.<String>post(MyContants.BASEURL+"s=Sms/verify")
+                .params(harr)
+                .tag(this)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String body = response.body();
+                        try {
+                            JSONObject jsonb=new JSONObject(body);
+                            int code = jsonb.getInt("code");
+                            String datas = jsonb.getString("datas");
+                            if(code==200){
+                                  /*
                        注册
                      */
-                    bind();
-                }
-            }
-            @Override
-            public void onFailed(int code,String data) {
-                ToastUtils.show(BandphoneActivity.this,"验证码错误",1);
-            }
-        });
+                                Intent intent=new Intent(BandphoneActivity.this,AgreementActivity.class);
+                                intent.putExtra("contact",bound_phone.getText().toString().trim());
+                                intent.putExtra("password","");
+                                intent.putExtra("register_or_bind","bind");
+                                intent.putExtra("type",type);
+                                intent.putExtra("openid",openid);
+                                intent.putExtra("name",name);
+                                startActivity(intent);
+                            }
+                            else if(code==404){
+                               ToastUtils.showShort(BandphoneActivity.this,datas);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
 
     }
     private void bind() {
-//        HttpParams httparam=new HttpParams();
-//        httparam.put("contact",bound_phone.getText().toString().trim());
-//        httparam.put("type",type);
-//        httparam.put("openid",openid);
-//        httparam.put("name",name);
-//        OkGo.<String>post(MyContants.BASEURL+"s=Login/threeRegister")
-//                .tag(this)
-//                .params(httparam)
-//                .execute(new StringCallback() {
-//                    @Override
-//                    public void onSuccess(Response<String> response) {
-//                        String body = response.body();
-//                    }
-//                });
-                
+
         Map<String,String> map=new ArrayMap<>();
         map.put("contact",bound_phone.getText().toString().trim());
         map.put("type",type);
@@ -213,7 +227,7 @@ public class BandphoneActivity extends BaseActivity {
                       SpUtils.putString(BandphoneActivity.this,"token",result.getDatas().getToken());
                       SpUtils.putInt(BandphoneActivity.this, "guid", 1);
                       //绑定成功跳登录
-                       Intent intent=new Intent(BandphoneActivity.this, MainActivity.class);
+                       Intent intent=new Intent(BandphoneActivity.this, DianDianActivity.class);
                         startActivity(intent);
 
                   }
@@ -226,7 +240,7 @@ public class BandphoneActivity extends BaseActivity {
             @Override
             public void onFailed(int code,String data) {
 
-               // ToastUtils.show(BandphoneActivity.this,data,1);
+               ToastUtils.show(BandphoneActivity.this,data,1);
             }
         });
 

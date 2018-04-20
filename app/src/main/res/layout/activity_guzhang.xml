@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     <LinearLayout
+        android:layout_marginBottom="20dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -28,6 +29,40 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
+        <LinearLayout
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"></View>
+            <RelativeLayout
+                android:id="@+id/relan_sao"
+                android:background="@color/back_bei"
+                android:layout_marginTop="1dp"
+                android:layout_width="match_parent"
+                android:layout_height="55dp">
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/img_sao"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:src="@drawable/img_fusao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/tv_bianhao"
+                    android:layout_marginLeft="5dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/img_sao"
+                    android:textSize="16sp"
+                    android:padding="10dp"
+                    android:text="对准车上的二维码"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+        </LinearLayout>
     <LinearLayout
         android:background="@drawable/shape_radioline"
         android:layout_marginRight="5dp"
@@ -35,6 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
             android:textColor="@color/black_san"
             android:textSize="16sp"
@@ -116,6 +152,7 @@
 
     </LinearLayout>
     <RelativeLayout
+        android:layout_marginBottom="10dp"
         android:id="@+id/real_ok"
         android:layout_marginTop="25dp"
         android:background="@drawable/shape_redradius"

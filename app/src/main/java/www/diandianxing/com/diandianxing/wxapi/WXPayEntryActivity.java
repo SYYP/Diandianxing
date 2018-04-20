@@ -19,16 +19,13 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import www.diandianxing.com.diandianxing.MainActivity;
 import www.diandianxing.com.diandianxing.base.BaseActivity;
 import www.diandianxing.com.diandianxing.base.Myapplication;
 import www.diandianxing.com.diandianxing.utils.EventMessage;
-import www.diandianxing.com.diandianxing.utils.GGUtils;
 import www.diandianxing.com.diandianxing.utils.MyContants;
 import www.diandianxing.com.diandianxing.utils.SpUtils;
 
 import static com.tencent.mm.sdk.constants.ConstantsAPI.COMMAND_PAY_BY_WX;
-import static com.umeng.analytics.pro.x.S;
 
 
 /**
@@ -101,18 +98,17 @@ public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandl
                                         EventMessage emsg=new EventMessage("chongzhi");
                                         EventBus.getDefault().postSticky(emsg);
                                         Toast.makeText(Myapplication.getApplication(), "微信支付成功", Toast.LENGTH_SHORT).show();
-
-                                        //通知首页刷新数据
+                                     //   通知首页刷新数据
                                         EventMessage eventMessage=new EventMessage("mainetwork");
                                         EventBus.getDefault().postSticky(eventMessage);
-
+                                          finish();
 //                                        Log.e("TAG","支付广播发送");
 //                                        Intent intent= new Intent();
 //                                        intent.setAction(GGUtils.SX_DATA);
 //                                        intent.putExtra("balances",balance);
 //                                        intent.putExtra("securityDeposit",securityDeposit);
 //                                        sendBroadcast(intent);
-                                        finish();
+
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -126,6 +122,7 @@ public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandl
             }
             if (baseResp.errCode == -2) {
                 Toast.makeText(this, "微信支付取消", Toast.LENGTH_SHORT).show();
+                finish();
             }
 
         }
